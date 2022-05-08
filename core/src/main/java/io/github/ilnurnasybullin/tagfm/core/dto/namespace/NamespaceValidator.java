@@ -13,4 +13,16 @@ public class NamespaceValidator extends NamespaceDto {
                                  List<Set<TreeTagDto>> synonyms, Set<TaggedFileDto> files) {
         super(name, created, fileNaming, ROOT, synonyms, files);
     }
+
+    @Override
+    public NamespaceDto rename(String newName) {
+        checkName(newName);
+        return super.rename(newName);
+    }
+
+    private void checkName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new InvalidNamespaceNameException(String.format("Invalid name [%s] for namespace", name));
+        }
+    }
 }
