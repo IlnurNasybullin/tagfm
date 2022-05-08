@@ -15,7 +15,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @CommandLine.Command(name = "tagfm", subcommands = {
-        NamespaceInitCommand.class
+        NamespaceInitCommand.class,
+        NamespaceCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {
@@ -36,6 +37,10 @@ public class FileManagerCommand implements Runnable, Closeable {
 
     void initNamespace(Optional<NamespaceDto> namespace) {
         this.namespace = namespace;
+    }
+
+    void setNamespace(NamespaceDto namespace) {
+        initNamespace(Optional.of(namespace));
     }
 
     void checkNamespaceOnNonExisting() {
