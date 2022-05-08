@@ -1,0 +1,4 @@
+include 'api'
+include 'core'
+include 'repository-xml'
+include 'cli'
