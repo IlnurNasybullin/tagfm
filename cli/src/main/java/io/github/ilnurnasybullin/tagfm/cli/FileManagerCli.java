@@ -9,8 +9,8 @@ public class FileManagerCli {
     public static void main(String[] args) {
         try(ApplicationContext context = ApplicationContext.run(args);
             FileManagerCommand command = context.getBean(FileManagerCommand.class)) {
-            new CommandLine(command, context::getBean)
-                    .setCaseInsensitiveEnumValuesAllowed(true)
+            CommandLine commandLine = new CommandLine(command, context::getBean);
+            commandLine.setCaseInsensitiveEnumValuesAllowed(true)
                     .execute(args);
         }
     }

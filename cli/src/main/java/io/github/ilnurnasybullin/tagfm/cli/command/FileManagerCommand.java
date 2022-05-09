@@ -1,16 +1,13 @@
 package io.github.ilnurnasybullin.tagfm.cli.command;
 
-import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceAlreadyInitialized;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceServiceImpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 import java.io.Closeable;
-import java.util.List;
 import java.util.Optional;
 
 @CommandLine.Command(name = "tagfm", subcommands = {
@@ -42,10 +39,6 @@ public class FileManagerCommand implements Runnable, Closeable {
         this.namespace = namespace;
     }
 
-    void setNamespace(NamespaceDto namespace) {
-        initNamespace(Optional.of(namespace));
-    }
-
     void checkNamespaceOnNonExisting() {
         namespace.ifPresent(namespace -> {
             throw new NamespaceAlreadyInitialized(
@@ -60,45 +53,6 @@ public class FileManagerCommand implements Runnable, Closeable {
 
     void setWriteMode() {
         onCommit = true;
-    }
-
-    public void printInfo() {
-        NamespaceDto namespace = namespaceOrThrow();
-
-        printNamespace(namespace);
-        printTags(namespace);
-        printSynonyms(namespace);
-    }
-
-    private void printSynonyms(NamespaceDto namespace) {
-        System.out.println("\nSynonym tags:");
-        if (namespace.synonyms().isEmpty()) {
-            System.out.println("Synonym tags are missing");
-        }
-    }
-
-    private void printNamespace(NamespaceDto namespace) {
-        System.out.println("Namespace info: ");
-        TableFormatPrinter printer = new TableFormatPrinter("%-25s | %-35s | %-25s%n", 91);
-        printer.print(new String[]{"name", "created", "file naming strategy"},
-                new Object[][] {{namespace.name(), namespace.created(), namespace.fileNaming()}});
-    }
-
-    private void printTags(NamespaceDto namespace) {
-        System.out.println("\nTags info:");
-        if (namespace.tags().noneMatch(tag -> true)) {
-            System.out.println("Tags are missing");
-            return;
-        }
-
-        TableFormatPrinter printer = new TableFormatPrinter("%-25s | %-25s%n", 53);
-        printer.print(
-                new String[]{"name", "parent"},
-                namespace.tags(),
-                List.of(TreeTagDto::name, tag -> tag.parent()
-                        .map(TreeTagDto::name)
-                        .orElse(""))
-        );
     }
 
     @Override

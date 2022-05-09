@@ -1,3 +1,4 @@
+rootProject.name = 'tagfm'
 include 'api'
 include 'core'
 include 'repository-xml'
