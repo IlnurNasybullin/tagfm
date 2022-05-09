@@ -17,7 +17,8 @@ import java.util.function.Function;
 @CommandLine.Command(name = "tagfm", subcommands = {
         NamespaceInitCommand.class,
         NamespaceCommand.class,
-        AddTagsCommand.class
+        AddTagsCommand.class,
+        RenameTagCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {
@@ -84,7 +85,7 @@ public class FileManagerCommand implements Runnable, Closeable {
 
     private void printTags(NamespaceDto namespace) {
         System.out.println("\nTags info:");
-        if (namespace.<TreeTagDto>tags().noneMatch(tag -> true)) {
+        if (namespace.tags().noneMatch(tag -> true)) {
             System.out.println("Tags are missing");
             return;
         }
@@ -93,7 +94,7 @@ public class FileManagerCommand implements Runnable, Closeable {
         printer.print(
                 new String[]{"name", "parent"},
                 namespace.tags(),
-                List.<Function<TreeTagDto, Object>>of(TreeTagDto::name, tag -> tag.parent().map(TreeTagDto::name).orElse(""))
+                List.of(TreeTagDto::name, tag -> tag.parent().map(TreeTagDto::name).orElse(""))
         );
     }
 

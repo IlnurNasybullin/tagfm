@@ -4,10 +4,12 @@ import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
 import io.github.ilnurnasybullin.tagfm.core.repository.TreeIterator;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class NamespaceDto implements Namespace {
 
@@ -77,6 +79,16 @@ public class NamespaceDto implements Namespace {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public Stream<TreeTagDto> tags() {
+        return Namespace.super.tags();
+    }
+
+    TreeTagDto root() {
+        return root;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -94,23 +106,5 @@ public class NamespaceDto implements Namespace {
         return "NamespaceDto{" +
                 "name='" + name + '\'' +
                 '}';
-    }
-
-    public void addTags(Collection<TreeTagDto> tags) {
-        tags.forEach(this::addTag);
-    }
-
-    public void addTag(TreeTagDto tag) {
-        addTag(tag, root);
-    }
-
-    private static void addTag(TreeTagDto tag, TreeTagDto root) {
-        if (!root.children().containsKey(tag.name())) {
-            tag.reparent(root);
-            return;
-        }
-
-        TreeTagDto newRoot = root.children().get(tag.name());
-        Map.copyOf(tag.children()).forEach((name, child) -> addTag(child, newRoot));
     }
 }
