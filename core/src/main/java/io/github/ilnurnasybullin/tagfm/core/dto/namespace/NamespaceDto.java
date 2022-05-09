@@ -19,6 +19,8 @@ public class NamespaceDto implements Namespace {
 
     private final TreeTagDto root;
     private final List<Set<TreeTagDto>> synonyms;
+
+    // Can be replacing to Map<Path, TaggedFileDto>
     private final Set<TaggedFileDto> files;
 
     protected NamespaceDto(String name, ZonedDateTime created, FileNamingStrategy fileNaming, TreeTagDto ROOT,

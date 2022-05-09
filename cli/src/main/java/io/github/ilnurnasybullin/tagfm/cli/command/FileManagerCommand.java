@@ -18,7 +18,8 @@ import java.util.Optional;
         NamespaceCommand.class,
         AddTagsCommand.class,
         RenameTagCommand.class,
-        RemoveTagCommand.class
+        RemoveTagCommand.class,
+        BindCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {

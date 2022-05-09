@@ -52,7 +52,7 @@ public class NamespaceMapper {
 
         Function<Path, String> naming = switch (strategy) {
             case ABSOLUTE -> Path::toString;
-            case RELATIVE ->  filePath -> currentPath.resolve(filePath).toString();
+            case RELATIVE ->  filePath -> currentPath.relativize(filePath.toAbsolutePath()).toString();
         };
 
         Set<TaggedFileEntity> taggedFiles = namespace.files()
@@ -69,12 +69,13 @@ public class NamespaceMapper {
         TaggedFileEntity entity = new TaggedFileEntity();
 
         try {
-            entity.setName(naming.apply(taggedFile.file().toAbsolutePath().toRealPath()));
+            String fileName = naming.apply(taggedFile.file().toRealPath());
+            entity.setName(fileName);
         } catch (IOException e) {
             throw new UncheckedIOException(String.format("Invalid file's url [%s]", taggedFile.file()), e);
         }
 
-        Set<TagEntity> tags = taggedFile.<TagEntity>tags()
+        Set<TagEntity> tags = taggedFile.<Tag>tags()
                 .stream()
                 .map(tagsMap::get)
                 .collect(Collectors.toSet());
