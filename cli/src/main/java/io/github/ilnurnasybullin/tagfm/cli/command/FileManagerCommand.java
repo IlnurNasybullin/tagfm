@@ -12,13 +12,13 @@ import picocli.CommandLine;
 import java.io.Closeable;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @CommandLine.Command(name = "tagfm", subcommands = {
         NamespaceInitCommand.class,
         NamespaceCommand.class,
         AddTagsCommand.class,
-        RenameTagCommand.class
+        RenameTagCommand.class,
+        RemoveTagCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {
@@ -94,7 +94,9 @@ public class FileManagerCommand implements Runnable, Closeable {
         printer.print(
                 new String[]{"name", "parent"},
                 namespace.tags(),
-                List.of(TreeTagDto::name, tag -> tag.parent().map(TreeTagDto::name).orElse(""))
+                List.of(TreeTagDto::name, tag -> tag.parent()
+                        .map(TreeTagDto::name)
+                        .orElse(""))
         );
     }
 

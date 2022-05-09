@@ -2,35 +2,36 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
+import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagRemover;
+import io.github.ilnurnasybullin.tagfm.core.dto.namespace.TagRemovingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "rename-tag")
-public class RenameTagCommand implements Runnable {
+@CommandLine.Command(name = "remove-tag")
+public class RemoveTagCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
-    private boolean shortName = false;
+    private boolean shortName;
+
+    @CommandLine.Option(names = {"-trs", "--tag-removing-strategy"})
+    private TagRemovingStrategy tagRemovingStrategy = TagRemovingStrategy.UP_CHILDREN_WITHOUT_CONFLICTS;
 
     @CommandLine.Parameters(index = "0", arity = "1")
-    private String oldName;
+    private String tagName;
 
-    @CommandLine.Parameters(index = "1", arity = "1")
-    private String newName;
-
-    public RenameTagCommand(FileManagerCommand fileManager) {
+    public RemoveTagCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
 
     @Override
     public void run() {
         NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto searchedTag = searchTag(oldName, namespace);
-        searchedTag.rename(newName);
+        TreeTagDto searchedTag = searchTag(tagName, namespace);
+        new NamespaceTagRemover().removeTag(searchedTag, namespace, tagRemovingStrategy);
         fileManager.setWriteMode();
     }
 

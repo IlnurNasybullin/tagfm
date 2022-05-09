@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class TreeTagSearcher {
+public class NamespaceTagSearcher {
 
     public Optional<TreeTagDto> findByFullName(String fullName, NamespaceDto namespace) {
         String[] tagNames = new TreeTagSplitter().tagNames(fullName);
