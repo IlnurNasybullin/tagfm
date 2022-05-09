@@ -16,7 +16,8 @@ import java.util.function.Function;
 
 @CommandLine.Command(name = "tagfm", subcommands = {
         NamespaceInitCommand.class,
-        NamespaceCommand.class
+        NamespaceCommand.class,
+        AddTagsCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {

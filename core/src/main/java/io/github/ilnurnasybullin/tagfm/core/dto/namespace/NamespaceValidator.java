@@ -15,9 +15,9 @@ public class NamespaceValidator extends NamespaceDto {
     }
 
     @Override
-    public NamespaceDto rename(String newName) {
+    public void rename(String newName) {
         checkName(newName);
-        return super.rename(newName);
+        super.rename(newName);
     }
 
     private void checkName(String name) {

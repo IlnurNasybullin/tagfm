@@ -12,9 +12,9 @@ public class TaggedFileValidator extends TaggedFileDto {
     }
 
     @Override
-    public TaggedFileDto replace(Path file) {
+    public void replace(Path file) {
         checkFile(file);
-        return super.replace(file);
+        super.replace(file);
     }
 
     private void checkFile(Path file) {

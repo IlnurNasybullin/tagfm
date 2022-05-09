@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class TaggedFileDto implements TaggedFile {
 
-    private final Path file;
+    private Path file;
     private final Set<TreeTagDto> tags;
 
     protected TaggedFileDto(Path file, Set<TreeTagDto> tags) {
@@ -22,8 +22,8 @@ public class TaggedFileDto implements TaggedFile {
         return file;
     }
 
-    public TaggedFileDto replace(Path file) {
-        return new TaggedFileDto(file, tags);
+    public void replace(Path file) {
+        this.file = file;
     }
 
     @Override

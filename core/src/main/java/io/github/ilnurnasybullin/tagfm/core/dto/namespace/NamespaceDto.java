@@ -7,18 +7,15 @@ import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.repository.TreeIterator;
 
 import java.time.ZonedDateTime;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class NamespaceDto implements Namespace {
 
-    private final String name;
+    private String name;
     private final ZonedDateTime created;
-    private final FileNamingStrategy fileNaming;
+    private FileNamingStrategy fileNaming;
 
-    private final TreeTagDto ROOT;
+    private final TreeTagDto root;
     private final List<Set<TreeTagDto>> synonyms;
     private final Set<TaggedFileDto> files;
 
@@ -27,7 +24,7 @@ public class NamespaceDto implements Namespace {
         this.name = name;
         this.created = created;
         this.fileNaming = fileNaming;
-        this.ROOT = ROOT;
+        this.root = ROOT;
         this.synonyms = synonyms;
         this.files = files;
     }
@@ -37,8 +34,8 @@ public class NamespaceDto implements Namespace {
         return name;
     }
 
-    public NamespaceDto rename(String newName) {
-        return new NamespaceDto(newName, created, fileNaming, ROOT, synonyms, files);
+    public void rename(String newName) {
+        this.name = newName;
     }
 
     @Override
@@ -51,8 +48,8 @@ public class NamespaceDto implements Namespace {
         return fileNaming;
     }
 
-    public NamespaceDto replaceFileNamingStrategy(FileNamingStrategy fileNaming) {
-        return new NamespaceDto(name, created, fileNaming, ROOT, synonyms, files);
+    public void replaceFileNamingStrategy(FileNamingStrategy fileNaming) {
+        this.fileNaming = fileNaming;
     }
 
     @Override
@@ -60,7 +57,7 @@ public class NamespaceDto implements Namespace {
     public Iterator<TreeTagDto> horizontalTraversal() {
         TreeIterator<TreeTagDto> iterator =
                 TreeIterator.horizontalTraversal(
-                        ROOT, tag -> tag.children()
+                        root, tag -> tag.children()
                                 .values()
                 );
         iterator.next();
@@ -97,5 +94,23 @@ public class NamespaceDto implements Namespace {
         return "NamespaceDto{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    public void addTags(Collection<TreeTagDto> tags) {
+        tags.forEach(this::addTag);
+    }
+
+    public void addTag(TreeTagDto tag) {
+        addTag(tag, root);
+    }
+
+    private static void addTag(TreeTagDto tag, TreeTagDto root) {
+        if (!root.children().containsKey(tag.name())) {
+            tag.reparent(root);
+            return;
+        }
+
+        TreeTagDto newRoot = root.children().get(tag.name());
+        Map.copyOf(tag.children()).forEach((name, child) -> addTag(child, newRoot));
     }
 }

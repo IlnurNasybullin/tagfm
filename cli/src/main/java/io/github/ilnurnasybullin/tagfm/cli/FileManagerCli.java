@@ -4,8 +4,6 @@ import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.micronaut.context.ApplicationContext;
 import picocli.CommandLine;
 
-import java.io.IOException;
-
 public class FileManagerCli {
 
     public static void main(String[] args) {

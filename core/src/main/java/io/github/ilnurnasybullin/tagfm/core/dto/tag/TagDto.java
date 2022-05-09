@@ -5,8 +5,8 @@ import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
 import java.util.Map;
 
 public interface TagDto extends Tag {
-    TreeTagDto rename(String newName);
+    void rename(String newName);
     String fullName();
-    TreeTagDto reparent(TreeTagDto parent);
+    void reparent(TreeTagDto parent);
     Map<String, TreeTagDto> children();
 }

@@ -9,8 +9,9 @@ module tagged.file.manager.cli {
     requires jakarta.inject;
     requires jakarta.annotation;
 
-    exports io.github.ilnurnasybullin.tagfm.cli.beans to io.micronaut.core;
-    exports io.github.ilnurnasybullin.tagfm.cli.command to io.micronaut.core;
+    exports io.github.ilnurnasybullin.tagfm.cli.beans;
+    exports io.github.ilnurnasybullin.tagfm.cli.command;
+    exports io.github.ilnurnasybullin.tagfm.cli.format;
 
     opens io.github.ilnurnasybullin.tagfm.cli.command;
 }

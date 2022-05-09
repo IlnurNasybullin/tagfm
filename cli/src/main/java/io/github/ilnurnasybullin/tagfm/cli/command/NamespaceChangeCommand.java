@@ -23,9 +23,7 @@ public class NamespaceChangeCommand implements Runnable {
         if (strategy != null) {
             NamespaceDto namespace = fileManager.namespaceOrThrow();
             if (namespace.fileNaming() != strategy) {
-                namespace = namespace
-                        .replaceFileNamingStrategy(strategy);
-                fileManager.setNamespace(namespace);
+                namespace.replaceFileNamingStrategy(strategy);
                 fileManager.setWriteMode();
             }
         }

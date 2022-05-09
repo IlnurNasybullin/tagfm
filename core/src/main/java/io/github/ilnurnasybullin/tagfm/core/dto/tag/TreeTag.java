@@ -1,25 +1,16 @@
 package io.github.ilnurnasybullin.tagfm.core.dto.tag;
 
-import io.github.ilnurnasybullin.tagfm.core.service.Publisher;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TreeTag extends TreeTagValidator {
 
-    private static final Publisher publisher;
-    public static final String PARENT_TAG_PROPERTY = "tag-parent";
-    public static final String FULL_NAME_PROPERTY = "full-name-property";
-
-    static {
-        publisher = Publisher.get();
-
-        publisher.addSubscriber(PARENT_TAG_PROPERTY, TreeTag::reparent);
-        publisher.addSubscriber(FULL_NAME_PROPERTY, TreeTag::recalculateFullName);
-    }
-
     protected TreeTag(String name, String fullName, TreeTagDto parent, Map<String, TreeTagDto> children) {
         super(name, fullName, parent, children);
+        if (parent != null) {
+            parent.children().put(name, this);
+        }
     }
 
     private static TreeTagDto initWithoutParent(String name) {
@@ -27,10 +18,10 @@ public class TreeTag extends TreeTagValidator {
     }
 
     public static TreeTagDto initWithParent(String name, TreeTagDto parent) {
-        return of(name, parent, new HashMap<>());
+        return init(name, parent, new HashMap<>());
     }
 
-    private static TreeTagDto of(String name, TreeTagDto parent, Map<String, TreeTagDto> children) {
+    private static TreeTagDto init(String name, TreeTagDto parent, Map<String, TreeTagDto> children) {
         return new TreeTag(name, fullName(parent, name), parent, children);
     }
 
@@ -38,31 +29,24 @@ public class TreeTag extends TreeTagValidator {
         return initWithoutParent("");
     }
 
-    @Override
-    protected TreeTagDto recalculateFullName() {
-        TreeTagDto newTag = super.recalculateFullName();
-        publisher.publish(FULL_NAME_PROPERTY, this, newTag);
-        return newTag;
+    public static TreeTagDto of(String name) {
+        TreeTagValidator.checkName(name);
+        return initWithoutParent(name);
+    }
+
+    public static TreeTagDto of(String name, TreeTagDto parent) {
+        TreeTagValidator.checkName(name);
+        TreeTagValidator.checkOnUniqueLeaf(name, Optional.ofNullable(parent));
+        return initWithParent(name, parent);
     }
 
     @Override
-    public TreeTagDto reparent(TreeTagDto newParent) {
-        TreeTagDto newValue = super.reparent(newParent);
-        publisher.publish(PARENT_TAG_PROPERTY, this, newValue);
-        publisher.publish(FULL_NAME_PROPERTY, this, newValue);
-        return newValue;
-    }
-
-    private static void recalculateFullName(Object oldValue, Object newValue) {
-        TreeTagDto newTag = (TreeTagDto) newValue;
-        newTag.children().replaceAll((name, child) -> child.recalculateFullName());
-    }
-
-    private static void reparent(Object oldValue, Object newValue) {
-        TreeTagDto oldTag = (TreeTagDto) oldValue;
-        TreeTagDto newTag = (TreeTagDto) newValue;
-
-        oldTag.parent().ifPresent(parent -> parent.children().remove(oldTag.name()));
-        newTag.parent().ifPresent(parent -> parent.children().put(newTag.name(), newTag));
+    public void reparent(TreeTagDto newParent) {
+        Optional<TreeTagDto> oldParent = parent();
+        super.reparent(newParent);
+        oldParent.ifPresent(parent -> parent.children().remove(name()));
+        if (newParent != null) {
+            newParent.children().put(name(), this);
+        }
     }
 }

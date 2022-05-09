@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public class TreeTagDto extends AbstractTreeTag {
 
-    private final String name;
-    private final String fullName;
-    private final TreeTagDto parent;
+    private String name;
+    private String fullName;
+    private TreeTagDto parent;
     private final Map<String, TreeTagDto> children;
 
     protected TreeTagDto(String name, String fullName, TreeTagDto parent, Map<String, TreeTagDto> children) {
@@ -19,8 +19,9 @@ public class TreeTagDto extends AbstractTreeTag {
     }
 
     @Override
-    public TreeTagDto rename(String newName) {
-        return new TreeTagDto(newName, calculateFullName(parent, newName), parent, children);
+    public void rename(String newName) {
+        this.name = newName;
+        this.fullName = calculateFullName(parent, newName);
     }
 
     @Override
@@ -33,13 +34,9 @@ public class TreeTagDto extends AbstractTreeTag {
         return fullName;
     }
 
-    protected TreeTagDto recalculateFullName() {
-        return new TreeTagDto(name, calculateFullName(parent, name), parent, children);
-    }
-
     @Override
-    public TreeTagDto reparent(TreeTagDto newParent) {
-        return new TreeTagDto(name, calculateFullName(newParent, name), newParent, children);
+    public void reparent(TreeTagDto newParent) {
+        this.parent = newParent;
     }
 
     @Override

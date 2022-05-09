@@ -19,9 +19,8 @@ public class NamespaceRenameCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto renamedNamespace = fileManager.namespaceOrThrow()
-                .rename(newName);
-        fileManager.setNamespace(renamedNamespace);
+        NamespaceDto namespace = fileManager.namespaceOrThrow();
+        namespace.rename(newName);
         fileManager.setWriteMode();
     }
 }
