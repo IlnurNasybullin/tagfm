@@ -5,7 +5,17 @@ import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class NamespaceTagSearcherFacade {
+
+    public Stream<TreeTagDto> searchTags(Collection<String> names, NamespaceDto namespace, boolean byShortName) {
+        return names.stream()
+                .map(name -> searchTag(name, namespace, byShortName));
+    }
 
     public TreeTagDto searchTag(String name, NamespaceDto namespace, boolean byShortName) {
         NamespaceTagSearcher tagSearcher = new NamespaceTagSearcher();

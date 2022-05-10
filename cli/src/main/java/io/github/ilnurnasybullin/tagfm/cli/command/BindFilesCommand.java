@@ -1,17 +1,15 @@
 package io.github.ilnurnasybullin.tagfm.cli.command;
 
+import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceFileManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -20,10 +18,10 @@ import java.util.stream.Stream;
 public class BindFilesCommand implements Runnable {
 
     @CommandLine.Parameters(arity = "1", split = ",")
-    private Path[] files;
+    private final List<Path> files = new ArrayList<>();
 
     @CommandLine.Option(names = {"-t", "--tags"}, required = true, arity = "1", split = ",")
-    private String[] tags;
+    private final List<String> tags = new ArrayList<>();
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
     private boolean shortName;
@@ -47,20 +45,13 @@ public class BindFilesCommand implements Runnable {
     }
 
     private Stream<TaggedFileDto> getFiles(NamespaceDto namespace) {
-        NamespaceFileManager namespaceFileManager = new NamespaceFileManager();
-        return Arrays.stream(files).map(file -> {
-            try {
-                return namespaceFileManager.findOrCreate(file, namespace);
-            } catch (IOException e) {
-                throw new UncheckedIOException(String.format("Problems with file [%s]", file), e);
-            }
-        });
+        NamespaceFileManagerFacade facade = new NamespaceFileManagerFacade();
+        return facade.findOrCreate(files, namespace);
     }
 
     private List<TreeTagDto> getTags(NamespaceDto namespace) {
         NamespaceTagSearcherFacade tagSearcher = new NamespaceTagSearcherFacade();
-        return Arrays.stream(this.tags)
-                .map(tagName -> tagSearcher.searchTag(tagName, namespace, shortName))
+        return tagSearcher.searchTags(tags, namespace, shortName)
                 .toList();
     }
 }
