@@ -1,12 +1,11 @@
 package io.github.ilnurnasybullin.tagfm.core.repository;
 
-import java.nio.file.Path;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
 public interface NamespaceRepository {
-    Optional<Namespace> findBy(Path savedFile);
-    void commit(Namespace namespace, Path savingFile);
+    Optional<Namespace> findBy();
+    void commit(Namespace namespace);
 
     static NamespaceRepository get() {
         return ServiceLoader.load(NamespaceRepository.class)

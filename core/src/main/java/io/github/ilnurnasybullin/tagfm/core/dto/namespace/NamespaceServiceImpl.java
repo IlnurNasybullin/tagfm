@@ -1,17 +1,13 @@
 package io.github.ilnurnasybullin.tagfm.core.dto.namespace;
 
-import io.github.ilnurnasybullin.tagfm.api.service.NamespaceService;
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.api.service.NamespaceService;
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 public class NamespaceServiceImpl implements NamespaceService<NamespaceDto> {
 
-    public static final String DIR_NAME = ".tagfm";
-    public static final String FILE_NAME = "namespace.xml";
     private final NamespaceRepository repository;
 
     public NamespaceServiceImpl(NamespaceRepository repository) {
@@ -23,21 +19,12 @@ public class NamespaceServiceImpl implements NamespaceService<NamespaceDto> {
     }
 
     public void commit(NamespaceDto namespace) {
-        repository.commit(namespace, storingPath());
+        repository.commit(namespace);
     }
 
     public Optional<NamespaceDto> find() {
-        Path path = storingPath();
-        if (Files.notExists(path) || Files.isDirectory(path) || !Files.isReadable(path)) {
-            return Optional.empty();
-        }
-
-        return repository.findBy(path)
+        return repository.findBy()
                 .map(Namespace::from);
-    }
-
-    private Path storingPath() {
-        return Path.of(".", DIR_NAME, FILE_NAME);
     }
 
     @Override

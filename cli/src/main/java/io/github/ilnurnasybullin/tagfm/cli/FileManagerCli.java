@@ -8,7 +8,7 @@ import picocli.CommandLine;
 public class FileManagerCli {
 
     public static void main(String[] args) {
-        args = new String[]{"bind", "files", "-t", "a", ".idea"};
+        args = new String[]{"init", "test"};
 
         try(ApplicationContext context = ApplicationContext.run(args);
             FileManagerCommand command = context.getBean(FileManagerCommand.class)) {
