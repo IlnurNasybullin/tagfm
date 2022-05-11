@@ -6,7 +6,8 @@ import picocli.CommandLine;
 @Singleton
 @CommandLine.Command(name = "unbind", subcommands = {
         UnbindFileTagsCommand.class,
-        UnbindFilesCommand.class
+        UnbindFilesCommand.class,
+        UnbindSynonymsCommand.class
 })
 public class UnbindCommand implements Runnable {
     @Override

@@ -8,15 +8,23 @@ import picocli.CommandLine;
 public class FileManagerCli {
 
     public static void main(String[] args) {
-        args = new String[]{"init", "test"};
+
+        String[][] strings = {
+                {"add-tags", "gnome,linux,ubuntu,kubuntu"},
+                {"bind", "synonyms", "kubuntu,ubuntu"},
+                {"unbind", "synonyms", "kubuntu"}
+        };
 
         try(ApplicationContext context = ApplicationContext.run(args);
             FileManagerCommand command = context.getBean(FileManagerCommand.class)) {
             CommandLine.IFactory cfFactory = CommandLine.defaultFactory();
             CustomFactory factory = new CustomFactory(context, cfFactory);
-            CommandLine commandLine = new CommandLine(command, factory);
-            commandLine.setCaseInsensitiveEnumValuesAllowed(true)
-                    .execute(args);
+            CommandLine commandLine = new CommandLine(command, factory)
+                    .setCaseInsensitiveEnumValuesAllowed(true);
+
+            for (String[] customArgs: strings) {
+                commandLine.execute(customArgs);
+            }
         }
     }
 

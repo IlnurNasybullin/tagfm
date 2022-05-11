@@ -28,4 +28,17 @@ public class SynonymTagManager {
         namespaceSynonyms.add(bindTags);
     }
 
+    public void unbindSynonyms(Collection<TreeTagDto> tags, NamespaceDto namespace) {
+        if (tags.isEmpty()) {
+            return;
+        }
+
+        List<Set<TreeTagDto>> removingSynonyms = namespace.synonyms()
+                .stream()
+                .filter(synonyms -> synonyms.removeAll(tags) && synonyms.size() < 2)
+                .toList();
+
+        namespace.synonyms().removeAll(removingSynonyms);
+    }
+
 }
