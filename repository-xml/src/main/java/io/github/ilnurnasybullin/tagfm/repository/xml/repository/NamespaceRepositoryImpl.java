@@ -49,26 +49,10 @@ public class NamespaceRepositoryImpl implements NamespaceRepository {
         save(savingFile, entity);
     }
 
-    private void initPath() {
-        if (Files.notExists(savingFile)) {
-            createFiles(savingFile);
-        }
-    }
 
-    private void removePath() {
-        try {
-            Files.walk(savingFile.getParent())
-                    .filter(Files::exists)
-                    .map(Path::toFile)
-                    .sorted(Comparator.reverseOrder())
-                    .forEach(File::delete);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
 
     public void save(Path savingFile, NamespaceEntity entity) {
-        try(TransactionManager manager = new TransactionManager(this::initPath, this::removePath)) {
+        try(FileTransactionManager manager = new FileTransactionManager(savingFile)) {
             JAXBContext context = JAXBContext.newInstance(NamespaceEntity.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -76,17 +60,6 @@ public class NamespaceRepositoryImpl implements NamespaceRepository {
             manager.acknowledge();
         } catch (JAXBException e) {
             throw new IllegalStateException("Problems with creating JAXBContext", e);
-        }
-    }
-
-    private void createFiles(Path path) {
-        try {
-            Files.createDirectories(path.getParent());
-            Files.createFile(path);
-        } catch (IOException e) {
-            throw new NestedFilesCreatingException(
-                    String.format("Problems with creating nested paths of [%s]", path), e
-            );
         }
     }
 }

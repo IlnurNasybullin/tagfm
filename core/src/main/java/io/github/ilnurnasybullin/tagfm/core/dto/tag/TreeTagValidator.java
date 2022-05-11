@@ -24,7 +24,7 @@ public class TreeTagValidator extends TreeTagDto {
         if (parent.stream()
                 .map(TreeTagDto::children)
                 .anyMatch(children -> children.containsKey(name))) {
-            throw new UniqueLeafNameConstraintException(
+            throw new TreeTagCollisionException(
                     String.format("Name [%s] isn't unique in parent tag [%s]", name,
                             parent.map(TreeTagDto::name)
                             .orElse(null))

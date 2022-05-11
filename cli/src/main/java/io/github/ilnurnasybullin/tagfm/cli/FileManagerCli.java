@@ -10,9 +10,14 @@ public class FileManagerCli {
     public static void main(String[] args) {
 
         String[][] strings = {
-                {"add-tags", "gnome,linux,ubuntu,kubuntu"},
-                {"bind", "synonyms", "kubuntu,ubuntu"},
-                {"unbind", "synonyms", "kubuntu"}
+//                {"init", "test"},
+//                {"add-tags", "OS/windows,OS/linux/gnome,OS/MacOS,OS/linux/Android,OS/linux/kubuntu,OS/linux/ubuntu"},
+//                {"bind", "files", "-t", "OS/linux", ".idea"},
+//                {"bind", "files", "-t", "OS/windows", ".gradle"},
+//                {"bind", "synonyms", "OS/linux/kubuntu,OS/linux/ubuntu"},
+//                {"unbind", "file-tags", ".gradle", "-t", "OS/windows", "-frp", "remove_if_no_tags"},
+//                {"remove-tag", "OS/linux", "-trs", "up_and_merge_children"},
+                {"bind", "parent", "OS/Android", "OS/kubuntu"}
         };
 
         try(ApplicationContext context = ApplicationContext.run(args);

@@ -1,7 +1,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagsAdder;
+import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagAdder;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagCreator;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
@@ -34,7 +34,7 @@ public class AddTagsCommand implements Runnable {
                 .flatMap(Optional::stream)
                 .toList();
 
-        new NamespaceTagsAdder().addTags(tags, namespace);
+        NamespaceTagAdder.of(namespace).addTags(tags);
         fileManager.setWriteMode();
     }
 }

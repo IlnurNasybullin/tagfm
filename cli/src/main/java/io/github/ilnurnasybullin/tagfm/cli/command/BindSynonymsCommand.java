@@ -2,7 +2,6 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -39,7 +38,7 @@ public class BindSynonymsCommand implements Runnable {
     }
 
     private void bindSynonyms(List<TreeTagDto> tags, NamespaceDto namespace) {
-        new SynonymTagManager().bindSynonyms(tags, namespace);
+        namespace.synonymsManager().bind(tags);
     }
 
     private List<TreeTagDto> getTags(NamespaceDto namespace) {

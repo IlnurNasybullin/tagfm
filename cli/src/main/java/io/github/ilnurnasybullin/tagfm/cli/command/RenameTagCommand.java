@@ -2,7 +2,6 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;

@@ -1,17 +1,16 @@
 package io.github.ilnurnasybullin.tagfm.core.dto.namespace;
 
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileManager;
+import io.github.ilnurnasybullin.tagfm.core.dto.synonym.SynonymTagManager;
+import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Set;
 
 public class NamespaceValidator extends NamespaceDto {
     protected NamespaceValidator(String name, ZonedDateTime created, FileNamingStrategy fileNaming, TreeTagDto ROOT,
-                                 List<Set<TreeTagDto>> synonyms, Set<TaggedFileDto> files) {
-        super(name, created, fileNaming, ROOT, synonyms, files);
+                                 SynonymTagManager synonymsManager, TaggedFileManager fileManager) {
+        super(name, created, fileNaming, ROOT, synonymsManager, fileManager);
     }
 
     @Override

@@ -2,7 +2,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.SynonymTagManager;
+import io.github.ilnurnasybullin.tagfm.core.dto.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -30,8 +30,8 @@ public class UnbindSynonymsCommand implements Runnable {
     public void run() {
         NamespaceDto namespace = fileManager.namespaceOrThrow();
         List<TreeTagDto> tags = getTags(namespace);
-        new SynonymTagManager().unbindSynonyms(tags, namespace);
-        namespace.synonyms();
+        SynonymTagManager synonymsManager = namespace.synonymsManager();
+        tags.forEach(synonymsManager::unbind);
         fileManager.setWriteMode();
     }
 

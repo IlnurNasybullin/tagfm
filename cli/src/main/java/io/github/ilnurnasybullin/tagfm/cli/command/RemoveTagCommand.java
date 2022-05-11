@@ -31,7 +31,7 @@ public class RemoveTagCommand implements Runnable {
     public void run() {
         NamespaceDto namespace = fileManager.namespaceOrThrow();
         TreeTagDto searchedTag = searchTag(tagName, namespace);
-        new NamespaceTagRemover().removeTag(searchedTag, namespace, tagRemovingStrategy);
+        NamespaceTagRemover.of(namespace).removeTag(searchedTag, tagRemovingStrategy);
         fileManager.setWriteMode();
     }
 

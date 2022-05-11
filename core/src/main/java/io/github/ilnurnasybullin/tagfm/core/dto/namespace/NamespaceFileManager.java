@@ -15,7 +15,13 @@ import java.util.stream.Collectors;
 
 public class NamespaceFileManager {
 
-    public TaggedFileDto findOrCreate(Path path, NamespaceDto namespace) throws IOException {
+    private final NamespaceDto namespace;
+
+    public NamespaceFileManager(NamespaceDto namespace) {
+        this.namespace = namespace;
+    }
+
+    public TaggedFileDto findOrCreate(Path path) throws IOException {
         Path realPath = path.toRealPath();
         return namespace.files()
                 .stream()
@@ -24,10 +30,10 @@ public class NamespaceFileManager {
                 .orElseGet(() -> TaggedFile.init(path));
     }
 
-    public Map<Path, TaggedFileDto> findOrCreate(Collection<Path> paths, NamespaceDto namespace) {
+    public Map<Path, TaggedFileDto> findOrCreate(Collection<Path> paths) {
         Set<Path> realPaths = toRealPaths(paths);
 
-        Map<Path, TaggedFileDto> foundFiles = foundFiles(namespace, realPaths);
+        Map<Path, TaggedFileDto> foundFiles = foundFiles(realPaths);
 
         realPaths.stream()
                 .map(path -> Map.entry(path, TaggedFile.init(path)))
@@ -36,13 +42,13 @@ public class NamespaceFileManager {
         return foundFiles;
     }
 
-    public Map<Path, TaggedFileDto> find(Collection<Path> files, NamespaceDto namespace) {
+    public Map<Path, TaggedFileDto> find(Collection<Path> files) {
         Set<Path> realPaths = toRealPaths(files);
 
-        Map<Path, TaggedFileDto> foundFiles = foundFiles(namespace, realPaths);
+        Map<Path, TaggedFileDto> foundFiles = foundFiles(realPaths);
 
         if (!realPaths.isEmpty()) {
-            throw new NamespaceNotExistTaggedFile(
+            throw new NamespaceNotExistTaggedFileException(
                     String.format("Files [%s] is not existing in namespace [%s]!", realPaths, namespace.name())
             );
         }
@@ -50,7 +56,7 @@ public class NamespaceFileManager {
         return foundFiles;
     }
 
-    private Map<Path, TaggedFileDto> foundFiles(NamespaceDto namespace, Set<Path> realPaths) {
+    private Map<Path, TaggedFileDto> foundFiles(Set<Path> realPaths) {
         return namespace.files()
                 .stream()
                 .filter(file -> realPaths.remove(file.file()))

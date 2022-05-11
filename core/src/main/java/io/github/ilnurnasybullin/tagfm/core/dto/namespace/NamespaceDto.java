@@ -1,14 +1,18 @@
 package io.github.ilnurnasybullin.tagfm.core.dto.namespace;
 
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
+import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileManager;
+import io.github.ilnurnasybullin.tagfm.core.dto.synonym.SynonymTagManager;
+import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
 import io.github.ilnurnasybullin.tagfm.core.repository.TreeIterator;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class NamespaceDto implements Namespace {
@@ -18,19 +22,18 @@ public class NamespaceDto implements Namespace {
     private FileNamingStrategy fileNaming;
 
     private final TreeTagDto root;
-    private final List<Set<TreeTagDto>> synonyms;
 
-    // Can be replacing to Map<Path, TaggedFileDto>
-    private final Set<TaggedFileDto> files;
+    private final SynonymTagManager synonymsManager;
+    private final TaggedFileManager fileManager;
 
     protected NamespaceDto(String name, ZonedDateTime created, FileNamingStrategy fileNaming, TreeTagDto ROOT,
-                           List<Set<TreeTagDto>> synonyms, Set<TaggedFileDto> files) {
+                           SynonymTagManager synonymsManager, TaggedFileManager fileManager) {
         this.name = name;
         this.created = created;
         this.fileNaming = fileNaming;
         this.root = ROOT;
-        this.synonyms = synonyms;
-        this.files = files;
+        this.synonymsManager = synonymsManager;
+        this.fileManager = fileManager;
     }
 
     @Override
@@ -71,13 +74,13 @@ public class NamespaceDto implements Namespace {
     @Override
     @SuppressWarnings("unchecked")
     public List<Set<TreeTagDto>> synonyms() {
-        return synonyms;
+        return synonymsManager.synonyms();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Set<TaggedFileDto> files() {
-        return files;
+        return fileManager.files();
     }
 
     @Override
@@ -88,6 +91,14 @@ public class NamespaceDto implements Namespace {
 
     TreeTagDto root() {
         return root;
+    }
+
+    public TaggedFileManager fileManager() {
+        return fileManager;
+    }
+
+    public SynonymTagManager synonymsManager() {
+        return synonymsManager;
     }
 
     @Override
