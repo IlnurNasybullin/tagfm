@@ -6,6 +6,7 @@ import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceFileManager;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class NamespaceFileManagerFacade {
@@ -17,4 +18,10 @@ public class NamespaceFileManagerFacade {
                 .stream();
     }
 
+    public Stream<TaggedFileDto> find(Collection<Path> files, NamespaceDto namespace) {
+        return new NamespaceFileManager()
+                .find(files, namespace)
+                .values()
+                .stream();
+    }
 }

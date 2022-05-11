@@ -25,18 +25,9 @@ public class NamespaceFileManager {
     }
 
     public Map<Path, TaggedFileDto> findOrCreate(Collection<Path> paths, NamespaceDto namespace) {
-        Set<Path> realPaths = paths.stream().map(path -> {
-            try {
-                return path.toRealPath();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        }).collect(Collectors.toSet());
+        Set<Path> realPaths = toRealPaths(paths);
 
-        Map<Path, TaggedFileDto> foundFiles = namespace.files()
-                .stream()
-                .filter(file -> realPaths.remove(file.file()))
-                .collect(Collectors.toMap(TaggedFileDto::file, Function.identity()));
+        Map<Path, TaggedFileDto> foundFiles = foundFiles(namespace, realPaths);
 
         realPaths.stream()
                 .map(path -> Map.entry(path, TaggedFile.init(path)))
@@ -45,4 +36,34 @@ public class NamespaceFileManager {
         return foundFiles;
     }
 
+    public Map<Path, TaggedFileDto> find(Collection<Path> files, NamespaceDto namespace) {
+        Set<Path> realPaths = toRealPaths(files);
+
+        Map<Path, TaggedFileDto> foundFiles = foundFiles(namespace, realPaths);
+
+        if (!realPaths.isEmpty()) {
+            throw new NamespaceNotExistTaggedFile(
+                    String.format("Files [%s] is not existing in namespace [%s]!", realPaths, namespace.name())
+            );
+        }
+
+        return foundFiles;
+    }
+
+    private Map<Path, TaggedFileDto> foundFiles(NamespaceDto namespace, Set<Path> realPaths) {
+        return namespace.files()
+                .stream()
+                .filter(file -> realPaths.remove(file.file()))
+                .collect(Collectors.toMap(TaggedFileDto::file, Function.identity()));
+    }
+
+    private Set<Path> toRealPaths(Collection<Path> files) {
+        return files.stream().map(path -> {
+            try {
+                return path.toRealPath();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }).collect(Collectors.toSet());
+    }
 }
