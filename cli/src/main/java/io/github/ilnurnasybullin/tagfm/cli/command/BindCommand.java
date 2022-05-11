@@ -5,7 +5,8 @@ import picocli.CommandLine;
 
 @Singleton
 @CommandLine.Command(name = "bind", subcommands = {
-        BindFilesCommand.class
+        BindFilesCommand.class,
+        BindSynonymsCommand.class
 })
 public class BindCommand implements Runnable {
     @Override

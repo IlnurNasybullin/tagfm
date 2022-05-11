@@ -10,7 +10,6 @@ import picocli.CommandLine;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Singleton
 @CommandLine.Command(name = "add-tags")
@@ -18,15 +17,12 @@ public class AddTagsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    private final Pattern pattern = Pattern.compile(",\\s+");
-
     @CommandLine.Parameters(index = "*", paramLabel = "tags", arity = "1..*", split = ",")
     private String[] tagNames;
 
     public AddTagsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
-
 
     @Override
     public void run() {

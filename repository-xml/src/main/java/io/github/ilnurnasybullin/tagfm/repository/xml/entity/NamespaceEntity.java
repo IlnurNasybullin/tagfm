@@ -21,7 +21,11 @@ public class NamespaceEntity {
     private Set<TaggedFileEntity> taggedFiles;
     private List<SynonymsEntity> synonyms;
 
-    public NamespaceEntity() {}
+    public NamespaceEntity() {
+        tags = new HashSet<>();
+        taggedFiles = new HashSet<>();
+        synonyms = new ArrayList<>();
+    }
 
     @XmlAttribute
     public String getName() {
@@ -78,11 +82,11 @@ public class NamespaceEntity {
         this.created = created;
     }
 
-    @XmlElement(name = "synonyms")
     public List<SynonymsEntity> getSynonyms() {
-        return synonyms == null ? List.of() : synonyms;
+        return synonyms;
     }
 
+    @XmlElement
     public void setSynonyms(List<SynonymsEntity> synonyms) {
         this.synonyms = synonyms;
     }

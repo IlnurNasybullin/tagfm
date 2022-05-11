@@ -5,14 +5,12 @@ import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
 import io.github.ilnurnasybullin.tagfm.core.repository.TaggedFile;
 import io.github.ilnurnasybullin.tagfm.repository.xml.dto.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.repository.xml.entity.FileNamingStrategyEntity;
-import io.github.ilnurnasybullin.tagfm.repository.xml.entity.NamespaceEntity;
-import io.github.ilnurnasybullin.tagfm.repository.xml.entity.TagEntity;
-import io.github.ilnurnasybullin.tagfm.repository.xml.entity.TaggedFileEntity;
+import io.github.ilnurnasybullin.tagfm.repository.xml.entity.*;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -38,6 +36,16 @@ public class NamespaceMapper {
         tagsMap.forEach((tag, tagEntity) -> tag.parent()
                 .ifPresent(tagParent -> tagEntity.setParent(tagsMap.get(tagParent))));
         entity.setTags(Set.copyOf(tagsMap.values()));
+
+        List<SynonymsEntity> synonymEntities = namespace.synonyms()
+                .stream()
+                .map(synonymsSet -> synonymsSet.stream().map(tagsMap::get).collect(Collectors.toSet()))
+                .map(synonymsSet -> {
+                    SynonymsEntity synonyms = new SynonymsEntity();
+                    synonyms.setTags(synonymsSet);
+                    return synonyms;
+                }).toList();
+        entity.setSynonyms(synonymEntities);
 
         FileNamingStrategy strategy = namespace.fileNaming();
         entity.setFileNaming(FileNamingStrategyEntity.from(strategy));
