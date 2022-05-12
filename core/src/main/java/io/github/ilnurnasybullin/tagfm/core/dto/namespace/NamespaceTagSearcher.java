@@ -20,8 +20,12 @@ public class NamespaceTagSearcher {
     }
 
     public Optional<TreeTagDto> findByFullName(String fullName) {
-        String[] tagNames = new TreeTagSplitter().tagNames(fullName);
         TreeTagDto tag = namespace.root();
+        if (Objects.equals(tag.name(), fullName)) {
+            throw new IllegalStateException(String.format("Illegal tag full [%s] name for searching!", fullName));
+        }
+
+        String[] tagNames = new TreeTagSplitter().tagNames(fullName);
 
         int i = 0;
         while (i < tagNames.length && tag != null) {

@@ -9,14 +9,10 @@ import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "parent")
-public class BindParentCommand implements Runnable {
+@CommandLine.Command(name = "parent-tag")
+public class UnbindParentTagsCommand implements Runnable {
 
-    @CommandLine.Parameters(index = "0", arity = "1")
-    private String parentTag;
-
-    @CommandLine.Parameters(index = "1", arity = "1")
-    private String childTag;
+    private final FileManagerCommand fileManager;
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
     private boolean shortName;
@@ -24,24 +20,18 @@ public class BindParentCommand implements Runnable {
     @CommandLine.Option(names = {"-pbs", "--parent-binding-strategy"})
     private TagParentBindingStrategy parentBindingStrategy = TagParentBindingStrategy.THROW_IF_COLLISION;
 
-    private final FileManagerCommand fileManager;
+    @CommandLine.Parameters(arity = "1")
+    private String childTag;
 
-    public BindParentCommand(FileManagerCommand fileManager) {
+    public UnbindParentTagsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
 
     @Override
     public void run() {
         NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto parentTag = getTag(namespace, this.parentTag);
-        TreeTagDto childTag = getTag(namespace, this.childTag);
-
-        TagParentBinding.of(namespace).bindParent(childTag, parentTag, parentBindingStrategy);
+        TreeTagDto tag = new NamespaceTagSearcherFacade().searchTag(childTag, namespace, shortName);
+        TagParentBinding.of(namespace).unbind(tag, parentBindingStrategy);
         fileManager.setWriteMode();
-    }
-
-    private TreeTagDto getTag(NamespaceDto namespace, String tagName) {
-        NamespaceTagSearcherFacade facade = new NamespaceTagSearcherFacade();
-        return facade.searchTag(tagName, namespace, shortName);
     }
 }
