@@ -26,10 +26,11 @@ class MergeTagParentBinder implements TagParentBinder {
         }
 
         CollisionWalker walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        walker.walk(tag, leafs.get(tagName));
+        TreeTagDto collisionTag = leafs.get(tagName);
+        walker.walk(tag, collisionTag);
 
-        namespace.fileManager().replaceTag(tag, parent);
-        namespace.synonymsManager().replace(tag, parent);
+        namespace.fileManager().replaceTag(tag, collisionTag);
+        namespace.synonymsManager().replace(tag, collisionTag);
         tag.reparent(null);
     }
 

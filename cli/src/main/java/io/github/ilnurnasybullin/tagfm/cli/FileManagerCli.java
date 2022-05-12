@@ -13,11 +13,13 @@ public class FileManagerCli {
 //                {"init", "test"},
 //                {"add-tags", "OS/windows,OS/linux/gnome,OS/MacOS,OS/linux/Android,OS/linux/kubuntu,OS/linux/ubuntu"},
 //                {"bind", "files", "-t", "OS/linux", ".idea"},
-//                {"bind", "files", "-t", "OS/windows", ".gradle"},
+//                {"bind", "files", "-t", "OS/linux/gnome", ".gradle"},
 //                {"bind", "synonyms", "OS/linux/kubuntu,OS/linux/ubuntu"},
 //                {"unbind", "file-tags", ".gradle", "-t", "OS/windows", "-frp", "remove_if_no_tags"},
 //                {"remove-tag", "OS/linux", "-trs", "up_and_merge_children"},
-                {"bind", "parent", "OS/Android", "OS/kubuntu"}
+//                {"bind", "parent", "OS/Android", "OS/kubuntu"},
+//                {"add-tags", "OS/linux/gnome"},
+                {"bind", "parent", "OS", "OS/linux/gnome", "-pbs", "merge"},
         };
 
         try(ApplicationContext context = ApplicationContext.run(args);
