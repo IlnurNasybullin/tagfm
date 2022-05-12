@@ -1,7 +1,7 @@
 module tagged.file.manager.cli {
     requires info.picocli;
     requires tagged.file.manager.core;
-    requires tagged.file.manager.api;
+    requires tagged.file.manager.repository.xml;
 
     requires io.micronaut.core;
     requires io.micronaut.inject;
