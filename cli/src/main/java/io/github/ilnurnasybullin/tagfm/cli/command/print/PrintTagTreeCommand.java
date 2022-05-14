@@ -9,6 +9,8 @@ import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
+import java.util.Optional;
+
 /**
  * @author Ilnur Nasybullin
  */
@@ -22,7 +24,7 @@ public class PrintTagTreeCommand implements Runnable {
     private boolean shortName;
 
     @CommandLine.Parameters(arity = "0", index = "0")
-    private String rootTag;
+    private Optional<String> rootTag;
 
     public PrintTagTreeCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
@@ -31,13 +33,13 @@ public class PrintTagTreeCommand implements Runnable {
     @Override
     public void run() {
         NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto tag = rootTag == null ? getRootTag(namespace) : getTag(namespace);
-        TreeTagPrinter printer = new TreeTagPrinter(tag);
+        TreeTagDto root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        TreeTagPrinter printer = new TreeTagPrinter(root);
         printer.print();
     }
 
-    private TreeTagDto getTag(NamespaceDto namespace) {
-        return new NamespaceTagSearcherFacade().searchTag(rootTag, namespace, shortName);
+    private TreeTagDto getTag(NamespaceDto namespace, String tagName) {
+        return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
     }
 
     private TreeTagDto getRootTag(NamespaceDto namespace) {
