@@ -1,5 +1,6 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;

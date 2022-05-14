@@ -1,5 +1,6 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
 import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;

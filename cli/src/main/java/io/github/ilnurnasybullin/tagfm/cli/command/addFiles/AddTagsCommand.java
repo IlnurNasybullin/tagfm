@@ -1,5 +1,6 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.addFiles;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagAdder;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagCreator;

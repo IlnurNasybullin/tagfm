@@ -1,5 +1,7 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.unbind;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.FileRemovingPolicy;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;

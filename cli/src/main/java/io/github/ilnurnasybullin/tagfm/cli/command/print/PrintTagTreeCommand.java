@@ -1,5 +1,6 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.format.TreeTagPrinter;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
@@ -7,8 +8,6 @@ import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
-
-import java.util.Optional;
 
 /**
  * @author Ilnur Nasybullin

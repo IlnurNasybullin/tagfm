@@ -1,4 +1,4 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.bind;
 
 import jakarta.inject.Singleton;
 import picocli.CommandLine;

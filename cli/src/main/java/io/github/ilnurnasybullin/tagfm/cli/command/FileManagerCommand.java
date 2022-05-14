@@ -1,5 +1,15 @@
 package io.github.ilnurnasybullin.tagfm.cli.command;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.addFiles.AddTagsCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.bind.BindCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.list.ListCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceInitCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotInitializedException;
+import io.github.ilnurnasybullin.tagfm.cli.command.print.PrintCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.removeTag.RemoveTagCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.renameTag.RenameTagCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.unbind.UnbindCommand;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceAlreadyInitialized;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceServiceImpl;
@@ -38,11 +48,11 @@ public class FileManagerCommand implements Runnable, Closeable {
         initNamespace(namespaceService.find());
     }
 
-    void initNamespace(Optional<NamespaceDto> namespace) {
+    public void initNamespace(Optional<NamespaceDto> namespace) {
         this.namespace = namespace;
     }
 
-    void checkNamespaceOnNonExisting() {
+    public void checkNamespaceOnNonExisting() {
         namespace.ifPresent(namespace -> {
             throw new NamespaceAlreadyInitialized(
                     String.format("Namespace [%s] has already initialized!", namespace.name())
@@ -50,11 +60,11 @@ public class FileManagerCommand implements Runnable, Closeable {
         });
     }
 
-    NamespaceDto namespaceOrThrow() {
+    public NamespaceDto namespaceOrThrow() {
         return namespace.orElseThrow(() -> new NamespaceNotInitializedException("Namespace isn't initialized!"));
     }
 
-    void setWriteMode() {
+    public void setWriteMode() {
         onCommit = true;
     }
 

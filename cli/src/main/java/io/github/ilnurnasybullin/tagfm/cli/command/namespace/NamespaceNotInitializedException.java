@@ -1,4 +1,4 @@
-package io.github.ilnurnasybullin.tagfm.cli.command;
+package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 public class NamespaceNotInitializedException extends IllegalStateException {
     public NamespaceNotInitializedException() {
