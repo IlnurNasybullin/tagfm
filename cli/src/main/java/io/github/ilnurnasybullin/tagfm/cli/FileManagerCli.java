@@ -10,7 +10,8 @@ public class FileManagerCli {
     public static void main(String[] args) {
 
         String[][] strings = {
-//                {"init", "test"}
+//                {"bind", "files", "-sn", "-t", "Android", "./bundle"},
+                {"list", "files", "-fns", "absolute"}
         };
 
         try(ApplicationContext context = ApplicationContext.run(args);
