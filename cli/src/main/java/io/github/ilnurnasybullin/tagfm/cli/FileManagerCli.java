@@ -19,7 +19,8 @@ public class FileManagerCli {
 //                {"remove-tag", "OS/linux", "-trs", "up_and_merge_children"},
 //                {"bind", "parent", "OS/Android", "OS/kubuntu"},
 //                {"add-tags", "OS/linux/gnome"},
-                {"print", "general-state"},
+//                {"print", "general-state"},
+                {"print", "tag-tree", "-sn", "OS"}
         };
 
         try(ApplicationContext context = ApplicationContext.run(args);

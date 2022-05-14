@@ -14,4 +14,5 @@ module tagfm.cli {
     exports io.github.ilnurnasybullin.tagfm.cli.format;
 
     opens io.github.ilnurnasybullin.tagfm.cli.command;
+    opens io.github.ilnurnasybullin.tagfm.cli.format;
 }

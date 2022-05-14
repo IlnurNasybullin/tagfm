@@ -5,7 +5,8 @@ import picocli.CommandLine;
 
 @Singleton
 @CommandLine.Command(name = "print", subcommands = {
-        PrintGeneralStateCommand.class
+        PrintGeneralStateCommand.class,
+        PrintTagTreeCommand.class
 })
 public class PrintCommand implements Runnable {
     @Override

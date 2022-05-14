@@ -19,6 +19,10 @@ public class NamespaceTagSearcher {
         return new NamespaceTagSearcher(namespace);
     }
 
+    public TreeTagDto root() {
+        return namespace.root();
+    }
+
     public Optional<TreeTagDto> findByFullName(String fullName) {
         TreeTagDto tag = namespace.root();
         if (Objects.equals(tag.name(), fullName)) {
