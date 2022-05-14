@@ -10,6 +10,7 @@ import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotInitial
 import io.github.ilnurnasybullin.tagfm.cli.command.print.PrintCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.removeTag.RemoveTagCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.renameTag.RenameTagCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.replaceFile.ReplaceFileCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.unbind.UnbindCommand;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceAlreadyInitialized;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
@@ -31,7 +32,8 @@ import java.util.Optional;
         UnbindCommand.class,
         PrintCommand.class,
         ListCommand.class,
-        CopyTagsCommand.class
+        CopyTagsCommand.class,
+        ReplaceFileCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {

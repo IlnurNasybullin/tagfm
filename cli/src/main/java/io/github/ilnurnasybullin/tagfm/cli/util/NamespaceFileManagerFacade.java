@@ -4,9 +4,11 @@ import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceFileManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceNotExistTaggedFileException;
+import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class NamespaceFileManagerFacade {
@@ -30,10 +32,13 @@ public class NamespaceFileManagerFacade {
                 .values()
                 .stream();
     }
-    
+
+    public Optional<TaggedFileDto> find(Path file, NamespaceDto namespace) {
+        return NamespaceFileManager.of(namespace).find(file);
+    }
+
     public TaggedFileDto findExact(Path file, NamespaceDto namespace) {
-        return NamespaceFileManager.of(namespace)
-                .find(file)
+        return find(file, namespace)
                 .orElseThrow(() ->
                         new NamespaceNotExistTaggedFileException(
                                 String.format("File or directory [%s] is not exist in namespace [%s]",
