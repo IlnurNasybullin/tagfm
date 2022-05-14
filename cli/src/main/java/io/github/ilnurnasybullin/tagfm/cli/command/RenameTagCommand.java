@@ -15,10 +15,10 @@ public class RenameTagCommand implements Runnable {
     @CommandLine.Option(names = {"-sn", "--short-name"})
     private boolean shortName = false;
 
-    @CommandLine.Parameters(index = "0", arity = "1")
+    @CommandLine.Parameters(index = "0")
     private String oldName;
 
-    @CommandLine.Parameters(index = "1", arity = "1")
+    @CommandLine.Parameters(index = "1")
     private String newName;
 
     public RenameTagCommand(FileManagerCommand fileManager) {

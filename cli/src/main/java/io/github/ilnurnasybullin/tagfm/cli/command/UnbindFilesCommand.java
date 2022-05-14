@@ -16,7 +16,7 @@ public class UnbindFilesCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", split = ",")
+    @CommandLine.Parameters(arity = "1")
     private List<Path> files;
 
     public UnbindFilesCommand(FileManagerCommand fileManager) {

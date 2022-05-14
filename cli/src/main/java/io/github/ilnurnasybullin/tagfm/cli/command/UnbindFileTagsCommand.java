@@ -20,10 +20,10 @@ public class UnbindFileTagsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", split = ",")
+    @CommandLine.Parameters(arity = "1")
     private final List<Path> files = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-t", "--tags"}, split = ",")
+    @CommandLine.Option(names = {"-t", "--tags"})
     private final List<String> tags = new ArrayList<>();
 
     @CommandLine.Option(names = {"-sn", "--short-name"})

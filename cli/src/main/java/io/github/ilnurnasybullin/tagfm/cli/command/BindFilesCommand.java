@@ -17,10 +17,10 @@ import java.util.stream.Stream;
 @CommandLine.Command(name = "files")
 public class BindFilesCommand implements Runnable {
 
-    @CommandLine.Parameters(arity = "1", split = ",")
+    @CommandLine.Parameters(arity = "1")
     private final List<Path> files = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-t", "--tags"}, required = true, arity = "1", split = ",")
+    @CommandLine.Option(names = {"-t", "--tags"}, required = true, arity = "1")
     private final List<String> tags = new ArrayList<>();
 
     @CommandLine.Option(names = {"-sn", "--short-name"})

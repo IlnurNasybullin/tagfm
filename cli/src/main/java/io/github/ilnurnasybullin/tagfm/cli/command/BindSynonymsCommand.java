@@ -15,7 +15,7 @@ public class BindSynonymsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", split = ",")
+    @CommandLine.Parameters(arity = "1")
     private final List<String> tags = new ArrayList<>();
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
