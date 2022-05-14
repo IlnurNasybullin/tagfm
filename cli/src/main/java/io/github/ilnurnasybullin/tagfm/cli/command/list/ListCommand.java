@@ -8,7 +8,8 @@ import picocli.CommandLine;
  */
 @Singleton
 @CommandLine.Command(name = "list", subcommands = {
-        ListFilesCommand.class
+        ListFilesCommand.class,
+        ListFileTagsCommand.class
 })
 public class ListCommand implements Runnable {
     @Override
