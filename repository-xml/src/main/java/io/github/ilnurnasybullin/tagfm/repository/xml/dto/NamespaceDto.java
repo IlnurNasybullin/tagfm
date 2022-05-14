@@ -1,6 +1,7 @@
 package io.github.ilnurnasybullin.tagfm.repository.xml.dto;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIteratorsFactory;
 import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIterator;
 import io.github.ilnurnasybullin.tagfm.repository.xml.entity.*;
@@ -94,7 +95,11 @@ public class NamespaceDto implements Namespace {
     @Override
     @SuppressWarnings("unchecked")
     public Iterator<TagEntity> horizontalTraversal() {
-        Iterator<TagEntity> iterator = TreeIterator.horizontalTraversal(root, TagEntity::children);
+        Iterator<TagEntity> iterator = TreeIteratorsFactory
+                .HORIZONTAL_TRAVERSAL
+                .SIMPLE
+                .iterator(root, TagEntity::children);
+
         iterator.next();
         return iterator;
     }

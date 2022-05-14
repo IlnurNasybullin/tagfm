@@ -5,6 +5,7 @@ import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIteratorsFactory;
 import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIterator;
 
@@ -62,8 +63,8 @@ public class NamespaceDto implements Namespace {
     @Override
     @SuppressWarnings("unchecked")
     public Iterator<TreeTagDto> horizontalTraversal() {
-        TreeIterator<TreeTagDto> iterator =
-                TreeIterator.horizontalTraversal(
+        Iterator<TreeTagDto> iterator =
+                TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(
                         root, tag -> tag.children()
                                 .values()
                 );
