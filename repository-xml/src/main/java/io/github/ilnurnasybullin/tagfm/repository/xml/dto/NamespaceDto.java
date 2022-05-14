@@ -2,7 +2,7 @@ package io.github.ilnurnasybullin.tagfm.repository.xml.dto;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.repository.TreeIterator;
+import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIterator;
 import io.github.ilnurnasybullin.tagfm.repository.xml.entity.*;
 
 import java.io.IOException;

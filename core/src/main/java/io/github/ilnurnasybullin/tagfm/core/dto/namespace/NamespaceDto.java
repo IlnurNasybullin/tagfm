@@ -6,7 +6,7 @@ import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.repository.TreeIterator;
+import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIterator;
 
 import java.time.ZonedDateTime;
 import java.util.Iterator;

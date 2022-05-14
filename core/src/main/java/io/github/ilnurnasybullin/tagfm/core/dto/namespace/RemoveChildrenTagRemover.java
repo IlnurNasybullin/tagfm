@@ -2,7 +2,7 @@ package io.github.ilnurnasybullin.tagfm.core.dto.namespace;
 
 import io.github.ilnurnasybullin.tagfm.core.dto.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
-import io.github.ilnurnasybullin.tagfm.core.repository.TreeIterator;
+import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIterator;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;

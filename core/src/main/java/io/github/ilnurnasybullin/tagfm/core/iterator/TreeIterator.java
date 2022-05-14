@@ -1,14 +1,14 @@
-package io.github.ilnurnasybullin.tagfm.core.repository;
+package io.github.ilnurnasybullin.tagfm.core.iterator;
 
 import java.util.*;
 import java.util.function.Function;
 
 public class TreeIterator<T> implements Iterator<T> {
 
-    private final Queue<T> horizontalTraversal;
+    private final Deque<T> horizontalTraversal;
     private final Function<T, Collection<T>> childrenFunction;
 
-    private TreeIterator(Queue<T> horizontalTraversal, Function<T, Collection<T>> childrenFunction) {
+    private TreeIterator(Deque<T> horizontalTraversal, Function<T, Collection<T>> childrenFunction) {
         this.horizontalTraversal = horizontalTraversal;
         this.childrenFunction = childrenFunction;
     }
