@@ -1,8 +1,8 @@
 import io.github.ilnurnasybullin.tagfm.repository.xml.repository.NamespaceRepositoryImpl;
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
 
-module tagged.file.manager.repository.xml {
-    requires tagged.file.manager.core;
+module tagfm.repository.xml {
+    requires tagfm.core;
 
     requires java.activation;
     requires java.xml.bind;

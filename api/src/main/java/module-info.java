@@ -1,3 +1,3 @@
-module tagged.file.manager.api {
+module tagfm.api {
     exports io.github.ilnurnasybullin.tagfm.api.service;
 }

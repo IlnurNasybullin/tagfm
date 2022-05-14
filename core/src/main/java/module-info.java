@@ -1,7 +1,7 @@
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
 
-module tagged.file.manager.core {
-    requires transitive tagged.file.manager.api;
+module tagfm.core {
+    requires transitive tagfm.api;
     exports io.github.ilnurnasybullin.tagfm.core.repository;
 
     exports io.github.ilnurnasybullin.tagfm.core.dto.file;
