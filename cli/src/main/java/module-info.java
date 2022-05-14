@@ -31,4 +31,7 @@ module tagfm.cli {
     opens io.github.ilnurnasybullin.tagfm.cli.command.renameTag;
     exports io.github.ilnurnasybullin.tagfm.cli.command.unbind;
     opens io.github.ilnurnasybullin.tagfm.cli.command.unbind;
+
+    exports io.github.ilnurnasybullin.tagfm.cli.command.copyTags;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.copyTags;
 }

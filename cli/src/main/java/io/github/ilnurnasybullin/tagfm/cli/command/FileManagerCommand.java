@@ -2,6 +2,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.addFiles.AddTagsCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.bind.BindCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.copyTags.CopyTagsCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.list.ListCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceInitCommand;
@@ -29,7 +30,8 @@ import java.util.Optional;
         BindCommand.class,
         UnbindCommand.class,
         PrintCommand.class,
-        ListCommand.class
+        ListCommand.class,
+        CopyTagsCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {

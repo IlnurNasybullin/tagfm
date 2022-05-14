@@ -11,7 +11,10 @@ public class FileManagerCli {
 
         String[][] strings = {
 //                {"bind", "files", "-sn", "-t", "Android", "./bundle"},
-                {"list", "tags", "-d", "2", "/OS"}
+//                {"list", "synonyms", "/OS"},
+//                {"copy-tags", "bundle", ".tagfm"},
+//                {"copy-tags", "bundle", ".tagfm", "-c"},
+                {"copy-tags", "bundle", ".gradle", "--copy-tags-strategy", "replace"}
         };
 
         try(ApplicationContext context = ApplicationContext.run(args);

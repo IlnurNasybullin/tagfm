@@ -6,10 +6,7 @@ import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,17 +14,21 @@ public class NamespaceFileManager {
 
     private final NamespaceDto namespace;
 
-    public NamespaceFileManager(NamespaceDto namespace) {
+    private NamespaceFileManager(NamespaceDto namespace) {
         this.namespace = namespace;
     }
 
-    public TaggedFileDto findOrCreate(Path path) throws IOException {
-        Path realPath = path.toRealPath();
+    public static NamespaceFileManager of(NamespaceDto namespace) {
+        return new NamespaceFileManager(namespace);
+    }
+
+    public TaggedFileDto findOrCreate(Path file)  {
+        Path realPath = toRealPath(file);
         return namespace.files()
                 .stream()
-                .filter(file -> Objects.equals(file.file(), realPath))
+                .filter(taggedFile -> Objects.equals(taggedFile.file(), realPath))
                 .findAny()
-                .orElseGet(() -> TaggedFile.init(path));
+                .orElseGet(() -> TaggedFile.init(file));
     }
 
     public Map<Path, TaggedFileDto> findOrCreate(Collection<Path> paths) {
@@ -71,5 +72,21 @@ public class NamespaceFileManager {
                 throw new UncheckedIOException(e);
             }
         }).collect(Collectors.toSet());
+    }
+
+    public Optional<TaggedFileDto> find(Path file) {
+        Path realPath = toRealPath(file);
+        return namespace.files()
+                .stream()
+                .filter(taggedFile -> Objects.equals(taggedFile.file(), realPath))
+                .findAny();
+    }
+
+    private Path toRealPath(Path file) {
+        try {
+            return file.toAbsolutePath().toRealPath();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

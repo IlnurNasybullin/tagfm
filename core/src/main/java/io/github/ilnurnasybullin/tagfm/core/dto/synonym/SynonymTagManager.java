@@ -3,6 +3,7 @@ package io.github.ilnurnasybullin.tagfm.core.dto.synonym;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SynonymTagManager {
 
@@ -121,5 +122,18 @@ public class SynonymTagManager {
         while (iterator.hasNext()) {
             bind(first, iterator.next());
         }
+    }
+
+    public Set<TreeTagDto> synonyms(TreeTagDto tag) {
+        if (!synonyms.containsKey(tag)) {
+            return Set.of();
+        }
+
+        SynonymClass synonymClass = synonyms.get(tag);
+        return synonyms.entrySet()
+                .stream()
+                .filter(entry -> Objects.equals(entry.getValue(), synonymClass))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toUnmodifiableSet());
     }
 }
