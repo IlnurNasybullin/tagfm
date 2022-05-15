@@ -3,6 +3,6 @@ include 'api'
 include 'core'
 include 'repository-xml'
 include 'cli'
-include 'logical-expression-computer'
+include 'logical-expression-evaluator'
 include 'logical-expression-spi-provider'
 

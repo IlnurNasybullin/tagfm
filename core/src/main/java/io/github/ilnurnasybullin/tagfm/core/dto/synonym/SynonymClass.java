@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.core.dto.synonym;
 
-public class SynonymClass {
+class SynonymClass {
     private int count;
 
     public int count() {

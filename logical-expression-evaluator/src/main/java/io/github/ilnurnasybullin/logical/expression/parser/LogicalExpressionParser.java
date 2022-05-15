@@ -1,7 +1,7 @@
 package io.github.ilnurnasybullin.logical.expression.parser;
 
-import io.github.ilnurnasybullin.logical.expression.computer.LogicalASTree;
-import io.github.ilnurnasybullin.logical.expression.computer.LogicalASTreeImpl;
+import io.github.ilnurnasybullin.logical.expression.evaluator.LogicalASTree;
+import io.github.ilnurnasybullin.logical.expression.evaluator.LogicalASTreeImpl;
 import io.github.ilnurnasybullin.logical.expression.element.*;
 
 import java.util.*;
@@ -33,19 +33,19 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
     // brackets aren't checking!
     @Override
     public LogicalASTree<T> parse(List<String> tokens) {
-        List<LogicalASTreeImpl<T>> treeTerms = new ArrayList<>();
+        List<LogicalASTree<T>> treeTerms = new ArrayList<>();
 
         Deque<Term<T>> terms = getTerms(tokens);
 
-        LogicalASTreeImpl<T> root = null;
+        LogicalASTree<T> root = null;
         for (Term<T> term: terms) {
             if (term.isOperand()) {
                 treeTerms.add(LogicalASTreeImpl.operand(term));
                 continue;
             }
 
-            ListIterator<LogicalASTreeImpl<T>> iterator = treeTerms.listIterator(treeTerms.size());
-            List<LogicalASTreeImpl<T>> operands = new ArrayList<>();
+            ListIterator<LogicalASTree<T>> iterator = treeTerms.listIterator(treeTerms.size());
+            List<LogicalASTree<T>> operands = new ArrayList<>();
             OperatorElement operator = (OperatorElement) term;
 
             int i = 0;

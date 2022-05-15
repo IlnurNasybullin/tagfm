@@ -6,7 +6,7 @@ import io.github.ilnurnasybullin.tagfm.logical.expression.LogicalExpressionParse
  */
 module tagfm.logical.expression.spi.provider {
     requires tagfm.core;
-    requires logical.expression.computer;
+    requires logical.expression.evaluator;
 
     exports io.github.ilnurnasybullin.tagfm.logical.expression;
 

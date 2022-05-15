@@ -4,6 +4,7 @@ import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagSplitter;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,6 +51,13 @@ public class NamespaceTagSearcher {
         return namespace.tags()
                 .filter(tag -> setNames.contains(tag.name()))
                 .collect(Collectors.groupingBy(TreeTagDto::name));
+    }
+
+    public Map<String, TreeTagDto> findByFullNames(Collection<String> names) {
+        Set<String> setNames = Set.copyOf(names);
+        return namespace.tags()
+                .filter(tag -> setNames.contains(tag.fullName()))
+                .collect(Collectors.toMap(TreeTagDto::fullName, Function.identity()));
     }
 
 }

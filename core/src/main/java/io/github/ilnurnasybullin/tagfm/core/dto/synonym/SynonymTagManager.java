@@ -136,4 +136,8 @@ public class SynonymTagManager {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toUnmodifiableSet());
     }
+
+    public Map<TreeTagDto, Object> synonymMap() {
+        return Collections.unmodifiableMap(synonyms);
+    }
 }

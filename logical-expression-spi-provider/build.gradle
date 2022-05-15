@@ -1,4 +1,4 @@
 dependencies {
     implementation project(":core")
-    implementation project(":logical-expression-computer")
+    implementation project(":logical-expression-evaluator")
 }

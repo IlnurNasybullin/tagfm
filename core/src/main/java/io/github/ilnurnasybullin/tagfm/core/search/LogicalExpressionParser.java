@@ -9,7 +9,7 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface LogicalExpressionParser<T> {
-    LogicalExpressionComputer<T> parse(List<String> tokens, Function<String, T> mapper);
+    LogicalExpressionEvaluator<T> parse(List<String> tokens, Function<String, T> mapper);
 
     @SuppressWarnings("unchecked")
     static <T> LogicalExpressionParser<T> get() {

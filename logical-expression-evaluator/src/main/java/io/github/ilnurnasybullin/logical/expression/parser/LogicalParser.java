@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.logical.expression.parser;
 
-import io.github.ilnurnasybullin.logical.expression.computer.LogicalASTree;
+import io.github.ilnurnasybullin.logical.expression.evaluator.LogicalASTree;
 
 import java.util.List;
 
