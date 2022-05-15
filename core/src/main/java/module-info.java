@@ -1,4 +1,5 @@
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
+import io.github.ilnurnasybullin.tagfm.core.search.LogicalExpressionParser;
 
 module tagfm.core {
     requires transitive tagfm.api;
@@ -12,5 +13,8 @@ module tagfm.core {
 
     exports io.github.ilnurnasybullin.tagfm.core.iterator;
 
+    exports io.github.ilnurnasybullin.tagfm.core.search;
+
     uses NamespaceRepository;
+    uses LogicalExpressionParser;
 }

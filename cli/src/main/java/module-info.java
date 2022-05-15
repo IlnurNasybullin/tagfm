@@ -1,7 +1,9 @@
 module tagfm.cli {
     requires info.picocli;
+
     requires tagfm.core;
     requires tagfm.repository.xml;
+    requires tagfm.logical.expression.spi.provider;
 
     requires io.micronaut.core;
     requires io.micronaut.inject;

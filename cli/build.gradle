@@ -18,6 +18,7 @@ dependencies {
 
     implementation project(':core')
     implementation project(':repository-xml')
+    implementation project(':logical-expression-spi-provider')
 }
 
 jar {

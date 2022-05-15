@@ -4,4 +4,5 @@ include 'core'
 include 'repository-xml'
 include 'cli'
 include 'logical-expression-computer'
+include 'logical-expression-spi-provider'
 
