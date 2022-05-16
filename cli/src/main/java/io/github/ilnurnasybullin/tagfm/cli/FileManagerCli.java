@@ -15,7 +15,8 @@ public class FileManagerCli {
 //                {"copy-tags", "bundle", ".tagfm"},
 //                {"copy-tags", "bundle", ".tagfm", "-c"},
 //                {"copy-tags", "bundle", ".gradle", "--copy-tags-strategy", "replace"},
-                {"replace-file", ".gradle", ".idea/modules"}
+                {"search-files", "~", "OS", "&", "Android", "-fss", "hierarchy"},
+                {"search-files", "~", "OS", "|", "Android", "-fss", "hierarchy"}
         };
 
         try(ApplicationContext context = ApplicationContext.run(args);

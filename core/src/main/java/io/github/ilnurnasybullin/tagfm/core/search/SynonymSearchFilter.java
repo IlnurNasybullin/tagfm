@@ -4,6 +4,7 @@ import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
 import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class SynonymSearchFilter implements TaggedFilesFilter {
     static TaggedFilesFilter of(NamespaceDto namespace,
                                        LogicalExpressionEvaluator<String> expressionEvaluator,
                                        Map<String, TreeTagDto> usedTags) {
-        Map<TreeTagDto, Object> synonyms = namespace.synonymsManager().synonymMap();
+        Map<TreeTagDto, Object> synonyms = new HashMap<>(namespace.synonymsManager().synonymMap());
         usedTags.values()
                 .stream()
                 .filter(tag -> !synonyms.containsKey(tag))

@@ -33,7 +33,8 @@ import java.util.Optional;
         PrintCommand.class,
         ListCommand.class,
         CopyTagsCommand.class,
-        ReplaceFileCommand.class
+        ReplaceFileCommand.class,
+        SearchFilesCommand.class
 })
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {

@@ -40,7 +40,8 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
         LogicalASTree<T> root = null;
         for (Term<T> term: terms) {
             if (term.isOperand()) {
-                treeTerms.add(LogicalASTreeImpl.operand(term));
+                root = LogicalASTreeImpl.operand(term);
+                treeTerms.add(root);
                 continue;
             }
 
