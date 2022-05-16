@@ -8,17 +8,6 @@ import picocli.CommandLine;
 public class FileManagerCli {
 
     public static void main(String[] args) {
-
-        String[][] strings = {
-//                {"bind", "files", "-sn", "-t", "Android", "./bundle"},
-//                {"list", "synonyms", "/OS"},
-//                {"copy-tags", "bundle", ".tagfm"},
-//                {"copy-tags", "bundle", ".tagfm", "-c"},
-//                {"copy-tags", "bundle", ".gradle", "--copy-tags-strategy", "replace"},
-                {"search-files", "~", "OS", "&", "Android", "-fss", "hierarchy"},
-                {"search-files", "~", "OS", "|", "Android", "-fss", "hierarchy"}
-        };
-
         try(ApplicationContext context = ApplicationContext.run(args);
             FileManagerCommand command = context.getBean(FileManagerCommand.class)) {
             CommandLine.IFactory cfFactory = CommandLine.defaultFactory();
@@ -26,9 +15,7 @@ public class FileManagerCli {
             CommandLine commandLine = new CommandLine(command, factory)
                     .setCaseInsensitiveEnumValuesAllowed(true);
 
-            for (String[] customArgs: strings) {
-                commandLine.execute(customArgs);
-            }
+            commandLine.execute(args);
         }
     }
 
