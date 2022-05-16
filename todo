@@ -1,6 +1,8 @@
 ## Add License (Apache License 2.0)
 ## Add desktop app, description, helpers, exception handler
 ## Add tests
+## refactoring packages
+## logging
 ## Javadoc, github etc.
 ## Add internationalization & localization
 ## Add file watching
