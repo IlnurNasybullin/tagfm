@@ -14,29 +14,9 @@
  *    limitations under the License.
  */
 
-plugins {
-    id 'io.micronaut.library' version '1.3.2'
-}
+package io.github.ilnurnasybullin.tagfm.cli.command.unbind;
 
-application {
-    mainModule = 'tagged.file.manager.cli'
-}
-
-mainClassName = "io.github.ilnurnasybullin.tagfm.cli.FileManagerCli"
-
-micronaut {
-    version = "3.4.3"
-}
-
-dependencies {
-    implementation 'info.picocli:picocli:4.6.3'
-    runtimeOnly 'org.slf4j:slf4j-nop:1.7.29'
-
-    implementation project(':core')
-    implementation project(':repository-xml')
-    implementation project(':logical-expression-spi-provider')
-}
-
-jar {
-    manifest.attributes("Main-Class": mainClassName)
+public enum FileRemovingPolicy {
+    NO_REMOVE,
+    REMOVE_IF_NO_TAGS
 }

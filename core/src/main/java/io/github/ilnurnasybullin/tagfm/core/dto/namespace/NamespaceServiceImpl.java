@@ -28,11 +28,6 @@ public class NamespaceServiceImpl implements NamespaceService<NamespaceDto> {
     }
 
     @Override
-    public NamespaceDto init(String name) {
-        return init(name, FileNamingStrategy.RELATIVE);
-    }
-
-    @Override
     public NamespaceDto init(String name, FileNamingStrategy strategy) {
         find().ifPresent(namespace -> {
             throw new NamespaceAlreadyInitialized(String.format("Namespace [%s] already initialized!", namespace.name()));
