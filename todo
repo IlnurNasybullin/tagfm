@@ -1,4 +1,6 @@
-## Add License (Apache License 2.0)
+## remove license in unnecessary files (assemble files)
+## printing searched files
+## refactoring api
 ## Add desktop app, description, helpers, exception handler
 ## Add tests
 ## refactoring packages
@@ -6,6 +8,7 @@
 ## Javadoc, github etc.
 ## Add internationalization & localization
 ## Add file watching
+## add uninstalling
 ## automatic update
 ## Namespace union
 ## Add remote mode (?)
