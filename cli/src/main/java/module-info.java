@@ -27,6 +27,8 @@ module tagfm.cli {
     requires jakarta.inject;
     requires jakarta.annotation;
 
+//    requires org.slf4j.nop;
+
     exports io.github.ilnurnasybullin.tagfm.cli.beans;
     exports io.github.ilnurnasybullin.tagfm.cli.command;
     exports io.github.ilnurnasybullin.tagfm.cli.format;

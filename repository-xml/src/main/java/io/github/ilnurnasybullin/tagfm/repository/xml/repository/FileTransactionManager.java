@@ -31,6 +31,7 @@ public class FileTransactionManager implements AutoCloseable {
 
     public FileTransactionManager(Path savingFile) {
         this.savingFile = savingFile;
+        initPath();
     }
 
     private void initPath() {

@@ -45,7 +45,7 @@ public class NamespaceRepositoryImpl implements NamespaceRepository {
         return optional.map(entity -> new NamespaceMapper().to(entity));
     }
 
-    public Optional<NamespaceEntity> read(Path savedPath) {
+    private Optional<NamespaceEntity> read(Path savedPath) {
         if (Files.notExists(savedPath) || Files.isDirectory(savedPath)) {
             return Optional.empty();
         }
@@ -67,7 +67,7 @@ public class NamespaceRepositoryImpl implements NamespaceRepository {
 
 
 
-    public void save(Path savingFile, NamespaceEntity entity) {
+    private void save(Path savingFile, NamespaceEntity entity) {
         try(FileTransactionManager manager = new FileTransactionManager(savingFile)) {
             JAXBContext context = JAXBContext.newInstance(NamespaceEntity.class);
             Marshaller marshaller = context.createMarshaller();

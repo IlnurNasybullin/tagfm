@@ -30,7 +30,7 @@ micronaut {
 
 dependencies {
     implementation 'info.picocli:picocli:4.6.3'
-    runtimeOnly 'org.slf4j:slf4j-nop:1.7.29'
+    annotationProcessor("io.micronaut:micronaut-inject-java")
 
     implementation project(':core')
     implementation project(':repository-xml')

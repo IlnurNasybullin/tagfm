@@ -1,4 +1,6 @@
-module io.micronaut.core {
+open module io.micronaut.core {
+	requires transitive org.slf4j;
+
 	exports io.micronaut.core.annotation;
 	exports io.micronaut.core.attr;
 	exports io.micronaut.core.beans;
@@ -46,4 +48,7 @@ module io.micronaut.core {
 	exports io.micronaut.caffeine.base;
 	exports io.micronaut.caffeine.cache;
 	exports io.micronaut.caffeine.cache.stats;
+
+	uses io.micronaut.core.type.TypeInformationProvider;
+	uses io.micronaut.core.optim.StaticOptimizations.Loader;
 }
