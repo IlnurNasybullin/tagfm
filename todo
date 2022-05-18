@@ -1,9 +1,12 @@
 ## remove license in unnecessary files (assemble files)
 ## printing searched files
+## description
+## exception handler
+## helpers
+## tests
 ## refactoring api
-## Add desktop app, description, helpers, exception handler
-## Add tests
 ## refactoring packages
+## Add desktop app
 ## logging
 ## Javadoc, github etc.
 ## Add internationalization & localization
