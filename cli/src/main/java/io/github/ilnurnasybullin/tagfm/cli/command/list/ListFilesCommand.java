@@ -18,7 +18,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.list;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -53,7 +53,7 @@ public class ListFilesCommand implements Runnable {
         fileManager.namespaceOrThrow()
                 .files()
                 .stream()
-                .map(TaggedFileDto::file)
+                .map(TaggedFile::file)
                 .map(fileMapping)
                 .sorted()
                 .forEach(System.out::println);

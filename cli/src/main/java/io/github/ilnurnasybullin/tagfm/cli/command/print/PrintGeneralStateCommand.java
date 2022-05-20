@@ -18,9 +18,9 @@ package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -43,7 +43,7 @@ public class PrintGeneralStateCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
+        Namespace namespace = fileManager.namespaceOrThrow();
         System.out.println("Namespace general state:");
 
         printNamespaceAttributes(namespace);
@@ -52,14 +52,14 @@ public class PrintGeneralStateCommand implements Runnable {
         printNamespaceFiles(namespace);
     }
 
-    private void printNamespaceFiles(NamespaceDto namespace) {
+    private void printNamespaceFiles(Namespace namespace) {
         printHeader("Namespace tagged files:");
         TableFormatPrinter printer = new TableFormatPrinter("%50s | %50s%n", 103);
         printer.print(new String[]{"name", "tags"}, namespace.files().stream(),
-                List.of(TaggedFileDto::file,
+                List.of(TaggedFile::file,
                         file -> file
                             .tags()
-                            .stream().map(TreeTagDto::fullName)
+                            .stream().map(Tag::fullName)
                             .collect(Collectors.joining(", "))
                 )
         );
@@ -67,7 +67,7 @@ public class PrintGeneralStateCommand implements Runnable {
         System.out.println();
     }
 
-    private void printNamespaceSynonyms(NamespaceDto namespace) {
+    private void printNamespaceSynonyms(Namespace namespace) {
         printHeader("Namespace synonyms:");
         TableFormatPrinter printer = new TableFormatPrinter("%10s | %50s\n", 63);
 
@@ -75,27 +75,27 @@ public class PrintGeneralStateCommand implements Runnable {
         printer.print(new String[]{"No. class", "tags"}, namespace.synonyms().stream(),
                 List.of(tags -> counter.getAndIncrement(), tags -> tags
                         .stream()
-                        .map(TreeTagDto::fullName)
+                        .map(Tag::fullName)
                         .collect(Collectors.joining(", "))
                 )
         );
         System.out.println();
     }
 
-    private void printNamespaceTags(NamespaceDto namespace) {
+    private void printNamespaceTags(Namespace namespace) {
         printHeader("Namespace tags:");
         TableFormatPrinter printer = new TableFormatPrinter("%25s | %40s | %25s%n", 96);
-        printer.print(new String[]{"name", "fullName", "parent"}, namespace.tags(),
-                List.of(TreeTagDto::name, TreeTagDto::fullName, tag -> tag
+        printer.print(new String[]{"name", "fullName", "parent"}, namespace.tags(false),
+                List.of(Tag::name, Tag::fullName, tag -> tag
                         .parent()
-                        .map(TreeTagDto::name)
+                        .map(Tag::name)
                         .orElse("")
                 )
         );
         System.out.println();
     }
 
-    private void printNamespaceAttributes(NamespaceDto namespace) {
+    private void printNamespaceAttributes(Namespace namespace) {
         printHeader("Namespace attributes");
         System.out.printf("\tname: %s%n", namespace.name());
         System.out.printf("\tcreated: %s%n", DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).format(namespace.created()));

@@ -19,9 +19,8 @@ package io.github.ilnurnasybullin.tagfm.cli.command.print;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.format.TreeTagPrinter;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -48,17 +47,17 @@ public class PrintTagTreeCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
         TreeTagPrinter printer = new TreeTagPrinter(root);
         printer.print();
     }
 
-    private TreeTagDto getTag(NamespaceDto namespace, String tagName) {
+    private Tag getTag(Namespace namespace, String tagName) {
         return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
     }
 
-    private TreeTagDto getRootTag(NamespaceDto namespace) {
-        return NamespaceTagSearcher.of(namespace).root();
+    private Tag getRootTag(Namespace namespace) {
+        return namespace.root();
     }
 }

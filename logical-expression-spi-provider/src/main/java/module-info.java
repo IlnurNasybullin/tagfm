@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import io.github.ilnurnasybullin.tagfm.core.search.LogicalExpressionParser;
+import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionParser;
 import io.github.ilnurnasybullin.tagfm.logical.expression.LogicalExpressionParserImpl;
 
 /**

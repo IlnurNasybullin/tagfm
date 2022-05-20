@@ -16,22 +16,22 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.util;
 
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagFinder;
 
 import java.util.Collection;
 import java.util.stream.Stream;
 
 public class NamespaceTagSearcherFacade {
 
-    public Stream<TreeTagDto> searchTags(Collection<String> names, NamespaceDto namespace, boolean byShortName) {
+    public Stream<Tag> searchTags(Collection<String> names, Namespace namespace, boolean byShortName) {
         return names.stream()
                 .map(name -> searchTag(name, namespace, byShortName));
     }
 
-    public TreeTagDto searchTag(String name, NamespaceDto namespace, boolean byShortName) {
-        NamespaceTagSearcher tagSearcher = NamespaceTagSearcher.of(namespace);
+    public Tag searchTag(String name, Namespace namespace, boolean byShortName) {
+        NamespaceTagFinder tagSearcher = NamespaceTagFinder.of(namespace);
 
         if (!byShortName) {
             return tagSearcher.findByFullName(name).orElseThrow(() ->
@@ -39,7 +39,7 @@ public class NamespaceTagSearcherFacade {
             );
         }
 
-        TreeTagDto[] tags = tagSearcher.findByName(name).toArray(TreeTagDto[]::new);
+        Tag[] tags = tagSearcher.findByName(name).toArray(Tag[]::new);
         if (tags.length == 0) {
             throw tagNotFound(name, namespace);
         }
@@ -53,7 +53,7 @@ public class NamespaceTagSearcherFacade {
         return tags[0];
     }
 
-    private IllegalArgumentException tagNotFound(String name, NamespaceDto namespace) {
+    private IllegalArgumentException tagNotFound(String name, Namespace namespace) {
         return new IllegalArgumentException(String.format(
                 "Tag with name [%s] is not found in namespace [%s]!",
                 name, namespace.name()

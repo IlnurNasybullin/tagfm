@@ -17,7 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.logical.expression;
 
 import io.github.ilnurnasybullin.logical.expression.evaluator.LogicalASTree;
-import io.github.ilnurnasybullin.tagfm.core.search.LogicalExpressionEvaluator;
+import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

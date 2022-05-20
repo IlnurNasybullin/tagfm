@@ -17,10 +17,10 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.addFiles;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagAdder;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagCreator;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagCreator;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -43,10 +43,10 @@ public class AddTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
+        Namespace namespace = fileManager.namespaceOrThrow();
 
-        TreeTagCreator creator = new TreeTagCreator();
-        List<TreeTagDto> treeTags = tags.stream()
+        TagCreator creator = new TagCreator();
+        List<Tag> treeTags = tags.stream()
                 .map(creator::deepCreate)
                 .flatMap(Optional::stream)
                 .toList();

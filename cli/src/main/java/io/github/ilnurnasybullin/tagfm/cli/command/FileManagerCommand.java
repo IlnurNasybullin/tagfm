@@ -16,6 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command;
 
+import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.addFiles.AddTagsCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.bind.BindCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.copyTags.CopyTagsCommand;
@@ -29,9 +30,8 @@ import io.github.ilnurnasybullin.tagfm.cli.command.renameTag.RenameTagCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.replaceFile.ReplaceFileCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.searchFiles.SearchFilesCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.unbind.UnbindCommand;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceAlreadyInitialized;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceServiceImpl;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceAlreadyInitializedException;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -56,33 +56,33 @@ import java.util.Optional;
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {
 
-    private Optional<NamespaceDto> namespace;
-    private final NamespaceServiceImpl namespaceService;
+    private Optional<Namespace> namespace;
+    private final NamespaceRepositoryService<Namespace> namespaceService;
 
     private boolean onCommit = false;
 
-    public FileManagerCommand(NamespaceServiceImpl namespaceService) {
+    public FileManagerCommand(NamespaceRepositoryService<Namespace> namespaceService) {
         this.namespaceService = namespaceService;
     }
 
     @PostConstruct
     private void initNamespace() {
-        initNamespace(namespaceService.find());
+        initNamespace(namespaceService.find(""));
     }
 
-    public void initNamespace(Optional<NamespaceDto> namespace) {
+    public void initNamespace(Optional<Namespace> namespace) {
         this.namespace = namespace;
     }
 
     public void checkNamespaceOnNonExisting() {
         namespace.ifPresent(namespace -> {
-            throw new NamespaceAlreadyInitialized(
+            throw new NamespaceAlreadyInitializedException(
                     String.format("Namespace [%s] has already initialized!", namespace.name())
             );
         });
     }
 
-    public NamespaceDto namespaceOrThrow() {
+    public Namespace namespaceOrThrow() {
         return namespace.orElseThrow(() -> new NamespaceNotInitializedException("Namespace isn't initialized!"));
     }
 

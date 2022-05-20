@@ -16,12 +16,10 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.copyTags;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.CopyTagsStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFile;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -54,12 +52,12 @@ public class CopyTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
+        Namespace namespace = fileManager.namespaceOrThrow();
 
         NamespaceFileManagerFacade facade = new NamespaceFileManagerFacade();
-        TaggedFileDto srcTaggedFile = facade.findExact(src, namespace);
+        TaggedFile srcTaggedFile = facade.findExact(src, namespace);
 
-        TaggedFileDto destTaggedFile = createIfNotExist ?
+        TaggedFile destTaggedFile = createIfNotExist ?
                 facade.findOrCreate(dest, namespace) :
                 facade.findExact(dest, namespace);
 

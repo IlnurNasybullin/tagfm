@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.format;
 
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
 
 import java.util.*;
 
@@ -35,7 +35,7 @@ public class TreeTagPrinter {
 
     private static class TagPrinterStateMachine {
 
-        private final TreeTagDto root;
+        private final Tag root;
 
         private final static String BORDER_WITH_SEQUEL = "\u251c\u2500\u2500\u2500";
         private final static String BORDER_WITHOUT_SEQUEL = "\u2514\u2500\u2500\u2500";
@@ -44,20 +44,20 @@ public class TreeTagPrinter {
 
         private PrintState currentState;
 
-        private final TreeMap<String, TreeTagDto> children;
+        private final TreeMap<String, Tag> children;
 
-        private TagPrinterStateMachine(TreeTagDto root) {
+        private TagPrinterStateMachine(Tag root) {
             this.root = root;
             this.children = new TreeMap<>(root.children());
             this.currentState = PrintState.PRINT_TAG_NAME;
         }
 
-        public Optional<TreeTagDto> next() {
+        public Optional<Tag> next() {
             if (children.isEmpty()) {
                 return Optional.empty();
             }
 
-            Map.Entry<String, TreeTagDto> entry = children.firstEntry();
+            Map.Entry<String, Tag> entry = children.firstEntry();
             children.remove(entry.getKey());
 
             currentState = children.isEmpty() ?
@@ -89,9 +89,9 @@ public class TreeTagPrinter {
 
     }
 
-    private final TreeTagDto root;
+    private final Tag root;
 
-    public TreeTagPrinter(TreeTagDto root) {
+    public TreeTagPrinter(Tag root) {
         this.root = root;
     }
 
@@ -102,7 +102,7 @@ public class TreeTagPrinter {
         while (!printers.isEmpty()) {
             printers.forEach(TagPrinterStateMachine::print);
 
-            TreeTagDto newRoot = null;
+            Tag newRoot = null;
             while (!printers.isEmpty() && newRoot == null) {
                 newRoot = printers.peekLast().next().orElse(null);
                 if (newRoot == null) {

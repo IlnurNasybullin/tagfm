@@ -16,7 +16,9 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.beans;
 
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceServiceImpl;
+import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceRepositoryServiceImpl;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 
@@ -24,8 +26,8 @@ import io.micronaut.context.annotation.Factory;
 public class JavaBeans {
 
     @Bean
-    public NamespaceServiceImpl namespaceService() {
-        return new NamespaceServiceImpl();
+    public NamespaceRepositoryService<Namespace> namespaceService() {
+        return NamespaceRepositoryServiceImpl.of();
     }
 
 }

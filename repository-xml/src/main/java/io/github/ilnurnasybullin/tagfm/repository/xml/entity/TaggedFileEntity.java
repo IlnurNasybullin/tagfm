@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.repository.xml.entity;
 
-import io.github.ilnurnasybullin.tagfm.core.repository.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.repository.TaggedFileRepoDto;
 
 import javax.xml.bind.annotation.*;
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @XmlRootElement(name = "tagged-file")
-public class TaggedFileEntity implements TaggedFile {
+public class TaggedFileEntity implements TaggedFileRepoDto {
 
     private String name;
     private Set<TagEntity> tags;

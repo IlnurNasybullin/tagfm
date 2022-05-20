@@ -18,14 +18,16 @@ package io.github.ilnurnasybullin.tagfm.cli.command.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagSearcher;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
-import io.github.ilnurnasybullin.tagfm.core.iterator.TreeIteratorsFactory;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 /**
@@ -52,11 +54,11 @@ public class ListTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
-        Function<TreeTagDto, Collection<TreeTagDto>> leafsSupplier = tag -> new TreeMap<>(tag.children()).values();
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        Function<Tag, Collection<Tag>> leafsSupplier = tag -> new TreeMap<String, Tag>(tag.children()).values();
 
-        Iterator<TreeTagDto> iterator = depth.map(d ->
+        Iterator<Tag> iterator = depth.map(d ->
                         TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.LEVELED.iterator(root, leafsSupplier, d))
                         .orElse(TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(root, leafsSupplier));
 
@@ -64,12 +66,12 @@ public class ListTagsCommand implements Runnable {
         iterator.forEachRemaining(tag -> System.out.println(tag.fullName()));
     }
 
-    private TreeTagDto getTag(NamespaceDto namespace, String tagName) {
+    private Tag getTag(Namespace namespace, String tagName) {
         return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
     }
 
-    private TreeTagDto getRootTag(NamespaceDto namespace) {
-        return NamespaceTagSearcher.of(namespace).root();
+    private Tag getRootTag(Namespace namespace) {
+        return namespace.root();
     }
 
 }

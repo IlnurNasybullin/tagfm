@@ -16,12 +16,12 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.unbind;
 
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.TagParentBindingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TagParentBinding;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinding;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -46,8 +46,8 @@ public class UnbindParentTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto tag = new NamespaceTagSearcherFacade().searchTag(childTag, namespace, shortName);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag tag = new NamespaceTagSearcherFacade().searchTag(childTag, namespace, shortName);
         TagParentBinding.of(namespace).unbind(tag, parentBindingStrategy);
         fileManager.setWriteMode();
     }

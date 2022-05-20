@@ -16,11 +16,10 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.util;
 
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceFileManager;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceNotExistTaggedFileException;
-import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceNotExistTaggedFileException;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -29,31 +28,31 @@ import java.util.stream.Stream;
 
 public class NamespaceFileManagerFacade {
 
-    public Stream<TaggedFileDto> findOrCreate(Collection<Path> files, NamespaceDto namespace) {
-        return NamespaceFileManager.of(namespace)
+    public Stream<TaggedFile> findOrCreate(Collection<Path> files, Namespace namespace) {
+        return FileFinderManager.of(namespace)
                 .findOrCreate(files)
                 .values()
                 .stream();
     }
 
-    public TaggedFileDto findOrCreate(Path file, NamespaceDto namespace) {
-        return NamespaceFileManager.of(namespace)
+    public TaggedFile findOrCreate(Path file, Namespace namespace) {
+        return FileFinderManager.of(namespace)
                 .findOrCreate(file);
     }
 
 
-    public Stream<TaggedFileDto> find(Collection<Path> files, NamespaceDto namespace) {
-        return NamespaceFileManager.of(namespace)
+    public Stream<TaggedFile> find(Collection<Path> files, Namespace namespace) {
+        return FileFinderManager.of(namespace)
                 .find(files)
                 .values()
                 .stream();
     }
 
-    public Optional<TaggedFileDto> find(Path file, NamespaceDto namespace) {
-        return NamespaceFileManager.of(namespace).find(file);
+    public Optional<TaggedFile> find(Path file, Namespace namespace) {
+        return FileFinderManager.of(namespace).find(file);
     }
 
-    public TaggedFileDto findExact(Path file, NamespaceDto namespace) {
+    public TaggedFile findExact(Path file, Namespace namespace) {
         return find(file, namespace)
                 .orElseThrow(() ->
                         new NamespaceNotExistTaggedFileException(

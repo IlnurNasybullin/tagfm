@@ -17,11 +17,10 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFile;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceNotExistTaggedFileException;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceNotExistTaggedFileException;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -48,7 +47,7 @@ public class ListFileTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
+        Namespace namespace = fileManager.namespaceOrThrow();
         Path realPath;
         try {
             realPath = file.toAbsolutePath().toRealPath();
@@ -56,7 +55,7 @@ public class ListFileTagsCommand implements Runnable {
             throw new UncheckedIOException(e);
         }
 
-        TaggedFileDto searchedFile = namespace.files()
+        TaggedFile searchedFile = namespace.files()
                 .stream()
                 .filter(taggedFile -> Objects.equals(taggedFile.file(), realPath))
                 .findAny()
@@ -66,7 +65,7 @@ public class ListFileTagsCommand implements Runnable {
 
         searchedFile.tags()
                 .stream()
-                .map(TreeTagDto::fullName)
+                .map(Tag::fullName)
                 .forEach(System.out::println);
     }
 }

@@ -19,9 +19,9 @@ package io.github.ilnurnasybullin.tagfm.cli.command.bind;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -51,8 +51,8 @@ public class BindFilesCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        List<TreeTagDto> tags = getTags(namespace);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        List<Tag> tags = getTags(namespace);
 
         getFiles(namespace).forEach(taggedFile -> {
             taggedFile.tags().addAll(tags);
@@ -61,12 +61,12 @@ public class BindFilesCommand implements Runnable {
         fileManager.setWriteMode();
     }
 
-    private Stream<TaggedFileDto> getFiles(NamespaceDto namespace) {
+    private Stream<TaggedFile> getFiles(Namespace namespace) {
         NamespaceFileManagerFacade facade = new NamespaceFileManagerFacade();
         return facade.findOrCreate(files, namespace);
     }
 
-    private List<TreeTagDto> getTags(NamespaceDto namespace) {
+    private List<Tag> getTags(Namespace namespace) {
         NamespaceTagSearcherFacade tagSearcher = new NamespaceTagSearcherFacade();
         return tagSearcher.searchTags(tags, namespace, shortName)
                 .toList();

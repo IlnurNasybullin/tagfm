@@ -17,8 +17,9 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceServiceImpl;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -29,7 +30,7 @@ import java.util.Optional;
 public class NamespaceInitCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
-    private final NamespaceServiceImpl namespaceService;
+    private final NamespaceRepositoryService<Namespace> namespaceService;
 
     @CommandLine.Option(names = {"-fns", "--file-naming-strategy"})
     private FileNamingStrategy fileNaming = FileNamingStrategy.RELATIVE;
@@ -37,7 +38,7 @@ public class NamespaceInitCommand implements Runnable {
     @CommandLine.Parameters
     private String name;
 
-    public NamespaceInitCommand(FileManagerCommand fileManager, NamespaceServiceImpl namespaceService) {
+    public NamespaceInitCommand(FileManagerCommand fileManager, NamespaceRepositoryService<Namespace> namespaceService) {
         this.fileManager = fileManager;
         this.namespaceService = namespaceService;
     }

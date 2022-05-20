@@ -16,19 +16,15 @@
 
 package io.github.ilnurnasybullin.tagfm.repository.xml.repository;
 
-import io.github.ilnurnasybullin.tagfm.core.repository.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepoDto;
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
 import io.github.ilnurnasybullin.tagfm.repository.xml.entity.NamespaceEntity;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.Optional;
 
 public class NamespaceRepositoryImpl implements NamespaceRepository {
@@ -36,7 +32,7 @@ public class NamespaceRepositoryImpl implements NamespaceRepository {
     private final Path savingFile = Path.of(".tagfm/namespace.xml");
 
     @Override
-    public Optional<Namespace> findBy() {
+    public Optional<NamespaceRepoDto> findBy(String name) {
         if (Files.notExists(savingFile) || Files.isDirectory(savingFile) || !Files.isReadable(savingFile)) {
             return Optional.empty();
         }
@@ -60,8 +56,8 @@ public class NamespaceRepositoryImpl implements NamespaceRepository {
     }
 
     @Override
-    public void commit(Namespace namespace) {
-        NamespaceEntity entity = new NamespaceMapper().from(namespace);
+    public void commit(NamespaceRepoDto namespaceRepoDto) {
+        NamespaceEntity entity = new NamespaceMapper().from(namespaceRepoDto);
         save(savingFile, entity);
     }
 

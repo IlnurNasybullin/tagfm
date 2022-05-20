@@ -18,9 +18,9 @@ package io.github.ilnurnasybullin.tagfm.cli.command.replaceFile;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFile;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileReplacing;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -47,17 +47,11 @@ public class ReplaceFileCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
+        Namespace namespace = fileManager.namespaceOrThrow();
 
         NamespaceFileManagerFacade facade = new NamespaceFileManagerFacade();
-        TaggedFileDto taggedFile = facade.findExact(src, namespace);
-        facade.find(dest, namespace).ifPresent(file -> {
-            throw new NamespaceAlreadyExistTaggedFileException(
-                    String.format("File or dir [%s] is already existed in namespace [%s]!", file, namespace.name())
-            );
-        });
-
-        taggedFile.replace(dest);
+        TaggedFile file = facade.findExact(src, namespace);
+        FileReplacing.of(namespace).replace(file, dest);
         fileManager.setWriteMode();
     }
 }

@@ -16,12 +16,12 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.bind;
 
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.TagParentBindingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TagParentBinding;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinding;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -49,15 +49,15 @@ public class BindParentCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto parentTag = getTag(namespace, this.parentTag);
-        TreeTagDto childTag = getTag(namespace, this.childTag);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag parentTag = getTag(namespace, this.parentTag);
+        Tag childTag = getTag(namespace, this.childTag);
 
         TagParentBinding.of(namespace).bindParent(childTag, parentTag, parentBindingStrategy);
         fileManager.setWriteMode();
     }
 
-    private TreeTagDto getTag(NamespaceDto namespace, String tagName) {
+    private Tag getTag(Namespace namespace, String tagName) {
         NamespaceTagSearcherFacade facade = new NamespaceTagSearcherFacade();
         return facade.searchTag(tagName, namespace, shortName);
     }

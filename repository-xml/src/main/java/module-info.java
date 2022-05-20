@@ -24,10 +24,10 @@ module tagfm.repository.xml {
     requires java.xml.bind;
     requires com.sun.xml.bind;
 
-    exports io.github.ilnurnasybullin.tagfm.repository.xml.repository;
-    exports io.github.ilnurnasybullin.tagfm.repository.xml.entity;
+    exports io.github.ilnurnasybullin.tagfm.repository.xml.repository to java.xml.bind;
+    exports io.github.ilnurnasybullin.tagfm.repository.xml.entity to java.xml.bind;
 
     provides NamespaceRepository with NamespaceRepositoryImpl;
 
-    opens io.github.ilnurnasybullin.tagfm.repository.xml.entity;
+    opens io.github.ilnurnasybullin.tagfm.repository.xml.entity to java.xml.bind;
 }

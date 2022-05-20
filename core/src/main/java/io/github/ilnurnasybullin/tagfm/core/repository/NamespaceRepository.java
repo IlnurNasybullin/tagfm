@@ -20,8 +20,8 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 
 public interface NamespaceRepository {
-    Optional<Namespace> findBy();
-    void commit(Namespace namespace);
+    Optional<NamespaceRepoDto> findBy(String name);
+    void commit(NamespaceRepoDto namespaceRepoDto);
 
     static NamespaceRepository get() {
         return ServiceLoader.load(NamespaceRepository.class)

@@ -1,5 +1,5 @@
 ## remove license in unnecessary files (assemble files)
-## printing searched files
+## printing searched files in list
 ## description
 ## exception handler
 ## helpers
@@ -14,5 +14,5 @@
 ## yaml, json & other formats of file
 ## add uninstalling
 ## automatic update
-## Multi-namespace & Namespace union
+## Multi-namespaceRepoDto & Namespace union
 ## Add remote mode (?)

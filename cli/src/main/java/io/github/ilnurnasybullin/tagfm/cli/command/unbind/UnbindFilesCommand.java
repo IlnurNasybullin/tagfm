@@ -18,8 +18,8 @@ package io.github.ilnurnasybullin.tagfm.cli.command.unbind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -42,14 +42,14 @@ public class UnbindFilesCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        List<TaggedFileDto> files = getFiles(namespace);
-        Set<TaggedFileDto> namespaceFiles = namespace.files();
+        Namespace namespace = fileManager.namespaceOrThrow();
+        List<TaggedFile> files = getFiles(namespace);
+        Set<TaggedFile> namespaceFiles = namespace.files();
         files.forEach(namespaceFiles::remove);
         fileManager.setWriteMode();
     }
 
-    private List<TaggedFileDto> getFiles(NamespaceDto namespace) {
+    private List<TaggedFile> getFiles(Namespace namespace) {
         return new NamespaceFileManagerFacade()
                 .find(files, namespace)
                 .toList();

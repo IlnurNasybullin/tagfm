@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.repository.xml.entity;
 
-import io.github.ilnurnasybullin.tagfm.core.repository.Tag;
+import io.github.ilnurnasybullin.tagfm.core.repository.TagRepoDto;
 
 import javax.xml.bind.annotation.*;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @XmlRootElement(name = "tag")
-public class TagEntity implements Tag {
+public class TagEntity implements TagRepoDto {
 
     private long id;
     private String name;
@@ -68,6 +68,8 @@ public class TagEntity implements Tag {
         }
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public Set<TagEntity> children() {
         return children;
     }

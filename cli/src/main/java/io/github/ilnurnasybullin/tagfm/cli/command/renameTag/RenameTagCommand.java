@@ -18,8 +18,8 @@ package io.github.ilnurnasybullin.tagfm.cli.command.renameTag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -44,13 +44,13 @@ public class RenameTagCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto searchedTag = searchTag(oldName, namespace);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag searchedTag = searchTag(oldName, namespace);
         searchedTag.rename(newName);
         fileManager.setWriteMode();
     }
 
-    private TreeTagDto searchTag(String name, NamespaceDto namespace) {
+    private Tag searchTag(String name, Namespace namespace) {
         return new NamespaceTagSearcherFacade().searchTag(name, namespace, shortName);
     }
 }

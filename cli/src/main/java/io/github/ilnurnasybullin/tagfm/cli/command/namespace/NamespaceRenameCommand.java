@@ -17,7 +17,8 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceRenamer;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -36,8 +37,8 @@ public class NamespaceRenameCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        namespace.rename(newName);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        NamespaceRenamer.of(namespace).rename(newName);
         fileManager.setWriteMode();
     }
 }

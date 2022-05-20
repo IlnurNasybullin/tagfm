@@ -18,10 +18,10 @@ package io.github.ilnurnasybullin.tagfm.cli.command.removeTag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceTagRemover;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.TagRemovingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagRemover;
+import io.github.ilnurnasybullin.tagfm.api.service.TagRemovingStrategy;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -46,13 +46,13 @@ public class RemoveTagCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto searchedTag = searchTag(tagName, namespace);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag searchedTag = searchTag(tagName, namespace);
         NamespaceTagRemover.of(namespace).removeTag(searchedTag, tagRemovingStrategy);
         fileManager.setWriteMode();
     }
 
-    private TreeTagDto searchTag(String name, NamespaceDto namespace) {
+    private Tag searchTag(String name, Namespace namespace) {
         return new NamespaceTagSearcherFacade().searchTag(name, namespace, shortName);
     }
 }

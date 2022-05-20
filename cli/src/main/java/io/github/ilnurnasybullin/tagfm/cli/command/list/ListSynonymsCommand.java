@@ -18,8 +18,8 @@ package io.github.ilnurnasybullin.tagfm.cli.command.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -44,17 +44,17 @@ public class ListSynonymsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        TreeTagDto tag = getTag(namespace);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Tag tag = getTag(namespace);
         namespace.synonymsManager()
                 .synonyms(tag)
                 .stream()
                 .filter(t -> t != tag)
-                .map(TreeTagDto::fullName)
+                .map(Tag::fullName)
                 .forEach(System.out::println);
     }
 
-    private TreeTagDto getTag(NamespaceDto namespace) {
+    private Tag getTag(Namespace namespace) {
         return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
     }
 }

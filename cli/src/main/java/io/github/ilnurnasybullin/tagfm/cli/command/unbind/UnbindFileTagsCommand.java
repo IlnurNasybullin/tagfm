@@ -19,9 +19,9 @@ package io.github.ilnurnasybullin.tagfm.cli.command.unbind;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.dto.file.TaggedFileDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.namespace.NamespaceDto;
-import io.github.ilnurnasybullin.tagfm.core.dto.tag.TreeTagDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -55,8 +55,8 @@ public class UnbindFileTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        NamespaceDto namespace = fileManager.namespaceOrThrow();
-        Collection<TreeTagDto> tags = getTags(namespace);
+        Namespace namespace = fileManager.namespaceOrThrow();
+        Collection<Tag> tags = getTags(namespace);
         getFiles(namespace).forEach(file -> tags.forEach(file.tags()::remove));
 
         if (removingPolicy == FileRemovingPolicy.REMOVE_IF_NO_TAGS) {
@@ -66,14 +66,14 @@ public class UnbindFileTagsCommand implements Runnable {
         fileManager.setWriteMode();
     }
 
-    private List<TreeTagDto> getTags(NamespaceDto namespace) {
+    private List<Tag> getTags(Namespace namespace) {
         return tags.isEmpty() ?
                 List.of() : new NamespaceTagSearcherFacade()
                 .searchTags(tags, namespace, shortName)
                 .toList();
     }
 
-    private Stream<TaggedFileDto> getFiles(NamespaceDto namespace) {
+    private Stream<TaggedFile> getFiles(Namespace namespace) {
         return new NamespaceFileManagerFacade()
                 .find(files, namespace);
     }
