@@ -113,4 +113,8 @@ public class LogicalASTreeImpl<T> implements LogicalASTree<T> {
         return result;
     }
 
+    public void printTree() {
+        
+    }
+
 }

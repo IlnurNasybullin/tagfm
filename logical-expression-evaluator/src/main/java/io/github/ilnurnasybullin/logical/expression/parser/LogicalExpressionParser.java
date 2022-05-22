@@ -99,6 +99,8 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
         Deque<Term<T>> terms = new ArrayDeque<>();
         Deque<OperatorElement> operators = new ArrayDeque<>();
 
+        int leftToRight = 0;
+
         for (String tokenString : tokens) {
             Token token = tokenMap.get(tokenString);
             if (token == null) {
@@ -114,9 +116,9 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
                         throw ibcException(tokens);
                     }
                 }
-                case NOT -> addOperator(new OperatorElement(Operator.NOT, currentLevel), operators, terms);
-                case AND -> addOperator(new OperatorElement(Operator.AND, currentLevel), operators, terms);
-                case OR -> addOperator(new OperatorElement(Operator.OR, currentLevel), operators, terms);
+                case NOT -> addOperator(new OperatorElement(Operator.NOT, currentLevel, leftToRight++), operators, terms);
+                case AND -> addOperator(new OperatorElement(Operator.AND, currentLevel, leftToRight++), operators, terms);
+                case OR -> addOperator(new OperatorElement(Operator.OR, currentLevel, leftToRight++), operators, terms);
             }
         }
 

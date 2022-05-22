@@ -22,11 +22,20 @@ package io.github.ilnurnasybullin.logical.expression.element;
 public class OperatorElement implements Term, Comparable<OperatorElement> {
 
     private final Operator operator;
-    private final int outerPriorityLevel;
 
-    public OperatorElement(Operator operator, int outerPriorityLevel) {
+    /*
+    ---------------------------------------
+        Level priorities: less value = more priority
+    ---------------------------------------
+     */
+
+    private final int outerPriorityLevelValue;
+    private final int oneLevelPriorityValue;
+
+    public OperatorElement(Operator operator, int outerPriorityLevelValue, int oneLevelPriorityValue) {
         this.operator = operator;
-        this.outerPriorityLevel = outerPriorityLevel;
+        this.outerPriorityLevelValue = outerPriorityLevelValue;
+        this.oneLevelPriorityValue = oneLevelPriorityValue;
     }
 
     @Override
@@ -46,11 +55,17 @@ public class OperatorElement implements Term, Comparable<OperatorElement> {
 
     @Override
     public int compareTo(OperatorElement other) {
-        if (outerPriorityLevel == other.outerPriorityLevel) {
-            return operator.priorityLevel() - other.operator().priorityLevel();
+        if (outerPriorityLevelValue == other.outerPriorityLevelValue) {
+            int priorityLevel = operator.priorityLevel();
+            int otherPriorityLevel = other.operator().priorityLevel();
+
+            if (priorityLevel == otherPriorityLevel) {
+                return oneLevelPriorityValue - other.oneLevelPriorityValue;
+            }
+            return priorityLevel - otherPriorityLevel;
         }
 
-        return outerPriorityLevel - other.outerPriorityLevel;
+        return outerPriorityLevelValue - other.outerPriorityLevelValue;
     }
 
     public boolean priorityThan(OperatorElement other) {
