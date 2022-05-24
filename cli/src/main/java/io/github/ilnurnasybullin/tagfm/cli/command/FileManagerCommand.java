@@ -18,7 +18,6 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.file.FileCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.file.merge.MergeCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotInitializedException;
 import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;

@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.file.merge.MergeCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.file.merge.CopyCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.file.unbind.RemoveFilesCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.file.unbind.UnbindFileTagsCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
@@ -15,7 +15,7 @@ import picocli.CommandLine;
         name = "file",
         subcommands = {
             FileBindCommand.class,
-            MergeCommand.class,
+            CopyCommand.class,
             UnbindFileTagsCommand.class,
             FileReplaceCommand.class,
             FileSearchCommand.class,

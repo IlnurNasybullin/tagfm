@@ -19,7 +19,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 /**
  * @author Ilnur Nasybullin
  */
-public enum MergeStrategy {
+public enum CopyStrategy {
     ADD,
     REPLACE
 }

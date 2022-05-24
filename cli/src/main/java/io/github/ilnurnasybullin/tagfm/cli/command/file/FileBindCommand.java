@@ -22,6 +22,7 @@ import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -34,7 +35,7 @@ import java.util.stream.Stream;
 @CommandLine.Command(name = "bind")
 public class FileBindCommand implements Runnable {
 
-    @CommandLine.Parameters(arity = "1")
+    @CommandLine.Option(names = {"-f", "--files"}, required = true, arity = "1")
     private final List<Path> files = new ArrayList<>();
 
     @CommandLine.Option(names = {"-t", "--tags"}, required = true, arity = "1")
@@ -42,6 +43,9 @@ public class FileBindCommand implements Runnable {
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
     private boolean shortName;
+
+    @CommandLine.Option(names = {"-c", "--create"})
+    private boolean createIfNotExist;
 
     private final FileManagerCommand fileManager;
 
@@ -68,7 +72,13 @@ public class FileBindCommand implements Runnable {
 
     private List<Tag> getTags(Namespace namespace) {
         NamespaceTagSearcherFacade tagSearcher = new NamespaceTagSearcherFacade();
-        return tagSearcher.searchTags(tags, namespace, shortName)
-                .toList();
+        if (!createIfNotExist) {
+            return tagSearcher.searchTags(tags, namespace, shortName)
+                    .toList();
+        }
+
+        List<Tag> tags = tagSearcher.searchOrCreate(this.tags, namespace, shortName).toList();
+        NamespaceTagAdder.of(namespace).addTags(tags);
+        return tags;
     }
 }

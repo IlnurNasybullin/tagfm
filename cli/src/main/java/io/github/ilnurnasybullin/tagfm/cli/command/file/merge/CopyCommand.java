@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
 import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
@@ -29,24 +30,41 @@ import java.nio.file.Path;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "merge")
-public class MergeCommand implements Runnable {
+@CommandLine.Command(
+        name = "copy-tags",
+        headerHeading = "Usage:%n%n",
+        header = "Copying tags from one file to other",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = """
+                Copying tags from one tagged file (src) to other (dest). Dest file can be added to namespace, if needed. \
+                If dest file already exist, tags from src file can be added or replaced.
+                """
+)
+public class CopyCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", index = "0")
+    @CommandLine.Parameters(arity = "1", index = "0", description = "src file of tags")
     private Path src;
 
-    @CommandLine.Parameters(arity = "1", index = "1")
+    @CommandLine.Parameters(arity = "1", index = "1", description = "dest file")
     private Path dest;
 
-    @CommandLine.Option(names = {"-c", "--create-dest"}, arity = "0")
+    @CommandLine.Option(names = {"-c", "--create-dest"}, arity = "0",
+            description = "create dest file, if it isn't existing in namespace"
+    )
     private boolean createIfNotExist;
 
-    @CommandLine.Option(names = {"-cts", "--copy-tags-strategy"})
-    private MergeStrategy mergeStrategy = MergeStrategy.ADD;
+    @CommandLine.Option(names = {"-cts", "--copy-strategy"},
+            description = "strategy of copying tags, default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES}"
+    )
+    private CopyStrategy copyStrategy = CopyStrategy.ADD;
 
-    public MergeCommand(FileManagerCommand fileManager) {
+    @CommandLine.Mixin
+    private ReusableOption options;
+
+    public CopyCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
 
@@ -63,7 +81,7 @@ public class MergeCommand implements Runnable {
 
         namespace.files().add(destTaggedFile);
 
-        if (mergeStrategy == MergeStrategy.REPLACE) {
+        if (copyStrategy == CopyStrategy.REPLACE) {
             destTaggedFile.tags().clear();
         }
 

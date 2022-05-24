@@ -39,9 +39,6 @@ public class TagAddCommand implements Runnable {
     )
     private final List<String> tags = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "help command")
-    private boolean helpRequest;
-
     public TagAddCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
@@ -49,7 +46,6 @@ public class TagAddCommand implements Runnable {
     @Override
     public void run() {
         Namespace namespace = fileManager.namespaceOrThrow();
-
         TagCreator creator = new TagCreator();
         List<Tag> treeTags = tags.stream()
                 .map(creator::deepCreate)

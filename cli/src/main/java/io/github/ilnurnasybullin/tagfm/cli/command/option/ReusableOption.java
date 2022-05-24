@@ -11,7 +11,7 @@ import picocli.CommandLine;
         synopsisHeading = "Usage:%n\t",
         descriptionHeading = "%nDescription:%n%n",
         parameterListHeading = "%nParameters:%n",
-        optionListHeading = "Options:%n",
+        optionListHeading = "%nOptions:%n",
         commandListHeading = "%nCommands:%n"
 )
 public class ReusableOption {

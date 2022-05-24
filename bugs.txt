@@ -1,3 +1,1 @@
-bind files add option for files (-f)
 & (and) searching... (search-files)
-file pathing names with "\"
