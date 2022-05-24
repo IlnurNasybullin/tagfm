@@ -13,5 +13,5 @@ jars=(
 )
 
 for i in ${!modules[@]}; do
-  sh ./fix-jar-modules-cli.sh ${modules[$i]} ${jars[$i]}
+  sh ./patch-jar-modules-cli.sh ${modules[$i]} ${jars[$i]}
 done
