@@ -17,19 +17,13 @@
 package io.github.ilnurnasybullin.tagfm.cli.command;
 
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
-import io.github.ilnurnasybullin.tagfm.cli.command.addFiles.AddTagsCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.bind.BindCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.copyTags.CopyTagsCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.list.ListCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.file.FileCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.file.merge.MergeCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceInitCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotInitializedException;
+import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
 import io.github.ilnurnasybullin.tagfm.cli.command.print.PrintCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.removeTag.RemoveTagCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.renameTag.RenameTagCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.replaceFile.ReplaceFileCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.searchFiles.SearchFilesCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.unbind.UnbindCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.tag.TagCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceAlreadyInitializedException;
 import jakarta.annotation.PostConstruct;
@@ -39,27 +33,32 @@ import picocli.CommandLine;
 import java.io.Closeable;
 import java.util.Optional;
 
-@CommandLine.Command(name = "tagfm", subcommands = {
-        NamespaceInitCommand.class,
-        NamespaceCommand.class,
-        AddTagsCommand.class,
-        RenameTagCommand.class,
-        RemoveTagCommand.class,
-        BindCommand.class,
-        UnbindCommand.class,
-        PrintCommand.class,
-        ListCommand.class,
-        CopyTagsCommand.class,
-        ReplaceFileCommand.class,
-        SearchFilesCommand.class
-})
+@CommandLine.Command(
+        name = "tagfm",
+        version = FileManagerCommand.version,
+        subcommands = {
+            FileCommand.class,
+            NamespaceCommand.class,
+            PrintCommand.class,
+            TagCommand.class
+        },
+        description = """
+                TagFM is a file manager for tagging files and folders, managing tags and searching files by logical \
+                tags query.
+                """
+)
 @Singleton
 public class FileManagerCommand implements Runnable, Closeable {
+
+    final static String version = "0.0.1";
 
     private Optional<Namespace> namespace;
     private final NamespaceRepositoryService<Namespace> namespaceService;
 
     private boolean onCommit = false;
+
+    @CommandLine.Mixin
+    private ReusableOption options;
 
     public FileManagerCommand(NamespaceRepositoryService<Namespace> namespaceService) {
         this.namespaceService = namespaceService;

@@ -35,30 +35,29 @@ module tagfm.cli {
 
     opens io.github.ilnurnasybullin.tagfm.cli.command;
     opens io.github.ilnurnasybullin.tagfm.cli.format;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.addFiles;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.addFiles;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.bind;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.bind;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.list;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.list;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.tag.bind;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.tag.bind;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.print.list;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.print.list;
     exports io.github.ilnurnasybullin.tagfm.cli.command.namespace;
     opens io.github.ilnurnasybullin.tagfm.cli.command.namespace;
     exports io.github.ilnurnasybullin.tagfm.cli.command.print;
     opens io.github.ilnurnasybullin.tagfm.cli.command.print;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.removeTag;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.removeTag;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.renameTag;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.renameTag;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.unbind;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.unbind;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
 
-    exports io.github.ilnurnasybullin.tagfm.cli.command.copyTags;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.copyTags;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 
-    exports io.github.ilnurnasybullin.tagfm.cli.command.replaceFile;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.replaceFile;
     exports io.github.ilnurnasybullin.tagfm.cli.util;
     opens io.github.ilnurnasybullin.tagfm.cli.util;
-    exports io.github.ilnurnasybullin.tagfm.cli.command.searchFiles;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.searchFiles;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.tag;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.tag;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.file;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.file;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
+
+    exports io.github.ilnurnasybullin.tagfm.cli.command.option;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.option;
 }

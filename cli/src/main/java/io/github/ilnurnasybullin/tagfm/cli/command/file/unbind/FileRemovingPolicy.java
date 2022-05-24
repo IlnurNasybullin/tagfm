@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
+package io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 
-import jakarta.inject.Singleton;
-import picocli.CommandLine;
-
-@CommandLine.Command(name = "namespace", description = "namespace initialization or modifying", subcommands = {
-        NamespaceInitCommand.class,
-        NamespaceRenameCommand.class,
-        NamespaceEditCommand.class
-})
-@Singleton
-public class NamespaceCommand implements Runnable {
-    @Override
-    public void run() {}
-
+public enum FileRemovingPolicy {
+    NO_REMOVE,
+    REMOVE_IF_NO_TAGS
 }

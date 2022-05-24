@@ -17,39 +17,32 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
-import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-import java.util.Optional;
-
-@CommandLine.Command(name = "init", description = {"init namespace in '.tagfm' folder (it's creating automatically"})
+@CommandLine.Command(name = "edit")
 @Singleton
-public class NamespaceInitCommand implements Runnable {
+public class NamespaceEditCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
-    private final NamespaceRepositoryService<Namespace> namespaceService;
 
     @CommandLine.Option(names = {"-fns", "--file-naming-strategy"})
-    private FileNamingStrategy fileNaming = FileNamingStrategy.RELATIVE;
+    private FileNamingStrategy strategy;
 
-    @CommandLine.Parameters
-    private String name;
-
-    @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true)
-    private boolean helpRequest;
-
-    public NamespaceInitCommand(FileManagerCommand fileManager, NamespaceRepositoryService<Namespace> namespaceService) {
+    public NamespaceEditCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
-        this.namespaceService = namespaceService;
     }
 
     @Override
     public void run() {
-        fileManager.checkNamespaceOnNonExisting();
-        fileManager.setWriteMode();
-        fileManager.initNamespace(Optional.of(namespaceService.init(name, fileNaming)));
+        if (strategy != null) {
+            Namespace namespace = fileManager.namespaceOrThrow();
+            if (namespace.fileNaming() != strategy) {
+                namespace.replaceFileNamingStrategy(strategy);
+                fileManager.setWriteMode();
+            }
+        }
     }
 }

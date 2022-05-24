@@ -14,30 +14,17 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.tagfm.cli.command.print;
+package io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
-import io.github.ilnurnasybullin.tagfm.cli.command.print.list.ListCommand;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(
-        name = "print",
-        subcommands = {
-            PrintGeneralStateCommand.class,
-            PrintTagTreeCommand.class,
-            ListCommand.class
-        },
-        description = """
-                print anything info about program's state or entities (tags, files, synonyms etc.)
-                """
-)
-public class PrintCommand implements Runnable {
-
-    @CommandLine.Mixin
-    private ReusableOption option;
-
+@CommandLine.Command(name = "unbind", subcommands = {
+        UnbindSynonymsCommand.class,
+        UnbindParentTagsCommand.class
+})
+public class TagUnbindCommand implements Runnable {
     @Override
     public void run() {
 

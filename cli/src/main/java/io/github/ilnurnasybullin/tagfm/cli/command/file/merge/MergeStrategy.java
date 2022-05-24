@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
+package io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 
-import jakarta.inject.Singleton;
-import picocli.CommandLine;
-
-@CommandLine.Command(name = "namespace", description = "namespace initialization or modifying", subcommands = {
-        NamespaceInitCommand.class,
-        NamespaceRenameCommand.class,
-        NamespaceEditCommand.class
-})
-@Singleton
-public class NamespaceCommand implements Runnable {
-    @Override
-    public void run() {}
-
+/**
+ * @author Ilnur Nasybullin
+ */
+public enum MergeStrategy {
+    ADD,
+    REPLACE
 }
