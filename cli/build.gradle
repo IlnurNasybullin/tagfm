@@ -19,7 +19,7 @@ plugins {
 }
 
 application {
-    mainModule = 'tagged.file.manager.cli'
+    mainModule = 'tagfm.cli'
 }
 
 mainClassName = "io.github.ilnurnasybullin.tagfm.cli.FileManagerCli"
