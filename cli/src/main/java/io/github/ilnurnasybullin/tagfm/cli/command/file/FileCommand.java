@@ -14,7 +14,7 @@ import picocli.CommandLine;
 @CommandLine.Command(
         name = "file",
         subcommands = {
-            FileBindCommand.class,
+            TagBindsCommand.class,
             CopyCommand.class,
             UnbindFileTagsCommand.class,
             FileReplaceCommand.class,

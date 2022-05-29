@@ -16,13 +16,12 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.tag.bind;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.file.FileBindCommand;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
 @CommandLine.Command(name = "bind", subcommands = {
-        FileBindCommand.class,
+        BindFilesCommand.class,
         BindSynonymsCommand.class,
         BindParentCommand.class
 })
