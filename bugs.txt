@@ -1,1 +1,2 @@
 & (and) searching... (search-files)
+duplicate tag "<synonyms>" in xml file
