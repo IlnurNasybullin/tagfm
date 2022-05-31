@@ -29,27 +29,26 @@ import picocli.CommandLine;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Singleton
 @CommandLine.Command(name = "bind")
-public class FileBindCommand implements Runnable {
+public class TagBindsCommand implements Runnable {
 
-    @CommandLine.Option(names = {"-f", "--files"}, required = true, arity = "1")
-    private final List<Path> files = new ArrayList<>();
+    @CommandLine.Parameters(index = "0", arity = "1")
+    private Path file;
 
-    @CommandLine.Option(names = {"-t", "--tags"}, required = true, arity = "1")
+    @CommandLine.Parameters(index = "1..*", arity = "1")
     private final List<String> tags = new ArrayList<>();
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
     private boolean shortName;
 
     @CommandLine.Option(names = {"-c", "--create"})
-    private boolean createIfNotExist;
+    private boolean createTag;
 
     private final FileManagerCommand fileManager;
 
-    public FileBindCommand(FileManagerCommand fileManager) {
+    public TagBindsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
 
@@ -58,21 +57,20 @@ public class FileBindCommand implements Runnable {
         Namespace namespace = fileManager.namespaceOrThrow();
         List<Tag> tags = getTags(namespace);
 
-        getFiles(namespace).forEach(taggedFile -> {
-            taggedFile.tags().addAll(tags);
-            namespace.files().add(taggedFile);
-        });
+        TaggedFile taggedFile = getFile(namespace);
+        taggedFile.tags().addAll(tags);
+        namespace.files().add(taggedFile);
         fileManager.setWriteMode();
     }
 
-    private Stream<TaggedFile> getFiles(Namespace namespace) {
+    private TaggedFile getFile(Namespace namespace) {
         NamespaceFileManagerFacade facade = new NamespaceFileManagerFacade();
-        return facade.findOrCreate(files, namespace);
+        return facade.findOrCreate(file, namespace);
     }
 
     private List<Tag> getTags(Namespace namespace) {
         NamespaceTagSearcherFacade tagSearcher = new NamespaceTagSearcherFacade();
-        if (!createIfNotExist) {
+        if (!createTag) {
             return tagSearcher.searchTags(tags, namespace, shortName)
                     .toList();
         }
