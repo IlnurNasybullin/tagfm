@@ -19,7 +19,7 @@ package io.github.ilnurnasybullin.tagfm.core.api.service;
 import io.github.ilnurnasybullin.tagfm.api.service.FileSearchStrategy;
 import io.github.ilnurnasybullin.tagfm.api.service.NonUniqueTagNameException;
 import io.github.ilnurnasybullin.tagfm.api.service.TagNotFoundException;
-import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileSearcherService;
+import io.github.ilnurnasybullin.tagfm.api.service.FileSearcherService;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
@@ -40,11 +40,11 @@ import java.util.stream.Collectors;
 /**
  * @author Ilnur Nasybullin
  */
-public class TaggedFileSearcher implements TaggedFileSearcherService<TaggedFileView> {
+public class FileSearcher implements FileSearcherService<TaggedFileView> {
 
     private final NamespaceView namespace;
 
-    public TaggedFileSearcher(NamespaceView namespace) {
+    public FileSearcher(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
