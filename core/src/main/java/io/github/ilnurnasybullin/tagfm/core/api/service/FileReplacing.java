@@ -24,7 +24,7 @@ public class FileReplacing implements FileReplacingService<TaggedFileView> {
 
     @Override
     public void replace(TaggedFileView file, Path newPath) {
-        FileFinderManager.of(namespace).find(newPath).ifPresent(f -> {
+        FileManager.of(namespace).find(newPath).ifPresent(f -> {
             throw new NamespaceAlreadyExistTaggedFileException(
                     String.format("File or dir [%s] is already existed in namespace [%s]!", f, namespace.name())
             );

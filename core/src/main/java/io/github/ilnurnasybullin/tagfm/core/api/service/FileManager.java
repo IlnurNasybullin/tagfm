@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service;
 
-import io.github.ilnurnasybullin.tagfm.api.service.FileFinderManagerService;
+import io.github.ilnurnasybullin.tagfm.api.service.FileManagerService;
 import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileNotFoundException;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
@@ -17,16 +17,16 @@ import java.util.stream.Stream;
 /**
  * @author Ilnur Nasybullin
  */
-public class FileFinderManager implements FileFinderManagerService<TaggedFileView> {
+public class FileManager implements FileManagerService<TaggedFileView> {
 
     private final NamespaceView namespace;
 
-    private FileFinderManager(NamespaceView namespace) {
+    private FileManager(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static FileFinderManager of(NamespaceView namespace) {
-        return new FileFinderManager(namespace);
+    public static FileManager of(NamespaceView namespace) {
+        return new FileManager(namespace);
     }
 
     private Path toRealPath(Path file) {

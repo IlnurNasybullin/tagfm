@@ -8,7 +8,7 @@ import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
 
 import java.nio.file.Path;
@@ -70,7 +70,7 @@ public class TagBindFilesCommand implements Runnable {
     }
 
     private Stream<TaggedFileView> getFiles(NamespaceView namespace) {
-        return FileFinderManager.of(namespace)
+        return FileManager.of(namespace)
                 .findOrCreate(files)
                 .values()
                 .stream();

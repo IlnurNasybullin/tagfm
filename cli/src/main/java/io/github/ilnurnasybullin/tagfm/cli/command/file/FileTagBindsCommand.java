@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
@@ -58,7 +58,7 @@ public class FileTagBindsCommand implements Runnable {
         NamespaceView namespace = fileManager.namespaceOrThrow();
         Collection<TagView> tags = getTags(namespace);
 
-        TaggedFileView taggedFile = FileFinderManager.of(namespace).findOrCreate(file);
+        TaggedFileView taggedFile = FileManager.of(namespace).findOrCreate(file);
         taggedFile.tags().addAll(tags);
         namespace.files().add(taggedFile);
         fileManager.commit();

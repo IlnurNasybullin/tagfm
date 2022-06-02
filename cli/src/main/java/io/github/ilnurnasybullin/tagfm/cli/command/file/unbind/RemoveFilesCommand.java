@@ -19,7 +19,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
 import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileNotFoundException;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -51,7 +51,7 @@ public class RemoveFilesCommand implements Runnable {
     }
 
     private List<TaggedFileView> getFiles(NamespaceView namespace) {
-        return FileFinderManager.of(namespace)
+        return FileManager.of(namespace)
                 .findExact(files)
                 .toList();
     }

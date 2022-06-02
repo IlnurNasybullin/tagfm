@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -56,7 +56,7 @@ public class UnbindFileTagsCommand implements Runnable {
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
         Collection<TagView> tags = getTags(namespace);
-        TaggedFileView taggedFile = FileFinderManager.of(namespace).findExact(file);
+        TaggedFileView taggedFile = FileManager.of(namespace).findExact(file);
         taggedFile.tags().removeAll(tags);
 
         if (removingPolicy == FileRemovingPolicy.REMOVE_IF_NO_TAGS && taggedFile.tags().isEmpty()) {

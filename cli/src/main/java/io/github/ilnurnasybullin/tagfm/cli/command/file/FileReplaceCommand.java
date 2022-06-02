@@ -19,7 +19,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.file;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileReplacing;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -49,7 +49,7 @@ public class FileReplaceCommand implements Runnable {
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
 
-        FileFinderManager fileFinder = FileFinderManager.of(namespace);
+        FileManager fileFinder = FileManager.of(namespace);
         TaggedFileView file = fileFinder.findExact(src);
         FileReplacing.of(namespace).replace(file, dest);
         fileManager.commit();
