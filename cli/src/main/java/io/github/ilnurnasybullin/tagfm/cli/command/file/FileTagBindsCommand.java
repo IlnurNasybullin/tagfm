@@ -21,7 +21,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdding;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -76,7 +76,7 @@ public class FileTagBindsCommand implements Runnable {
                 tagService.findOrCreateByNamesExact(tags).values() :
                 tagService.findOrCreateByFullNames(tags).values();
 
-        NamespaceTagAdder tagAdder = NamespaceTagAdder.of(namespace);
+        NamespaceTagAdding tagAdder = NamespaceTagAdding.of(namespace);
         tagAdder.addTags(tagViews);
         return tagViews;
     }

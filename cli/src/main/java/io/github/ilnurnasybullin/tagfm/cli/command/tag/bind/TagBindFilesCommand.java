@@ -9,7 +9,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdding;
 
 import java.nio.file.Path;
 
@@ -65,7 +65,7 @@ public class TagBindFilesCommand implements Runnable {
                 tagService.findOrCreateByNameExact(tagName) :
                 tagService.findOrCreateByFullName(tagName);
 
-        NamespaceTagAdder.of(namespace).addTag(tag);
+        NamespaceTagAdding.of(namespace).addTag(tag);
         return tag;
     }
 
