@@ -17,23 +17,23 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 public class UpAndRebaseNewTagRemover implements TagRemover {
 
-    private final Namespace namespace;
-    private final FilesTagManagerService<Tag> fileTagsManager;
+    private final NamespaceView namespace;
+    private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private UpAndRebaseNewTagRemover(Namespace namespace, FilesTagManagerService<Tag> fileTagsManager) {
+    private UpAndRebaseNewTagRemover(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
         this.namespace = namespace;
         this.fileTagsManager = fileTagsManager;
     }
 
-    public static UpAndRebaseNewTagRemover of(Namespace namespace) {
+    public static UpAndRebaseNewTagRemover of(NamespaceView namespace) {
         return new UpAndRebaseNewTagRemover(namespace, FilesTagManager.of(namespace));
     }
 

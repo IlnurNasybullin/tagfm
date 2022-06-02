@@ -16,12 +16,19 @@
 
 package io.github.ilnurnasybullin.tagfm.core.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
 public interface NamespaceRepository {
-    Optional<NamespaceRepoDto> findBy(String name);
-    void commit(NamespaceRepoDto namespaceRepoDto);
+    Optional<NamespaceEntity> findBy(String name);
+    List<NamespaceEntity> getAll();
+    void replace(String name, NamespaceEntity namespace);
+    void commit(NamespaceEntity namespace);
+    void remove(NamespaceEntity namespace);
+
+    Optional<NamespaceEntity> getWorkingNamespace();
+    void setWorkingNamespace(String name);
 
     static NamespaceRepository get() {
         return ServiceLoader.load(NamespaceRepository.class)

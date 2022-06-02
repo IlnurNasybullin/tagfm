@@ -17,8 +17,9 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -26,22 +27,28 @@ import picocli.CommandLine;
 @Singleton
 public class NamespaceEditCommand implements Runnable {
 
-    private final FileManagerCommand fileManager;
+    @CommandLine.Parameters(index = "0", arity = "1")
+    private String namespaceName;
 
     @CommandLine.Option(names = {"-fns", "--file-naming-strategy"})
     private FileNamingStrategy strategy;
 
-    public NamespaceEditCommand(FileManagerCommand fileManager) {
-        this.fileManager = fileManager;
+    private final NamespaceRepositoryService<NamespaceView> namespaceService;
+
+    public NamespaceEditCommand(NamespaceRepositoryService<NamespaceView> namespaceService) {
+        this.namespaceService = namespaceService;
     }
 
     @Override
     public void run() {
         if (strategy != null) {
-            Namespace namespace = fileManager.namespaceOrThrow();
+            NamespaceView namespace = namespaceService.find(namespaceName)
+                    .orElseThrow(() -> new NamespaceNotFoundException(
+                            String.format("Namespace with name [%s] isn't found!", namespaceName)
+                    ));
             if (namespace.fileNaming() != strategy) {
                 namespace.replaceFileNamingStrategy(strategy);
-                fileManager.setWriteMode();
+                namespaceService.commit(namespace);
             }
         }
     }

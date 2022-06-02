@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.format;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 
 import java.util.*;
 
@@ -35,7 +35,7 @@ public class TreeTagPrinter {
 
     private static class TagPrinterStateMachine {
 
-        private final Tag root;
+        private final TagView root;
 
         private final static String BORDER_WITH_SEQUEL = "\u251c\u2500\u2500\u2500";
         private final static String BORDER_WITHOUT_SEQUEL = "\u2514\u2500\u2500\u2500";
@@ -44,20 +44,20 @@ public class TreeTagPrinter {
 
         private PrintState currentState;
 
-        private final TreeMap<String, Tag> children;
+        private final TreeMap<String, TagView> children;
 
-        private TagPrinterStateMachine(Tag root) {
+        private TagPrinterStateMachine(TagView root) {
             this.root = root;
             this.children = new TreeMap<>(root.children());
             this.currentState = PrintState.PRINT_TAG_NAME;
         }
 
-        public Optional<Tag> next() {
+        public Optional<TagView> next() {
             if (children.isEmpty()) {
                 return Optional.empty();
             }
 
-            Map.Entry<String, Tag> entry = children.firstEntry();
+            Map.Entry<String, TagView> entry = children.firstEntry();
             children.remove(entry.getKey());
 
             currentState = children.isEmpty() ?
@@ -89,9 +89,9 @@ public class TreeTagPrinter {
 
     }
 
-    private final Tag root;
+    private final TagView root;
 
-    public TreeTagPrinter(Tag root) {
+    public TreeTagPrinter(TagView root) {
         this.root = root;
     }
 
@@ -102,7 +102,7 @@ public class TreeTagPrinter {
         while (!printers.isEmpty()) {
             printers.forEach(TagPrinterStateMachine::print);
 
-            Tag newRoot = null;
+            TagView newRoot = null;
             while (!printers.isEmpty() && newRoot == null) {
                 newRoot = printers.peekLast().next().orElse(null);
                 if (newRoot == null) {

@@ -1,9 +1,13 @@
 package io.github.ilnurnasybullin.tagfm.core.model.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymGroupView;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFileRepoDto;
+import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymGroupRepoDto;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTagRepoDto;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceEntity;
+import io.github.ilnurnasybullin.tagfm.core.repository.SynonymGroupEntity;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -14,15 +18,15 @@ import java.util.stream.Collectors;
 /**
  * @author Ilnur Nasybullin
  */
-public class NamespaceRepoDto implements io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepoDto {
+public class NamespaceRepoDto implements NamespaceEntity {
 
-    private final Namespace namespace;
+    private final NamespaceView namespace;
 
-    private NamespaceRepoDto(Namespace namespace) {
+    private NamespaceRepoDto(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static NamespaceRepoDto of(Namespace namespace) {
+    public static NamespaceRepoDto of(NamespaceView namespace) {
         return new NamespaceRepoDto(namespace);
     }
 
@@ -52,13 +56,11 @@ public class NamespaceRepoDto implements io.github.ilnurnasybullin.tagfm.core.re
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Set<TreeTagRepoDto>> synonyms() {
-        return namespace.synonyms()
+    public List<SynonymGroupRepoDto> synonymGroups() {
+        return namespace.synonymGroups()
                 .stream()
-                .map(set -> set.stream()
-                        .map(TreeTagRepoDto::of)
-                        .collect(Collectors.toUnmodifiableSet())
-                ).toList();
+                .map(SynonymGroupRepoDto::of)
+                .toList();
     }
 
     @Override

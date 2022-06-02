@@ -18,10 +18,10 @@ package io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
 
 import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinding;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -37,7 +37,7 @@ public class UnbindParentTagsCommand implements Runnable {
     @CommandLine.Option(names = {"-pbs", "--parent-binding-strategy"})
     private TagParentBindingStrategy parentBindingStrategy = TagParentBindingStrategy.THROW_IF_COLLISION;
 
-    @CommandLine.Parameters(arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1")
     private String childTag;
 
     public UnbindParentTagsCommand(FileManagerCommand fileManager) {
@@ -46,9 +46,12 @@ public class UnbindParentTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Tag tag = new NamespaceTagSearcherFacade().searchTag(childTag, namespace, shortName);
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        TagService tagService = TagService.of(namespace);
+        TagView tag = shortName ?
+                tagService.findByNameExact(childTag) :
+                tagService.findByFullNameExact(childTag);
         TagParentBinding.of(namespace).unbind(tag, parentBindingStrategy);
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 }

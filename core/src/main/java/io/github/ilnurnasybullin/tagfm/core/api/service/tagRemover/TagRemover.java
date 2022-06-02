@@ -17,13 +17,13 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover;
 
 import io.github.ilnurnasybullin.tagfm.api.service.TagRemovingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 public interface TagRemover {
     void removeTag(TreeTag tag);
 
-    static TagRemover instanceRemover(TagRemovingStrategy strategy, Namespace namespace) {
+    static TagRemover instanceRemover(TagRemovingStrategy strategy, NamespaceView namespace) {
         return switch (strategy) {
             case UP_CHILDREN_WITHOUT_CONFLICTS -> UpChildrenWithoutConflicts.of(namespace);
             case REMOVE_CHILDREN -> RemoveChildrenTagRemover.of(namespace);

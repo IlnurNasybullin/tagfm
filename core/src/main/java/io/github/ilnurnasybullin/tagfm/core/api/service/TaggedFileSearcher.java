@@ -17,10 +17,12 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileSearchStrategy;
-import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileSearcherStrategy;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.api.service.NonUniqueTagNameException;
+import io.github.ilnurnasybullin.tagfm.api.service.TagNotFoundException;
+import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileSearcherService;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.HierarchySearchFilter;
 import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.SimpleSearchFilter;
 import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.SynonymSearchFilter;
@@ -38,23 +40,23 @@ import java.util.stream.Collectors;
 /**
  * @author Ilnur Nasybullin
  */
-public class TaggedFileSearcher implements TaggedFileSearcherStrategy<TaggedFile> {
+public class TaggedFileSearcher implements TaggedFileSearcherService<TaggedFileView> {
 
-    private final Namespace namespace;
+    private final NamespaceView namespace;
 
-    public TaggedFileSearcher(Namespace namespace) {
+    public TaggedFileSearcher(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
     @Override
-    public Set<TaggedFile> searchFiles(List<String> expressionTokens, FileSearchStrategy searchStrategy) {
-        Map<String, Tag> usedTags = new HashMap<>();
+    public Set<TaggedFileView> searchFiles(List<String> expressionTokens, FileSearchStrategy searchStrategy) {
+        Map<String, TagView> usedTags = new HashMap<>();
 
-        Map<String, Tag> fullNamesMap = namespace.tags(false)
-                .collect(Collectors.toMap(Tag::fullName, Function.identity()));
+        Map<String, TagView> fullNamesMap = namespace.tags(false)
+                .collect(Collectors.toMap(TagView::fullName, Function.identity()));
 
-        Map<String, List<Tag>> shortNamesMap = namespace.tags(false)
-                .collect(Collectors.groupingBy(Tag::name));
+        Map<String, List<TagView>> shortNamesMap = namespace.tags(false)
+                .collect(Collectors.groupingBy(TagView::name));
 
         Function<String, String> tagsListener = validateListener(usedTags, fullNamesMap, shortNamesMap);
 
@@ -74,18 +76,18 @@ public class TaggedFileSearcher implements TaggedFileSearcherStrategy<TaggedFile
                 .collect(Collectors.toSet());
     }
 
-    private Function<String, String> validateListener(Map<String, Tag> usedTags,
-                                                      Map<String, Tag> fullNamesMap,
-                                                      Map<String, List<Tag>> shortNamesMap) {
+    private Function<String, String> validateListener(Map<String, TagView> usedTags,
+                                                      Map<String, TagView> fullNamesMap,
+                                                      Map<String, List<TagView>> shortNamesMap) {
         return tagName -> {
             if (shortNamesMap.containsKey(tagName)) {
-                List<Tag> tags = shortNamesMap.get(tagName);
+                List<TagView> tags = shortNamesMap.get(tagName);
                 if (tags.size() > 1) {
-                    throw new UniquelyIdentifiableTagException(
+                    throw new NonUniqueTagNameException(
                             String.format(
                                     "Tag with name [%s] isn't unique; exist tags [%s] with same name!",
                                     tagName,
-                                    tags.stream().map(Tag::fullName).collect(Collectors.joining("; "))
+                                    tags.stream().map(TagView::fullName).collect(Collectors.joining("; "))
                             )
                     );
                 }
@@ -97,7 +99,7 @@ public class TaggedFileSearcher implements TaggedFileSearcherStrategy<TaggedFile
                 return tagName;
             }
 
-            throw new NamespaceNotExistTagsException(
+            throw new TagNotFoundException(
                     String.format("Tag with name [%s] isn't exist in namespace [%s]", tagName, namespace.name())
             );
         };

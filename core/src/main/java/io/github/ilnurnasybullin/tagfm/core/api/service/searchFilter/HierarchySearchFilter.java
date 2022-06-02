@@ -16,9 +16,9 @@
 
 package io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
 import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 
@@ -31,27 +31,27 @@ import java.util.Set;
  */
 public class HierarchySearchFilter implements TaggedFilesFilter {
 
-    private final LogicalExpressionEvaluator<Tag> evaluator;
+    private final LogicalExpressionEvaluator<TagView> evaluator;
 
-    private HierarchySearchFilter(LogicalExpressionEvaluator<Tag> evaluator) {
+    private HierarchySearchFilter(LogicalExpressionEvaluator<TagView> evaluator) {
         this.evaluator = evaluator;
     }
 
-    public static TaggedFilesFilter of(Namespace namespace,
+    public static TaggedFilesFilter of(NamespaceView namespace,
                                        LogicalExpressionEvaluator<String> evaluator,
-                                       Map<String, Tag> usedTags) {
-        LogicalExpressionEvaluator<Tag> mappedEvaluator = evaluator.map(usedTags::get);
+                                       Map<String, TagView> usedTags) {
+        LogicalExpressionEvaluator<TagView> mappedEvaluator = evaluator.map(usedTags::get);
         return new HierarchySearchFilter(mappedEvaluator);
     }
 
     @Override
-    public boolean test(TaggedFile file) {
-        Set<Tag> tags = file.tags();
+    public boolean test(TaggedFileView file) {
+        Set<TagView> tags = file.tags();
         return evaluator.evaluate(tag -> hasChild(tag, tags));
     }
 
-    private boolean hasChild(Tag tag, Set<Tag> tags) {
-        Iterator<Tag> iterator = TreeIteratorsFactory.HORIZONTAL_TRAVERSAL
+    private boolean hasChild(TagView tag, Set<TagView> tags) {
+        Iterator<TagView> iterator = TreeIteratorsFactory.HORIZONTAL_TRAVERSAL
                 .SIMPLE
                 .iterator(tag, t -> t.children().values());
 

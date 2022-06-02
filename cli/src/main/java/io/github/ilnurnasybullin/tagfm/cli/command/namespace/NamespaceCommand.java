@@ -22,7 +22,9 @@ import picocli.CommandLine;
 @CommandLine.Command(name = "namespace", description = "namespace initialization or modifying", subcommands = {
         NamespaceInitCommand.class,
         NamespaceRenameCommand.class,
-        NamespaceEditCommand.class
+        NamespaceEditCommand.class,
+        NamespaceSwitch.class,
+        NamespaceRemoveCommand.class
 })
 @Singleton
 public class NamespaceCommand implements Runnable {

@@ -17,11 +17,11 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Singleton
 @CommandLine.Command(name = "unbind")
@@ -37,10 +36,10 @@ public class UnbindFileTagsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1")
-    private final List<Path> files = new ArrayList<>();
+    @CommandLine.Parameters(arity = "1", index = "0")
+    private Path file;
 
-    @CommandLine.Option(names = {"-t", "--tags"})
+    @CommandLine.Parameters(arity = "1", index = "1..*")
     private final List<String> tags = new ArrayList<>();
 
     @CommandLine.Option(names = {"-sn", "--short-name"})
@@ -55,26 +54,26 @@ public class UnbindFileTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Collection<Tag> tags = getTags(namespace);
-        getFiles(namespace).forEach(file -> tags.forEach(file.tags()::remove));
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        Collection<TagView> tags = getTags(namespace);
+        TaggedFileView taggedFile = FileFinderManager.of(namespace).findExact(file);
+        taggedFile.tags().removeAll(tags);
 
-        if (removingPolicy == FileRemovingPolicy.REMOVE_IF_NO_TAGS) {
-            namespace.files().removeIf(file -> file.tags().isEmpty());
+        if (removingPolicy == FileRemovingPolicy.REMOVE_IF_NO_TAGS && taggedFile.tags().isEmpty()) {
+            namespace.files().remove(taggedFile);
         }
 
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 
-    private List<Tag> getTags(Namespace namespace) {
-        return tags.isEmpty() ?
-                List.of() : new NamespaceTagSearcherFacade()
-                .searchTags(tags, namespace, shortName)
-                .toList();
-    }
+    private Collection<TagView> getTags(NamespaceView namespace) {
+        if (tags.isEmpty()) {
+            return List.of();
+        }
 
-    private Stream<TaggedFile> getFiles(Namespace namespace) {
-        return new NamespaceFileManagerFacade()
-                .find(files, namespace);
+        TagService tagFinder = TagService.of(namespace);
+        return shortName ?
+                tagFinder.findByNamesExact(tags).values() :
+                tagFinder.findByFullNamesExact(tags).values();
     }
 }

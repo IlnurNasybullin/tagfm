@@ -17,9 +17,9 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -32,10 +32,10 @@ public class TagRenameCommand implements Runnable {
     @CommandLine.Option(names = {"-sn", "--short-name"})
     private boolean shortName = false;
 
-    @CommandLine.Parameters(index = "0")
+    @CommandLine.Parameters(index = "0", arity = "1")
     private String oldName;
 
-    @CommandLine.Parameters(index = "1")
+    @CommandLine.Parameters(index = "1", arity = "1")
     private String newName;
 
     public TagRenameCommand(FileManagerCommand fileManager) {
@@ -44,13 +44,16 @@ public class TagRenameCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Tag searchedTag = searchTag(oldName, namespace);
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        TagView searchedTag = searchTag(oldName, namespace);
         searchedTag.rename(newName);
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 
-    private Tag searchTag(String name, Namespace namespace) {
-        return new NamespaceTagSearcherFacade().searchTag(name, namespace, shortName);
+    private TagView searchTag(String tagName, NamespaceView namespace) {
+        TagService tagService = TagService.of(namespace);
+        return shortName ?
+                tagService.findByNameExact(tagName) :
+                tagService.findByFullNameExact(tagName);
     }
 }

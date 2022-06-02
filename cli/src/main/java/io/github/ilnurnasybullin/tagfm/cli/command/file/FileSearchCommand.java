@@ -19,9 +19,9 @@ package io.github.ilnurnasybullin.tagfm.cli.command.file;
 import io.github.ilnurnasybullin.tagfm.api.service.FileSearchStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TaggedFileSearcher;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @CommandLine.Command(name = "search")
 public class FileSearchCommand implements Runnable {
 
-    @CommandLine.Parameters(arity = "1..", index = "0")
+    @CommandLine.Parameters(arity = "1", index = "0..*")
     private final List<String> tokens = new ArrayList<>();
 
     @CommandLine.Option(names = {"-fss", "--file-search-strategy"})
@@ -52,14 +52,14 @@ public class FileSearchCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
+        NamespaceView namespace = fileManager.namespaceOrThrow();
         TaggedFileSearcher factory = new TaggedFileSearcher(namespace);
 
-        Set<TaggedFile> files = factory.searchFiles(tokens, fileSearchStrategy);
+        Set<TaggedFileView> files = factory.searchFiles(tokens, fileSearchStrategy);
         printTags(files);
     }
 
-    private void printTags(Set<TaggedFile> files) {
+    private void printTags(Set<TaggedFileView> files) {
         if (files.isEmpty()) {
             System.out.println("Files are not found!");
             return;
@@ -67,10 +67,10 @@ public class FileSearchCommand implements Runnable {
 
         TableFormatPrinter printer = new TableFormatPrinter("%50s | %50s%n", 103);
         printer.print(new String[]{"name", "tags"}, files.stream(),
-                List.of(TaggedFile::file,
+                List.of(TaggedFileView::file,
                         file -> file
                                 .tags()
-                                .stream().map(Tag::fullName)
+                                .stream().map(TagView::fullName)
                                 .collect(Collectors.joining(", "))
                 )
         );

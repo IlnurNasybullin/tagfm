@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.core.model.tag;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 
 import java.util.Map;
 import java.util.Objects;
@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * @author Ilnur Nasybullin
  */
-public sealed class TreeTag implements Tag permits TreeTagSafety {
+public sealed class TreeTag implements TagView permits TreeTagSafety {
 
     protected final static String SEPARATOR = "/";
     

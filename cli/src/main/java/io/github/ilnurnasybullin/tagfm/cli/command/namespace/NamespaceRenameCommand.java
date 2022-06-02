@@ -16,9 +16,8 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceRenamer;
+import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -26,19 +25,23 @@ import picocli.CommandLine;
 @Singleton
 public class NamespaceRenameCommand implements Runnable {
 
-    private final FileManagerCommand fileManager;
+    private final NamespaceRepositoryService<NamespaceView> namespaceService;
 
-    @CommandLine.Parameters(arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1")
+    private String oldName;
+
+    @CommandLine.Parameters(index = "1", arity = "1")
     private String newName;
 
-    public NamespaceRenameCommand(FileManagerCommand fileManager) {
-        this.fileManager = fileManager;
+    public NamespaceRenameCommand(NamespaceRepositoryService<NamespaceView> namespaceService) {
+        this.namespaceService = namespaceService;
     }
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        NamespaceRenamer.of(namespace).rename(newName);
-        fileManager.setWriteMode();
+        NamespaceView namespace = namespaceService.find(oldName).orElseThrow(() ->
+                new NamespaceNotFoundException(String.format("Namespace with name [%s] isn't found!", oldName))
+        );
+        namespaceService.replace(newName, namespace);
     }
 }

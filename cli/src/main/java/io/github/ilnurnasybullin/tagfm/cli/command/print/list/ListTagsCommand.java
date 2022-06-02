@@ -17,9 +17,9 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -54,11 +54,11 @@ public class ListTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Tag root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
-        Function<Tag, Collection<Tag>> leafsSupplier = tag -> new TreeMap<String, Tag>(tag.children()).values();
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        TagView root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        Function<TagView, Collection<TagView>> leafsSupplier = tag -> new TreeMap<String, TagView>(tag.children()).values();
 
-        Iterator<Tag> iterator = depth.map(d ->
+        Iterator<TagView> iterator = depth.map(d ->
                         TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.LEVELED.iterator(root, leafsSupplier, d))
                         .orElse(TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(root, leafsSupplier));
 
@@ -66,11 +66,14 @@ public class ListTagsCommand implements Runnable {
         iterator.forEachRemaining(tag -> System.out.println(tag.fullName()));
     }
 
-    private Tag getTag(Namespace namespace, String tagName) {
-        return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
+    private TagView getTag(NamespaceView namespace, String tagName) {
+        TagService tagService = TagService.of(namespace);
+        return shortName ?
+                tagService.findByNameExact(tagName) :
+                tagService.findByFullNameExact(tagName);
     }
 
-    private Tag getRootTag(Namespace namespace) {
+    private TagView getRootTag(NamespaceView namespace) {
         return namespace.root();
     }
 

@@ -17,9 +17,9 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -44,17 +44,20 @@ public class ListSynonymsCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Tag tag = getTag(namespace);
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        TagView tag = getTag(namespace);
         namespace.synonymsManager()
                 .synonyms(tag)
                 .stream()
                 .filter(t -> t != tag)
-                .map(Tag::fullName)
+                .map(TagView::fullName)
                 .forEach(System.out::println);
     }
 
-    private Tag getTag(Namespace namespace) {
-        return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
+    private TagView getTag(NamespaceView namespace) {
+        TagService tagService = TagService.of(namespace);
+        return shortName ?
+                tagService.findByNameExact(tagName) :
+                tagService.findByFullNameExact(tagName);
     }
 }

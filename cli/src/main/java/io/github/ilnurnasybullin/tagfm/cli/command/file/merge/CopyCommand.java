@@ -18,9 +18,10 @@ package io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileNotFoundException;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -70,23 +71,29 @@ public class CopyCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        FileFinderManager fileFinder = FileFinderManager.of(namespace);
 
-        NamespaceFileManagerFacade facade = new NamespaceFileManagerFacade();
-        TaggedFile srcTaggedFile = facade.findExact(src, namespace);
+        TaggedFileView srcFile = fileFinder.findExact(src);
 
-        TaggedFile destTaggedFile = createIfNotExist ?
-                facade.findOrCreate(dest, namespace) :
-                facade.findExact(dest, namespace);
+        TaggedFileView destFile = createIfNotExist ?
+                fileFinder.findOrCreate(dest) :
+                fileFinder.findExact(dest);
 
-        namespace.files().add(destTaggedFile);
+        namespace.files().add(destFile);
 
         if (copyStrategy == CopyStrategy.REPLACE) {
-            destTaggedFile.tags().clear();
+            destFile.tags().clear();
         }
 
-        destTaggedFile.tags().addAll(srcTaggedFile.tags());
+        destFile.tags().addAll(srcFile.tags());
 
-        fileManager.setWriteMode();
+        fileManager.commit();
+    }
+
+    private TaggedFileNotFoundException fileNotExist(String fileName, String namespaceName) {
+        return new TaggedFileNotFoundException(
+                String.format("File [%s] isn't existing in namespace [%s]", fileName, namespaceName)
+        );
     }
 }

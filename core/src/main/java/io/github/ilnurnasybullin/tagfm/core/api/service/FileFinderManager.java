@@ -1,8 +1,9 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileFinderManagerService;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileNotFoundException;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFileSafety;
 
 import java.io.IOException;
@@ -11,19 +12,20 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Ilnur Nasybullin
  */
-public class FileFinderManager implements FileFinderManagerService<TaggedFile> {
+public class FileFinderManager implements FileFinderManagerService<TaggedFileView> {
 
-    private final Namespace namespace;
+    private final NamespaceView namespace;
 
-    private FileFinderManager(Namespace namespace) {
+    private FileFinderManager(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static FileFinderManager of(Namespace namespace) {
+    public static FileFinderManager of(NamespaceView namespace) {
         return new FileFinderManager(namespace);
     }
 
@@ -35,8 +37,23 @@ public class FileFinderManager implements FileFinderManagerService<TaggedFile> {
         }
     }
 
+    private Set<Path> toRealPaths(Collection<Path> files) {
+        return files.stream()
+                .map(this::toRealPath)
+                .collect(Collectors.toSet());
+    }
+
     @Override
-    public TaggedFile findOrCreate(Path file) {
+    public Optional<TaggedFileView> find(Path file) {
+        Path realPath = toRealPath(file);
+        return namespace.files()
+                .stream()
+                .filter(taggedFile -> Objects.equals(taggedFile.file(), realPath))
+                .findAny();
+    }
+
+    @Override
+    public TaggedFileView findOrCreate(Path file) {
         Path realPath = toRealPath(file);
         return namespace.files()
                 .stream()
@@ -45,57 +62,44 @@ public class FileFinderManager implements FileFinderManagerService<TaggedFile> {
                 .orElseGet(() -> TaggedFileSafety.init(file));
     }
 
-    private Set<Path> toRealPaths(Collection<Path> files) {
-        return files.stream().map(path -> {
-            try {
-                return path.toRealPath();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        }).collect(Collectors.toSet());
-    }
-
-    private Map<Path, TaggedFile> foundFiles(Set<Path> realPaths) {
+    private <T> Map<Path, T> removeFoundedFiles(Set<Path> realPaths, Function<TaggedFileView, T> valueFunction) {
         return namespace.files()
                 .stream()
                 .filter(file -> realPaths.remove(file.file()))
-                .collect(Collectors.toMap(TaggedFile::file, Function.identity()));
+                .collect(Collectors.toMap(TaggedFileView::file, valueFunction));
     }
 
     @Override
-    public Map<Path, TaggedFile> findOrCreate(Collection<Path> paths) {
-        Set<Path> realPaths = toRealPaths(paths);
-
-        Map<Path, TaggedFile> foundFiles = foundFiles(realPaths);
-
-        realPaths.stream()
-                .map(path -> Map.entry(path, TaggedFileSafety.init(path)))
-                .forEach(entry -> foundFiles.put(entry.getKey(), entry.getValue()));
-
-        return foundFiles;
-    }
-
-    @Override
-    public Map<Path, TaggedFile> find(Collection<Path> files) {
+    public Map<Path, Optional<TaggedFileView>> find(Collection<Path> files) {
         Set<Path> realPaths = toRealPaths(files);
-
-        Map<Path, TaggedFile> foundFiles = foundFiles(realPaths);
-
-        if (!realPaths.isEmpty()) {
-            throw new NamespaceNotExistTaggedFileException(
-                    String.format("Files [%s] is not existing in namespace [%s]!", realPaths, namespace.name())
-            );
-        }
-
-        return foundFiles;
+        return removeFoundedFiles(realPaths, Optional::of);
     }
 
     @Override
-    public Optional<TaggedFile> find(Path file) {
-        Path realPath = toRealPath(file);
-        return namespace.files()
-                .stream()
-                .filter(taggedFile -> Objects.equals(taggedFile.file(), realPath))
-                .findAny();
+    public Map<Path, TaggedFileView> findOrCreate(Collection<Path> paths) {
+        Set<Path> realPaths = toRealPaths(paths);
+        Map<Path, TaggedFileView> foundFiles = removeFoundedFiles(realPaths, Function.identity());
+        realPaths.forEach(path -> foundFiles.put(path, TaggedFileSafety.init(path)));
+        return foundFiles;
+    }
+
+    private TaggedFileNotFoundException notFound(Path file) {
+        return new TaggedFileNotFoundException(
+                String.format("File [%s] isn't found in namespace [%s]", file, namespace.name())
+        );
+    }
+
+    @Override
+    public TaggedFileView findExact(Path file) {
+        return find(file).orElseThrow(() -> notFound(file));
+    }
+
+    @Override
+    public Stream<TaggedFileView> findExact(Collection<Path> files) {
+        Map<Path, Optional<TaggedFileView>> foundFiles = find(files);
+        return files.stream()
+                .map(file -> foundFiles.getOrDefault(file, Optional.empty())
+                        .orElseThrow(() -> notFound(file))
+                );
     }
 }

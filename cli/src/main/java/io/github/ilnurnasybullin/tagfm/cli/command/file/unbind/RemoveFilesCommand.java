@@ -17,9 +17,10 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceFileManagerFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
+import io.github.ilnurnasybullin.tagfm.api.service.TaggedFileNotFoundException;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -33,7 +34,7 @@ public class RemoveFilesCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1")
+    @CommandLine.Parameters(arity = "1", index = "0..*")
     private List<Path> files;
 
     public RemoveFilesCommand(FileManagerCommand fileManager) {
@@ -42,16 +43,22 @@ public class RemoveFilesCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        List<TaggedFile> files = getFiles(namespace);
-        Set<TaggedFile> namespaceFiles = namespace.files();
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        List<TaggedFileView> files = getFiles(namespace);
+        Set<TaggedFileView> namespaceFiles = namespace.files();
         files.forEach(namespaceFiles::remove);
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 
-    private List<TaggedFile> getFiles(Namespace namespace) {
-        return new NamespaceFileManagerFacade()
-                .find(files, namespace)
+    private List<TaggedFileView> getFiles(NamespaceView namespace) {
+        return FileFinderManager.of(namespace)
+                .findExact(files)
                 .toList();
+    }
+
+    private TaggedFileNotFoundException fileNotExist(String fileName, String namespaceName) {
+        return new TaggedFileNotFoundException(
+                String.format("File [%s] isn't existing in namespace [%s]", fileName, namespaceName)
+        );
     }
 }

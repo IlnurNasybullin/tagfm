@@ -18,25 +18,25 @@ package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceTagRemoverService;
 import io.github.ilnurnasybullin.tagfm.api.service.TagRemovingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover.TagRemover;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class NamespaceTagRemover implements NamespaceTagRemoverService<Tag> {
+public class NamespaceTagRemover implements NamespaceTagRemoverService<TagView> {
 
-    private final Namespace namespace;
+    private final NamespaceView namespace;
 
-    private NamespaceTagRemover(Namespace namespace) {
+    private NamespaceTagRemover(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static NamespaceTagRemover of(Namespace namespace) {
+    public static NamespaceTagRemover of(NamespaceView namespace) {
         return new NamespaceTagRemover(namespace);
     }
 
     @Override
-    public void removeTag(Tag tag, TagRemovingStrategy strategy) {
+    public void removeTag(TagView tag, TagRemovingStrategy strategy) {
         if (tag.parent().isEmpty()) {
             throw new IllegalTagForRemovingException(
                     String.format("Tag [%s] for removing must have a parent!", tag.name())

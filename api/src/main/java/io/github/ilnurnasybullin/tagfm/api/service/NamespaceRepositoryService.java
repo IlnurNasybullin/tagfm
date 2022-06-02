@@ -16,10 +16,17 @@
 
 package io.github.ilnurnasybullin.tagfm.api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface NamespaceRepositoryService<N> {
     N init(String name, FileNamingStrategy strategy);
-    void commit(N namespace);
     Optional<N> find(String name);
+    List<N> getAll();
+    void commit(N namespace);
+    void replace(String name, N namespace);
+    void remove(N namespace);
+
+    Optional<N> getWorkingNamespace();
+    void setWorkingNamespace(String name);
 }

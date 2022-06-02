@@ -27,6 +27,7 @@ import picocli.CommandLine;
         subcommands = {
             PrintGeneralStateCommand.class,
             PrintTagTreeCommand.class,
+            PrintWorkingNamespace.class,
             ListCommand.class
         },
         description = """
@@ -39,7 +40,5 @@ public class PrintCommand implements Runnable {
     private ReusableOption option;
 
     @Override
-    public void run() {
-
-    }
+    public void run() {}
 }

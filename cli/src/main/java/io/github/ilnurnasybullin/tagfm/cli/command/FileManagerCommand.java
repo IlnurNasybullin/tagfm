@@ -19,13 +19,11 @@ package io.github.ilnurnasybullin.tagfm.cli.command;
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.file.FileCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotInitializedException;
+import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotFoundException;
 import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
 import io.github.ilnurnasybullin.tagfm.cli.command.print.PrintCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.tag.TagCommand;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceAlreadyInitializedException;
-import jakarta.annotation.PostConstruct;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -51,40 +49,29 @@ public class FileManagerCommand implements Runnable, Closeable {
 
     final static String version = "0.0.1";
 
-    private Optional<Namespace> namespace;
-    private final NamespaceRepositoryService<Namespace> namespaceService;
+    private Optional<NamespaceView> namespace;
+    private final NamespaceRepositoryService<NamespaceView> namespaceService;
 
     private boolean onCommit = false;
 
     @CommandLine.Mixin
     private ReusableOption options;
 
-    public FileManagerCommand(NamespaceRepositoryService<Namespace> namespaceService) {
+    public FileManagerCommand(NamespaceRepositoryService<NamespaceView> namespaceService) {
         this.namespaceService = namespaceService;
+        this.namespace = Optional.empty();
     }
 
-    @PostConstruct
-    private void initNamespace() {
-        initNamespace(namespaceService.find(""));
-    }
-
-    public void initNamespace(Optional<Namespace> namespace) {
+    public void initNamespace(Optional<NamespaceView> namespace) {
         this.namespace = namespace;
     }
 
-    public void checkNamespaceOnNonExisting() {
-        namespace.ifPresent(namespace -> {
-            throw new NamespaceAlreadyInitializedException(
-                    String.format("Namespace [%s] has already initialized!", namespace.name())
-            );
-        });
+    public NamespaceView namespaceOrThrow() {
+        initNamespace(namespaceService.getWorkingNamespace());
+        return namespace.orElseThrow(() -> new NamespaceNotFoundException("Working namespace isn't founded!"));
     }
 
-    public Namespace namespaceOrThrow() {
-        return namespace.orElseThrow(() -> new NamespaceNotInitializedException("Namespace isn't initialized!"));
-    }
-
-    public void setWriteMode() {
+    public void commit() {
         onCommit = true;
     }
 

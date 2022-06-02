@@ -18,17 +18,17 @@ package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.TagCreatorService;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.InvalidTagNameException;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.TreeTagSplitter;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTagSafety;
 
 import java.util.Optional;
 
-public class TagCreator implements TagCreatorService<Tag> {
+public class TagCreator implements TagCreatorService<TagView> {
 
     @Override
-    public Optional<Tag> deepCreate(String fullName) {
+    public Optional<TagView> deepCreate(String fullName) {
         String[] names = new TreeTagSplitter().tagNames(fullName);
         TreeTag root = TreeTagSafety.root();
         try {

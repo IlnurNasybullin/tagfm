@@ -16,17 +16,17 @@
 
 package io.github.ilnurnasybullin.tagfm.core.model.synonym;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public final class SynonymTagManager implements io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManager {
+public final class SynonymTagManager implements SynonymTagManagerView {
 
-    private final Map<TreeTag, SynonymClass> synonyms;
+    private final Map<TreeTag, SynonymGroup> synonyms;
 
-    private SynonymTagManager(Map<TreeTag, SynonymClass> synonyms) {
+    private SynonymTagManager(Map<TreeTag, SynonymGroup> synonyms) {
         this.synonyms = synonyms;
     }
 
@@ -34,53 +34,43 @@ public final class SynonymTagManager implements io.github.ilnurnasybullin.tagfm.
         return new SynonymTagManager(new IdentityHashMap<>());
     }
 
-    public static SynonymTagManager of(List<Set<TreeTag>> synonyms) {
-        Map<TreeTag, SynonymClass> map = new IdentityHashMap<>();
-        synonyms.forEach(tags -> {
-            SynonymClass sClass = new SynonymClass();
-            tags.forEach(tag -> {
-                map.put(tag, sClass);
-                sClass.increment();
-            });
-        });
+    public static SynonymTagManager of(List<SynonymGroup> synonyms) {
+        Map<TreeTag, SynonymGroup> map = new IdentityHashMap<>();
+        synonyms.forEach(group -> group.tags().forEach(tag -> map.put(tag, group)));
 
         return new SynonymTagManager(map);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Set<TreeTag>> synonyms() {
-        Map<SynonymClass, Set<TreeTag>> map = new IdentityHashMap<>();
-        synonyms.forEach((key, value) ->
-                map.computeIfAbsent(value, k -> Collections.newSetFromMap(new IdentityHashMap<>())).add(key));
-
-        return new ArrayList<>(map.values());
+    public List<SynonymGroup> synonymGroups() {
+        return List.copyOf(new HashSet<>(synonyms.values()));
     }
 
     private void bind(TreeTag tag, TreeTag synonym) {
-        SynonymClass tagClass = synonyms.get(tag);
-        SynonymClass synonymClass = synonyms.get(synonym);
+        SynonymGroup tagGroup = synonyms.get(tag);
+        SynonymGroup synonymGroup = synonyms.get(synonym);
 
-        if (tagClass != null && synonymClass != null) {
-            unionClasses(tagClass, synonymClass);
+        if (tagGroup != null && synonymGroup != null) {
+            unionClasses(tagGroup, synonymGroup);
             return;
         }
 
-        if (tagClass == null && synonymClass == null) {
-            SynonymClass sClass = new SynonymClass();
+        if (tagGroup == null && synonymGroup == null) {
+            SynonymGroup sClass = new SynonymGroup();
             put(tag, sClass);
             put(synonym, sClass);
             return;
         }
 
-        SynonymClass notNullClass;
+        SynonymGroup notNullClass;
         TreeTag newTag;
 
-        if (tagClass == null) {
-            notNullClass = synonymClass;
+        if (tagGroup == null) {
+            notNullClass = synonymGroup;
             newTag = tag;
         } else {
-            notNullClass = tagClass;
+            notNullClass = tagGroup;
             newTag = synonym;
         }
 
@@ -88,46 +78,39 @@ public final class SynonymTagManager implements io.github.ilnurnasybullin.tagfm.
     }
 
     @Override
-    public void bind(Tag tag, Tag synonym) {
+    public void bind(TagView tag, TagView synonym) {
         bind((TreeTag) tag, (TreeTag) synonym);
     }
 
-    private void put(TreeTag tag, SynonymClass synonymClass) {
-        synonyms.put(tag, synonymClass);
-        synonymClass.increment();
+    private void put(TreeTag tag, SynonymGroup synonymGroup) {
+        synonyms.put(tag, synonymGroup);
+        synonymGroup.tags().add(tag);
     }
 
-    private void unionClasses(SynonymClass primary, SynonymClass secondary) {
-        synonyms.replaceAll((key, value) -> {
-            if (value == secondary) {
-                primary.increment();
-                secondary.decrement();
-                return primary;
-            }
-            return value;
-        });
+    private void unionClasses(SynonymGroup primary, SynonymGroup secondary) {
+        primary.tags().addAll(secondary.tags());
+        secondary.tags().forEach(tag -> synonyms.replace(tag, primary));
     }
 
     @Override
-    public void unbind(Tag tag) {
+    public void unbind(TagView tag) {
         unbind((TreeTag) tag);
     }
 
     private void unbind(TreeTag tag) {
-        SynonymClass synonymClass = synonyms.get(tag);
-        if (synonymClass == null) {
+        SynonymGroup synonymGroup = synonyms.get(tag);
+        if (synonymGroup == null) {
             return;
         }
 
-        synonymClass.decrement();
-
-        if (synonymClass.count() < 2) {
-            synonyms.entrySet().removeIf(entry -> Objects.equals(entry.getValue(), synonymClass));
+        synonymGroup.tags().remove(tag);
+        if (synonymGroup.size() < 2) {
+            synonymGroup.tags().forEach(synonyms::remove);
         }
     }
 
     @Override
-    public void replace(Tag oldTag, Tag newTag) {
+    public void replace(TagView oldTag, TagView newTag) {
         replace((TreeTag) oldTag, (TreeTag) newTag);
     }
 
@@ -136,8 +119,8 @@ public final class SynonymTagManager implements io.github.ilnurnasybullin.tagfm.
             unbind(oldTag);
         }
 
-        SynonymClass primaryClass = synonyms.get(newTag);
-        SynonymClass secondaryClass = synonyms.get(oldTag);
+        SynonymGroup primaryClass = synonyms.get(newTag);
+        SynonymGroup secondaryClass = synonyms.get(oldTag);
 
         if (primaryClass == null || secondaryClass == null) {
             return;
@@ -148,26 +131,17 @@ public final class SynonymTagManager implements io.github.ilnurnasybullin.tagfm.
 
     @Override
     @SuppressWarnings("unchecked")
-    public Set<TreeTag> synonyms(Tag tag) {
+    public Set<TreeTag> synonyms(TagView tag) {
         return synonyms((TreeTag) tag);
     }
 
     private Set<TreeTag> synonyms(TreeTag tag) {
-        if (!synonyms.containsKey(tag)) {
-            return Set.of();
-        }
-
-        SynonymClass synonymClass = synonyms.get(tag);
-        return synonyms.entrySet()
-                .stream()
-                .filter(entry -> Objects.equals(entry.getValue(), synonymClass))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toUnmodifiableSet());
+        return Set.copyOf(synonyms.getOrDefault(tag, new SynonymGroup()).tags());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Map<TreeTag, Object> synonymMap() {
+    public Map<TreeTag, SynonymGroup> synonymMap() {
         return Collections.unmodifiableMap(synonyms);
     }
 }

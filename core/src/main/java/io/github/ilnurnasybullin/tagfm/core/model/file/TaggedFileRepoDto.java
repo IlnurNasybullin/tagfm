@@ -1,7 +1,8 @@
 package io.github.ilnurnasybullin.tagfm.core.model.file;
 
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTagRepoDto;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
+import io.github.ilnurnasybullin.tagfm.core.repository.TaggedFileEntity;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -11,15 +12,15 @@ import java.util.stream.Collectors;
 /**
  * @author Ilnur Nasybullin
  */
-public final class TaggedFileRepoDto implements io.github.ilnurnasybullin.tagfm.core.repository.TaggedFileRepoDto {
+public final class TaggedFileRepoDto implements TaggedFileEntity {
 
-    private final TaggedFile innerFile;
+    private final TaggedFileView innerFile;
 
-    private TaggedFileRepoDto(TaggedFile innerFile) {
+    private TaggedFileRepoDto(TaggedFileView innerFile) {
         this.innerFile = innerFile;
     }
 
-    public static TaggedFileRepoDto of(TaggedFile innerFile) {
+    public static TaggedFileRepoDto of(TaggedFileView innerFile) {
         return new TaggedFileRepoDto(innerFile);
     }
 

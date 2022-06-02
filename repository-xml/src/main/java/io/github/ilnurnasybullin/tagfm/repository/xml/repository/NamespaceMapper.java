@@ -17,10 +17,10 @@
 package io.github.ilnurnasybullin.tagfm.repository.xml.repository;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepoDto;
-import io.github.ilnurnasybullin.tagfm.core.repository.TagRepoDto;
-import io.github.ilnurnasybullin.tagfm.core.repository.TaggedFileRepoDto;
-import io.github.ilnurnasybullin.tagfm.repository.xml.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceEntity;
+import io.github.ilnurnasybullin.tagfm.core.repository.TagEntity;
+import io.github.ilnurnasybullin.tagfm.core.repository.TaggedFileEntity;
+import io.github.ilnurnasybullin.tagfm.repository.xml.dto.NamespaceDto;
 import io.github.ilnurnasybullin.tagfm.repository.xml.entity.*;
 
 import java.io.IOException;
@@ -41,29 +41,33 @@ public class NamespaceMapper {
         idGenerator = new AtomicLong();
     }
 
-    public NamespaceEntity from(NamespaceRepoDto namespaceRepoDto) {
-        NamespaceEntity entity = new NamespaceEntity();
-        entity.setCreated(namespaceRepoDto.created());
-        entity.setName(namespaceRepoDto.name());
+    public Namespace from(NamespaceEntity namespace) {
+        Namespace entity = new Namespace();
+        entity.setCreated(namespace.created());
+        entity.setName(namespace.name());
 
-        Map<TagRepoDto, TagEntity> tagsMap = namespaceRepoDto.tags(false)
+        Map<TagEntity, Tag> tagsMap = namespace.tags(false)
                 .collect(Collectors.toMap(Function.identity(), this::from));
 
+        //parent binding
         tagsMap.forEach((tag, tagEntity) -> tag.parent()
                 .ifPresent(tagParent -> tagEntity.setParent(tagsMap.get(tagParent))));
+
         entity.setTags(Set.copyOf(tagsMap.values()));
 
-        List<SynonymsEntity> synonymEntities = namespaceRepoDto.synonyms()
+        List<SynonymGroup> synonymEntities = namespace.synonymGroups()
                 .stream()
-                .map(synonymsSet -> synonymsSet.stream().map(tagsMap::get).collect(Collectors.toSet()))
-                .map(synonymsSet -> {
-                    SynonymsEntity synonyms = new SynonymsEntity();
-                    synonyms.setTags(synonymsSet);
-                    return synonyms;
+                .map(group -> {
+                    SynonymGroup synonymGroup = new SynonymGroup();
+                    synonymGroup.setTags(group.tags()
+                            .stream()
+                            .map(tagsMap::get)
+                            .collect(Collectors.toUnmodifiableSet()));
+                    return synonymGroup;
                 }).toList();
-        entity.setSynonyms(synonymEntities);
+        entity.setSynonymGroups(synonymEntities);
 
-        FileNamingStrategy strategy = namespaceRepoDto.fileNaming();
+        FileNamingStrategy strategy = namespace.fileNaming();
         entity.setFileNaming(FileNamingStrategyEntity.from(strategy));
 
         Path currentPath;
@@ -79,7 +83,7 @@ public class NamespaceMapper {
             case RELATIVE ->  filePath -> currentPath.relativize(filePath.toAbsolutePath()).toString();
         };
 
-        Set<TaggedFileEntity> taggedFiles = namespaceRepoDto.files()
+        Set<TaggedFile> taggedFiles = namespace.files()
                 .stream()
                 .map(taggedFile -> from(taggedFile, tagsMap, naming))
                 .collect(Collectors.toSet());
@@ -89,8 +93,8 @@ public class NamespaceMapper {
         return entity;
     }
 
-    private TaggedFileEntity from(TaggedFileRepoDto taggedFile, Map<TagRepoDto, TagEntity> tagsMap, Function<Path, String> naming) {
-        TaggedFileEntity entity = new TaggedFileEntity();
+    private TaggedFile from(TaggedFileEntity taggedFile, Map<TagEntity, Tag> tagsMap, Function<Path, String> naming) {
+        TaggedFile entity = new TaggedFile();
 
         try {
             String fileName = naming.apply(taggedFile.file().toRealPath());
@@ -99,7 +103,7 @@ public class NamespaceMapper {
             throw new UncheckedIOException(String.format("Invalid file's url [%s]", taggedFile.file()), e);
         }
 
-        Set<TagEntity> tags = taggedFile.<TagRepoDto>tags()
+        Set<Tag> tags = taggedFile.tags()
                 .stream()
                 .map(tagsMap::get)
                 .collect(Collectors.toSet());
@@ -108,13 +112,13 @@ public class NamespaceMapper {
         return entity;
     }
 
-    private TagEntity from(TagRepoDto tagRepoDto) {
-        TagEntity tagEntity = TagEntity.createWithId(idGenerator.getAndIncrement());
-        tagEntity.setName(tagRepoDto.name());
+    private Tag from(TagEntity tag) {
+        Tag tagEntity = Tag.createWithId(idGenerator.getAndIncrement());
+        tagEntity.setName(tag.name());
         return tagEntity;
     }
 
-    public NamespaceRepoDto to(NamespaceEntity entity) {
-        return Namespace.singleRoot(entity);
+    public NamespaceEntity to(Namespace entity) {
+        return NamespaceDto.singleRoot(entity);
     }
 }

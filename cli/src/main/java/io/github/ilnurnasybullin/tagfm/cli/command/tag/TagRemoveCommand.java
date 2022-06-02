@@ -16,12 +16,12 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagRemover;
 import io.github.ilnurnasybullin.tagfm.api.service.TagRemovingStrategy;
+import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagRemover;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -46,13 +46,16 @@ public class TagRemoveCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Tag searchedTag = searchTag(tagName, namespace);
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        TagView searchedTag = searchTag(namespace);
         NamespaceTagRemover.of(namespace).removeTag(searchedTag, tagRemovingStrategy);
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 
-    private Tag searchTag(String name, Namespace namespace) {
-        return new NamespaceTagSearcherFacade().searchTag(name, namespace, shortName);
+    private TagView searchTag(NamespaceView namespace) {
+        TagService tagService = TagService.of(namespace);
+        return shortName ?
+                tagService.findByNameExact(tagName) :
+                tagService.findByFullNameExact(tagName);
     }
 }

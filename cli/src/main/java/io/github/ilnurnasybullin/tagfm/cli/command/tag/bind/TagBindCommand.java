@@ -21,9 +21,9 @@ import picocli.CommandLine;
 
 @Singleton
 @CommandLine.Command(name = "bind", subcommands = {
-        BindFilesCommand.class,
-        BindSynonymsCommand.class,
-        BindParentCommand.class
+        TagBindFilesCommand.class,
+        TagBindSynonymsCommand.class,
+        TagBindParentCommand.class
 })
 public class TagBindCommand implements Runnable {
     @Override

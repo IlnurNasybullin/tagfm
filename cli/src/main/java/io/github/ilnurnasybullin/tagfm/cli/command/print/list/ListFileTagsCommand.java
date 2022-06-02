@@ -17,17 +17,14 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceNotExistTaggedFileException;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileFinderManager;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.Objects;
 
 /**
  * @author Ilnur Nasybullin
@@ -47,25 +44,14 @@ public class ListFileTagsCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Path realPath;
-        try {
-            realPath = file.toAbsolutePath().toRealPath();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        NamespaceView namespace = fileManager.namespaceOrThrow();
 
-        TaggedFile searchedFile = namespace.files()
-                .stream()
-                .filter(taggedFile -> Objects.equals(taggedFile.file(), realPath))
-                .findAny()
-                .orElseThrow(() -> new NamespaceNotExistTaggedFileException(
-                        String.format("File [%s] isn't exist in namespace [%s]!", realPath, namespace.name())
-                ));
+        FileFinderManager fileFinder = FileFinderManager.of(namespace);
+        TaggedFileView searchedFile = fileFinder.findExact(file);
 
         searchedFile.tags()
                 .stream()
-                .map(Tag::fullName)
+                .map(TagView::fullName)
                 .forEach(System.out::println);
     }
 }

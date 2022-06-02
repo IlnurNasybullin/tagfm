@@ -18,9 +18,9 @@ package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.format.TreeTagPrinter;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -47,17 +47,20 @@ public class PrintTagTreeCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        Tag root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        TagView root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
         TreeTagPrinter printer = new TreeTagPrinter(root);
         printer.print();
     }
 
-    private Tag getTag(Namespace namespace, String tagName) {
-        return new NamespaceTagSearcherFacade().searchTag(tagName, namespace, shortName);
+    private TagView getTag(NamespaceView namespace, String tagName) {
+        TagService tagService = TagService.of(namespace);
+        return shortName ?
+                tagService.findByNameExact(tagName) :
+                tagService.findByFullNameExact(tagName);
     }
 
-    private Tag getRootTag(Namespace namespace) {
+    private TagView getRootTag(NamespaceView namespace) {
         return namespace.root();
     }
 }

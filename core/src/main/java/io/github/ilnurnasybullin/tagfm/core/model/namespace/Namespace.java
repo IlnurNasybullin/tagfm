@@ -1,6 +1,7 @@
 package io.github.ilnurnasybullin.tagfm.core.model.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFile;
 import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
@@ -12,7 +13,7 @@ import java.util.Set;
 /**
  * @author Ilnur Nasybullin
  */
-public sealed class Namespace implements io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace permits NamespaceSafety {
+public sealed class Namespace implements NamespaceView permits NamespaceSafety {
 
     private String name;
     private final ZonedDateTime created;

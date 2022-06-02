@@ -2,18 +2,20 @@ package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.model.namespace.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.model.namespace.NamespaceMapper;
 import io.github.ilnurnasybullin.tagfm.core.model.namespace.NamespaceRepoDto;
 import io.github.ilnurnasybullin.tagfm.core.model.namespace.NamespaceSafety;
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Ilnur Nasybullin
  */
-public class NamespaceRepositoryServiceImpl implements NamespaceRepositoryService<Namespace> {
+public class NamespaceRepositoryServiceImpl implements NamespaceRepositoryService<NamespaceView> {
 
     private final NamespaceRepository repository;
 
@@ -30,7 +32,7 @@ public class NamespaceRepositoryServiceImpl implements NamespaceRepositoryServic
     }
 
     @Override
-    public Namespace init(String name, FileNamingStrategy strategy) {
+    public NamespaceView init(String name, FileNamingStrategy strategy) {
         find(name).ifPresent(namespace -> {
             throw new NamespaceAlreadyInitializedException(String.format("Namespace [%s] already initialized!", namespace.name()));
         });
@@ -39,13 +41,48 @@ public class NamespaceRepositoryServiceImpl implements NamespaceRepositoryServic
     }
 
     @Override
-    public void commit(Namespace namespace) {
+    public Optional<NamespaceView> find(String name) {
+        return repository.findBy(name)
+                .map(namespace -> NamespaceMapper.of(namespace).mapping());
+    }
+
+    @Override
+    public List<NamespaceView> getAll() {
+        return repository.getAll()
+                .stream()
+                .map(namespace -> (NamespaceView) NamespaceMapper.of(namespace).mapping())
+                .toList();
+    }
+
+    @Override
+    public void commit(NamespaceView namespace) {
         repository.commit(NamespaceRepoDto.of(namespace));
     }
 
     @Override
-    public Optional<Namespace> find(String name) {
-        return repository.findBy(name)
+    public void replace(String name, NamespaceView replacingNamespace) {
+        find(name).ifPresent(namespace -> {
+            throw new NamespaceAlreadyInitializedException(
+                    String.format("Namespace [%s] is already exist!", namespace.name())
+            );
+        });
+
+        repository.replace(name, NamespaceRepoDto.of(replacingNamespace));
+    }
+
+    @Override
+    public void remove(NamespaceView namespace) {
+        repository.remove(NamespaceRepoDto.of(namespace));
+    }
+
+    @Override
+    public Optional<NamespaceView> getWorkingNamespace() {
+        return repository.getWorkingNamespace()
                 .map(namespace -> NamespaceMapper.of(namespace).mapping());
+    }
+
+    @Override
+    public void setWorkingNamespace(String name) {
+        repository.setWorkingNamespace(name);
     }
 }

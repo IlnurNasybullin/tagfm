@@ -17,8 +17,8 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
@@ -27,15 +27,15 @@ import java.util.Map;
 
 public class RebaseNewTagParentBinder implements TagParentBinder {
 
-    private final Namespace namespace;
-    private final FilesTagManagerService<Tag> fileTagsManager;
+    private final NamespaceView namespace;
+    private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private RebaseNewTagParentBinder(Namespace namespace, FilesTagManagerService<Tag> fileTagsManager) {
+    private RebaseNewTagParentBinder(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
         this.namespace = namespace;
         this.fileTagsManager = fileTagsManager;
     }
 
-    public static RebaseNewTagParentBinder of(Namespace namespace) {
+    public static RebaseNewTagParentBinder of(NamespaceView namespace) {
         return new RebaseNewTagParentBinder(namespace, FilesTagManager.of(namespace));
     }
 

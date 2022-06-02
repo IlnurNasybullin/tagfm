@@ -16,9 +16,9 @@
 
 package io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
 
 import java.util.Map;
@@ -29,22 +29,22 @@ import java.util.Set;
  */
 public class SimpleSearchFilter implements TaggedFilesFilter {
 
-    private final LogicalExpressionEvaluator<Tag> evaluator;
+    private final LogicalExpressionEvaluator<TagView> evaluator;
 
-    private SimpleSearchFilter(LogicalExpressionEvaluator<Tag> evaluator) {
+    private SimpleSearchFilter(LogicalExpressionEvaluator<TagView> evaluator) {
         this.evaluator = evaluator;
     }
 
-    public static TaggedFilesFilter of(Namespace namespace,
+    public static TaggedFilesFilter of(NamespaceView namespace,
                                        LogicalExpressionEvaluator<String> expressionEvaluator,
-                                       Map<String, Tag> usedTags) {
-        LogicalExpressionEvaluator<Tag> tagsEvaluator = expressionEvaluator.map(usedTags::get);
+                                       Map<String, TagView> usedTags) {
+        LogicalExpressionEvaluator<TagView> tagsEvaluator = expressionEvaluator.map(usedTags::get);
         return new SimpleSearchFilter(tagsEvaluator);
     }
 
     @Override
-    public boolean test(TaggedFile file) {
-        Set<Tag> tags = file.tags();
+    public boolean test(TaggedFileView file) {
+        Set<TagView> tags = file.tags();
         return evaluator.evaluate(tags::contains);
     }
 }

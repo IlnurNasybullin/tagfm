@@ -27,7 +27,8 @@ import picocli.CommandLine;
         ListFilesCommand.class,
         ListFileTagsCommand.class,
         ListTagsCommand.class,
-        ListSynonymsCommand.class
+        ListSynonymsCommand.class,
+        ListNamespaces.class
 })
 public class ListCommand implements Runnable {
     @Override

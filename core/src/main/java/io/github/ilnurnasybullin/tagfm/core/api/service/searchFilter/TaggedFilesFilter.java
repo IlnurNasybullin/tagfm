@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 
 import java.util.function.Predicate;
 
@@ -24,6 +24,4 @@ import java.util.function.Predicate;
  * @author Ilnur Nasybullin
  */
 @FunctionalInterface
-public interface TaggedFilesFilter extends Predicate<TaggedFile> {
-
-}
+public interface TaggedFilesFilter extends Predicate<TaggedFileView> { }

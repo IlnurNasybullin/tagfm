@@ -17,8 +17,9 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.InvalidTagNameException;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagCreator;
 import jakarta.inject.Singleton;
@@ -26,7 +27,6 @@ import picocli.CommandLine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Singleton
 @CommandLine.Command(name = "add", description = "add tags in current namespace")
@@ -34,7 +34,7 @@ public class TagAddCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(index = "*", paramLabel = "tags", arity = "1..*",
+    @CommandLine.Parameters(index = "0..*", paramLabel = "tags", arity = "1",
             description = "adding tags in current namespace"
     )
     private final List<String> tags = new ArrayList<>();
@@ -45,14 +45,14 @@ public class TagAddCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
+        NamespaceView namespace = fileManager.namespaceOrThrow();
         TagCreator creator = new TagCreator();
-        List<Tag> treeTags = tags.stream()
-                .map(creator::deepCreate)
-                .flatMap(Optional::stream)
-                .toList();
+        List<TagView> treeTags = tags.stream()
+                .map(tagName -> creator.deepCreate(tagName).orElseThrow(() ->
+                        new InvalidTagNameException(String.format("Invalid tag name [%s] for creating!", tagName))
+                )).toList();
 
         NamespaceTagAdder.of(namespace).addTags(treeTags);
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 }

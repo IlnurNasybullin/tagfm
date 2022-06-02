@@ -2,11 +2,12 @@ package io.github.ilnurnasybullin.tagfm.core.model.namespace;
 
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFile;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFileSafety;
+import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymGroup;
 import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTagSafety;
-import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepoDto;
-import io.github.ilnurnasybullin.tagfm.core.repository.TagRepoDto;
+import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceEntity;
+import io.github.ilnurnasybullin.tagfm.core.repository.TagEntity;
 import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 
 import java.util.*;
@@ -17,21 +18,21 @@ import java.util.stream.Collectors;
  */
 public class NamespaceMapper {
 
-    private final NamespaceRepoDto namespace;
+    private final NamespaceEntity namespace;
 
-    private NamespaceMapper(NamespaceRepoDto namespace) {
+    private NamespaceMapper(NamespaceEntity namespace) {
         this.namespace = namespace;
     }
 
-    public static NamespaceMapper of(NamespaceRepoDto namespace) {
+    public static NamespaceMapper of(NamespaceEntity namespace) {
         return new NamespaceMapper(namespace);
     }
 
     public Namespace mapping() {
         TreeTag root = TreeTagSafety.root();
-        Map<TagRepoDto, TreeTag> tagsMap = new HashMap<>();
-        Iterator<TagRepoDto> iterator = TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE
-                        .iterator(namespace.root(), TagRepoDto::children);
+        Map<TagEntity, TreeTag> tagsMap = new HashMap<>();
+        Iterator<TagEntity> iterator = TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE
+                        .iterator(namespace.root(), TagEntity::children);
 
         iterator.next();
         iterator.forEachRemaining(tagRep -> {
@@ -43,15 +44,15 @@ public class NamespaceMapper {
             tagsMap.put(tagRep, tag);
         });
 
-        List<Set<TreeTag>> synonyms = namespace.synonyms()
+        List<SynonymGroup> synonyms = namespace.synonymGroups()
                 .stream()
-                .map(tags -> tags.stream()
-                        .map(tagsMap::get)
-                        .collect(
-                                () -> Collections.<TreeTag>newSetFromMap(new IdentityHashMap<>()),
-                                Set::add,
-                                Set::addAll
-                        ))
+                .map(sGroup -> {
+                    List<TreeTag> tags = sGroup.tags()
+                            .stream()
+                            .map(tagsMap::get)
+                            .collect(Collectors.toList());
+                    return new SynonymGroup(tags);
+                })
                 .collect(Collectors.toList());
 
         Set<TaggedFile> files = namespace.files().stream().map(file -> {

@@ -17,26 +17,26 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceTagAdderService;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class NamespaceTagAdder implements NamespaceTagAdderService<Tag> {
+public class NamespaceTagAdder implements NamespaceTagAdderService<TagView> {
 
-    private final Namespace namespace;
+    private final NamespaceView namespace;
 
-    private NamespaceTagAdder(Namespace namespace) {
+    private NamespaceTagAdder(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static NamespaceTagAdder of(Namespace namespace) {
+    public static NamespaceTagAdder of(NamespaceView namespace) {
         return new NamespaceTagAdder(namespace);
     }
 
     @Override
-    public void addTag(Tag tag) {
+    public void addTag(TagView tag) {
         addTag((TreeTag) namespace.root(), (TreeTag) tag);
     }
 

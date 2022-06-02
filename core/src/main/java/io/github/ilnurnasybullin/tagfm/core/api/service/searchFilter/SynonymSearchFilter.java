@@ -16,12 +16,15 @@
 
 package io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
+import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymGroup;
+import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,32 +34,32 @@ import java.util.stream.Collectors;
  */
 public class SynonymSearchFilter implements TaggedFilesFilter {
 
-    private final Map<Tag, Object> synonymsClass;
-    private final LogicalExpressionEvaluator<Object> evaluator;
+    private final Map<TagView, SynonymGroup> synonymsClass;
+    private final LogicalExpressionEvaluator<SynonymGroup> evaluator;
 
-    private SynonymSearchFilter(Map<Tag, Object> synonymsClass,
-                                LogicalExpressionEvaluator<Object> evaluator) {
+    private SynonymSearchFilter(Map<TagView, SynonymGroup> synonymsClass,
+                                LogicalExpressionEvaluator<SynonymGroup> evaluator) {
         this.synonymsClass = synonymsClass;
         this.evaluator = evaluator;
     }
 
-    public static TaggedFilesFilter of(Namespace namespace,
-                                LogicalExpressionEvaluator<String> expressionEvaluator,
-                                Map<String, Tag> usedTags) {
-        Map<Tag, Object> synonyms = new HashMap<>(namespace.synonymsManager().synonymMap());
+    public static TaggedFilesFilter of(NamespaceView namespace,
+                                       LogicalExpressionEvaluator<String> expressionEvaluator,
+                                       Map<String, TagView> usedTags) {
+        Map<TagView, SynonymGroup> synonyms = new HashMap<>(namespace.synonymsManager().synonymMap());
         usedTags.values()
                 .stream()
                 .filter(tag -> !synonyms.containsKey(tag))
-                .forEach(tag -> synonyms.put(tag, tag));
+                .forEach(tag -> synonyms.put(tag, new SynonymGroup(List.of((TreeTag) tag))));
 
-        LogicalExpressionEvaluator<Object> evaluator =
+        LogicalExpressionEvaluator<SynonymGroup> evaluator =
                 expressionEvaluator.map(tagName -> synonyms.get(usedTags.get(tagName)));
 
         return new SynonymSearchFilter(synonyms, evaluator);
     }
 
     @Override
-    public boolean test(TaggedFile file) {
+    public boolean test(TaggedFileView file) {
         Set<Object> synonyms = file.tags()
                 .stream()
                 .map(synonymsClass::get)

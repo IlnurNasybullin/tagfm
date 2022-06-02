@@ -1,7 +1,7 @@
 package io.github.ilnurnasybullin.tagfm.core.model.tag;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
-import io.github.ilnurnasybullin.tagfm.core.repository.TagRepoDto;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.repository.TagEntity;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -11,15 +11,15 @@ import java.util.stream.Collectors;
 /**
  * @author Ilnur Nasybullin
  */
-public final class TreeTagRepoDto implements TagRepoDto {
+public final class TreeTagRepoDto implements TagEntity {
 
-    private final Tag innerTag;
+    private final TagView innerTag;
 
-    private TreeTagRepoDto(Tag innerTag) {
+    private TreeTagRepoDto(TagView innerTag) {
         this.innerTag = innerTag;
     }
 
-    public static TreeTagRepoDto of(Tag tag) {
+    public static TreeTagRepoDto of(TagView tag) {
         return new TreeTagRepoDto(tag);
     }
 

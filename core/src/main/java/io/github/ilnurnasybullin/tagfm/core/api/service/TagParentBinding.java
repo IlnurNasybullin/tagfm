@@ -18,25 +18,29 @@ package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingService;
 import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder.*;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class TagParentBinding implements TagParentBindingService<Tag> {
+public class TagParentBinding implements TagParentBindingService<TagView> {
 
-    private final Namespace namespace;
+    private final NamespaceView namespace;
 
-    private TagParentBinding(Namespace namespace) {
+    private TagParentBinding(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static TagParentBinding of(Namespace namespace) {
+    public static TagParentBinding of(NamespaceView namespace) {
         return new TagParentBinding(namespace);
     }
 
     @Override
-    public void bindParent(Tag tag, Tag parent, TagParentBindingStrategy strategy) {
+    public void bind(TagView tag, TagView parent, TagParentBindingStrategy strategy) {
+        if (parent == null) {
+            unbind(tag, strategy);
+        }
+
         TagParentBinder binder = switch (strategy) {
             case THROW_IF_COLLISION -> new ThrowIfCollisionTagParentBinder();
             case REBASE_OLD -> RebaseOldTagParentBinder.of(namespace);
@@ -47,9 +51,9 @@ public class TagParentBinding implements TagParentBindingService<Tag> {
     }
 
     @Override
-    public void unbind(Tag tag, TagParentBindingStrategy strategy) {
-        Tag root = namespace.root();
-        bindParent(tag, root, strategy);
+    public void unbind(TagView tag, TagParentBindingStrategy strategy) {
+        TagView root = namespace.root();
+        bind(tag, root, strategy);
     }
 
 }

@@ -16,14 +16,14 @@
 
 package io.github.ilnurnasybullin.tagfm.core.api.service.util;
 
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 
 import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
-public class CollisionWalker<T extends Tag> {
+public class CollisionWalker<T extends TagView> {
 
     private final BiConsumer<T, T> hasCollision;
     private final BiConsumer<T, T> noCollision;
@@ -33,8 +33,8 @@ public class CollisionWalker<T extends Tag> {
         this.noCollision = noCollision;
     }
 
-    public static <T extends Tag> CollisionWalker<T> of(BiConsumer<T, T> hasCollision,
-                                            BiConsumer<T, T> noCollision) {
+    public static <T extends TagView> CollisionWalker<T> of(BiConsumer<T, T> hasCollision,
+                                                            BiConsumer<T, T> noCollision) {
         return new CollisionWalker<>(hasCollision, noCollision);
     }
 

@@ -1,5 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.core.model.file;
 
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.nio.file.Path;
@@ -9,7 +10,7 @@ import java.util.Set;
 /**
  * @author Ilnur Nasybullin
  */
-public sealed class TaggedFile implements io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFile permits TaggedFileSafety {
+public sealed class TaggedFile implements TaggedFileView permits TaggedFileSafety {
 
     private Path file;
     private final Set<TreeTag> tags;

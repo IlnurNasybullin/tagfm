@@ -17,14 +17,15 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.util.NamespaceTagSearcherFacade;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Namespace;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManager;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.Tag;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Singleton
@@ -45,16 +46,17 @@ public class UnbindSynonymsCommand implements Runnable {
 
     @Override
     public void run() {
-        Namespace namespace = fileManager.namespaceOrThrow();
-        List<Tag> tags = getTags(namespace);
-        SynonymTagManager synonymsManager = namespace.synonymsManager();
+        NamespaceView namespace = fileManager.namespaceOrThrow();
+        Collection<TagView> tags = getTags(namespace);
+        SynonymTagManagerView synonymsManager = namespace.synonymsManager();
         tags.forEach(synonymsManager::unbind);
-        fileManager.setWriteMode();
+        fileManager.commit();
     }
 
-    private List<Tag> getTags(Namespace namespace) {
-        return new NamespaceTagSearcherFacade()
-                .searchTags(tags, namespace, shortName)
-                .toList();
+    private Collection<TagView> getTags(NamespaceView namespace) {
+        TagService tagService = TagService.of(namespace);
+        return shortName ?
+                tagService.findByNamesExact(tags).values() :
+                tagService.findByFullNamesExact(tags).values();
     }
 }
