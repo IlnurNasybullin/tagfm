@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service;
 
-import io.github.ilnurnasybullin.tagfm.api.service.FileReplacingService;
+import io.github.ilnurnasybullin.tagfm.api.service.FileTagsReplacingService;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFile;
@@ -10,16 +10,16 @@ import java.nio.file.Path;
 /**
  * @author Ilnur Nasybullin
  */
-public class FileReplacing implements FileReplacingService<TaggedFileView> {
+public class FileTagsReplacing implements FileTagsReplacingService<TaggedFileView> {
 
     private final NamespaceView namespace;
 
-    private FileReplacing(NamespaceView namespace) {
+    private FileTagsReplacing(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static FileReplacing of(NamespaceView namespace) {
-        return new FileReplacing(namespace);
+    public static FileTagsReplacing of(NamespaceView namespace) {
+        return new FileTagsReplacing(namespace);
     }
 
     @Override

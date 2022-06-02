@@ -6,6 +6,6 @@ import java.nio.file.Path;
  * @author Ilnur Nasybullin
  */
 @FunctionalInterface
-public interface FileReplacingService<TF> {
+public interface FileTagsReplacingService<TF> {
     void replace(TF file, Path newPath);
 }
