@@ -130,12 +130,11 @@ public final class SynonymTagManager implements SynonymTagManagerView {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Set<TreeTag> synonyms(TagView tag) {
+    public Set<TagView> synonyms(TagView tag) {
         return synonyms((TreeTag) tag);
     }
 
-    private Set<TreeTag> synonyms(TreeTag tag) {
+    private Set<TagView> synonyms(TreeTag tag) {
         return Set.copyOf(synonyms.getOrDefault(tag, new SynonymGroup()).tags());
     }
 
