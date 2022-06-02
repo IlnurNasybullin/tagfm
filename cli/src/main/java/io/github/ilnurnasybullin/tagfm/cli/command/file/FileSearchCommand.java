@@ -22,7 +22,7 @@ import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.FileSearcher;
+import io.github.ilnurnasybullin.tagfm.core.api.service.FileSearching;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -53,7 +53,7 @@ public class FileSearchCommand implements Runnable {
     @Override
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
-        FileSearcher factory = new FileSearcher(namespace);
+        FileSearching factory = new FileSearching(namespace);
 
         Set<TaggedFileView> files = factory.searchFiles(tokens, fileSearchStrategy);
         printTags(files);

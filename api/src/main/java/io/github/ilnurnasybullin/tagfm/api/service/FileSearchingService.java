@@ -7,6 +7,6 @@ import java.util.Set;
  * @author Ilnur Nasybullin
  */
 @FunctionalInterface
-public interface FileSearcherService<TF> {
+public interface FileSearchingService<TF> {
     Set<TF> searchFiles(List<String> expressionTokens, FileSearchStrategy searchStrategy);
 }
