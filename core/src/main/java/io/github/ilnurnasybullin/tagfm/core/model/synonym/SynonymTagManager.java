@@ -88,6 +88,10 @@ public final class SynonymTagManager implements SynonymTagManagerView {
     }
 
     private void unionClasses(SynonymGroup primary, SynonymGroup secondary) {
+        if (Objects.equals(primary, secondary)) {
+            return;
+        }
+
         primary.tags().addAll(secondary.tags());
         secondary.tags().forEach(tag -> synonyms.replace(tag, primary));
     }
