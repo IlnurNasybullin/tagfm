@@ -25,7 +25,7 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class UpChildrenWithoutConflicts implements TagRemover {
+public class UpChildrenWithoutConflicts implements InnerNamespaceTagRemover {
 
     private final NamespaceView namespace;
     private final FilesTagManagerService<TagView> fileTagsManager;

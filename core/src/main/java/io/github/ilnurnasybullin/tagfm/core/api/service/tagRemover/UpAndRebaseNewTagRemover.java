@@ -26,7 +26,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.service.IllegalTagForRemovingExc
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class UpAndRebaseNewTagRemover implements TagRemover {
+public class UpAndRebaseNewTagRemover implements InnerNamespaceTagRemover {
 
     private final NamespaceView namespace;
     private final FilesTagManagerService<TagView> fileTagsManager;

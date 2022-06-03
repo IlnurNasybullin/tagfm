@@ -26,7 +26,7 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class MergeTagParentBinder implements TagParentBinder {
+public class MergeTagParentBinder implements InnerTagParentBinder {
 
     private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;

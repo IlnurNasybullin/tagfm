@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.api.service.NamespaceTagRemovingService;
 import io.github.ilnurnasybullin.tagfm.api.service.TagRemovingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover.TagRemover;
+import io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover.InnerNamespaceTagRemover;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 public class NamespaceTagRemover implements NamespaceTagRemovingService<TagView> {
@@ -43,7 +43,7 @@ public class NamespaceTagRemover implements NamespaceTagRemovingService<TagView>
             );
         }
 
-        TagRemover remover = TagRemover.instanceRemover(strategy, namespace);
+        InnerNamespaceTagRemover remover = InnerNamespaceTagRemover.instanceRemover(strategy, namespace);
         remover.removeTag((TreeTag) tag);
     }
 

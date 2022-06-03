@@ -19,7 +19,7 @@ package io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TreeTagCollisionException;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class ThrowIfCollisionTagParentBinder implements TagParentBinder {
+public class ThrowIfCollisionTagParentBinder implements InnerTagParentBinder {
 
     @Override
     public void bindParent(TreeTag tag, TreeTag parent) {

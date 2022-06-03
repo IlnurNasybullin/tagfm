@@ -22,7 +22,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 
-public class RemoveChildrenTagRemover implements TagRemover {
+public class RemoveChildrenTagRemover implements InnerNamespaceTagRemover {
 
     private final NamespaceView namespace;
 

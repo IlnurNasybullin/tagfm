@@ -16,9 +16,20 @@
 
 package io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder;
 
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 @FunctionalInterface
-public interface TagParentBinder {
+public interface InnerTagParentBinder {
     void bindParent(TreeTag tag, TreeTag parent);
+
+    static InnerTagParentBinder instanceBinder(NamespaceView namespace, TagParentBindingStrategy bindingStrategy) {
+        return switch (bindingStrategy) {
+            case THROW_IF_COLLISION -> new ThrowIfCollisionTagParentBinder();
+            case REBASE_OLD -> RebaseOldTagParentBinder.of(namespace);
+            case REBASE_NEW -> RebaseNewTagParentBinder.of(namespace);
+            case MERGE -> MergeTagParentBinder.of(namespace);
+        };
+    }
 }

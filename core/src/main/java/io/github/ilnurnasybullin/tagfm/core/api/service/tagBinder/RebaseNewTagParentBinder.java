@@ -26,7 +26,7 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class RebaseNewTagParentBinder implements TagParentBinder {
+public class RebaseNewTagParentBinder implements InnerTagParentBinder {
 
     private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
