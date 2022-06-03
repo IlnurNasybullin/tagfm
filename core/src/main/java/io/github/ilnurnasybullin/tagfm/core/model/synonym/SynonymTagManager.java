@@ -87,10 +87,15 @@ public final class SynonymTagManager implements SynonymTagManagerView {
         synonymGroup.tags().add(tag);
     }
 
-    private void unionClasses(SynonymGroup primary, SynonymGroup secondary) {
-        if (Objects.equals(primary, secondary)) {
+    private void unionClasses(SynonymGroup group1, SynonymGroup group2) {
+        if (Objects.equals(group1, group2)) {
             return;
         }
+
+        boolean group1IsPrimary = group1.tags().size() > group2.tags().size();
+
+        SynonymGroup primary = group1IsPrimary ? group1 : group2;
+        SynonymGroup secondary = group1IsPrimary ? group2 : group1;
 
         primary.tags().addAll(secondary.tags());
         secondary.tags().forEach(tag -> synonyms.replace(tag, primary));
