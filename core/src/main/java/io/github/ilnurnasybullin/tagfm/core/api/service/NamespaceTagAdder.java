@@ -24,6 +24,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class NamespaceTagAdder implements NamespaceTagAddingService<TagView> {
 
@@ -43,8 +44,15 @@ public class NamespaceTagAdder implements NamespaceTagAddingService<TagView> {
     }
 
     private void addTag(TreeTag parent, TreeTag child) {
+        TreeTag childRoot = child;
+        Optional<TreeTag> childParent = child.parent();
+        while (childParent.isPresent()) {
+            childRoot = childParent.get();
+            childParent = childRoot.parent();
+        }
+
         TagParentBindingService<TagView> parentBinder = TagParentBinder.of(namespace);
-        parentBinder.bind(child, parent, TagParentBindingStrategy.MERGE);
+        parentBinder.bind(childRoot, parent, TagParentBindingStrategy.MERGE);
     }
 
 }
