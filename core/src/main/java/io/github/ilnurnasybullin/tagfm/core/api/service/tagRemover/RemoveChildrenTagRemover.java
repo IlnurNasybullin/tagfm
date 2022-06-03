@@ -18,14 +18,9 @@ package io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover;
 
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
-
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Set;
 
 public class RemoveChildrenTagRemover implements TagRemover {
 
@@ -40,15 +35,16 @@ public class RemoveChildrenTagRemover implements TagRemover {
     }
 
     @Override
-    public void removeTag(TreeTag tag) {
-        tag.reparent(null);
-
-        Set<TagView> tags = Collections.newSetFromMap(new IdentityHashMap<>());
-        TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(tag, t -> t.children().values())
-                .forEachRemaining(tags::add);
+    public void removeTag(TreeTag removingTag) {
+        removingTag.reparent(null);
 
         SynonymTagManagerView synonymManager = namespace.synonymsManager();
-        tags.forEach(synonymManager::unbind);
-        FilesTagManager.of(namespace).removeTags(tags);
+        FilesTagManager filesTagManager = FilesTagManager.of(namespace);
+        TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE
+                .iterator(removingTag, tag -> tag.children().values())
+                .forEachRemaining(tag -> {
+                    synonymManager.unbind(tag);
+                    filesTagManager.removeTag(tag);
+                });
     }
 }
