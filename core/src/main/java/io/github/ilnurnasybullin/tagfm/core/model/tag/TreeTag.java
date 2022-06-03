@@ -25,18 +25,9 @@ public sealed class TreeTag implements TagView permits TreeTagSafety {
         this.children = children;
     }
 
-    protected static String fullName(TreeTag parent, String name) {
-        return parent == null ? name : String.format("%s%s%s", parent.fullName(), SEPARATOR, name);
-    }
-
-    protected String calculateFullName(TreeTag parent, String name) {
-        return fullName(parent, name);
-    }
-
     @Override
     public void rename(String newName) {
         this.name = newName;
-        this.fullName = calculateFullName(parent, newName);
     }
 
     @Override
@@ -51,6 +42,10 @@ public sealed class TreeTag implements TagView permits TreeTagSafety {
 
     public void reparent(TreeTag newParent) {
         this.parent = newParent;
+    }
+
+    protected void renameFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     @Override

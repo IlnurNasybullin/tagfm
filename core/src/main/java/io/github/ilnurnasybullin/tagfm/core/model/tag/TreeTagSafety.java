@@ -51,7 +51,7 @@ public final class TreeTagSafety extends TreeTag {
     }
 
     private static TreeTag init(String name, TreeTag parent, Map<String, TreeTag> children) {
-        return new TreeTagSafety(name, fullName(parent, name), parent, children);
+        return new TreeTagSafety(name, calculateFullName(parent, name), parent, children);
     }
 
     public static TreeTag root() {
@@ -69,6 +69,14 @@ public final class TreeTagSafety extends TreeTag {
         return initWithParent(name, parent);
     }
 
+    private static String calculateFullName(TreeTag parent, String name) {
+        return parent == null ? name : String.format("%s%s%s", parent.fullName(), SEPARATOR, name);
+    }
+
+    private void recalculateFullName() {
+        renameFullName(calculateFullName(parent().orElse(null), name()));
+    }
+
     private void checkOnUniqueLeaf(String name) {
         checkOnUniqueLeaf(name, parent());
     }
@@ -78,6 +86,7 @@ public final class TreeTagSafety extends TreeTag {
         checkName(newName);
         checkOnUniqueLeaf(newName);
         super.rename(newName);
+        recalculateFullName();
     }
 
     @Override
@@ -88,6 +97,7 @@ public final class TreeTagSafety extends TreeTag {
         if (newParent != null) {
             newParent.children().put(name(), this);
         }
+        recalculateFullName();
     }
     
 }
