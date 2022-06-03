@@ -48,9 +48,8 @@ public class TagAddCommand implements Runnable {
         NamespaceView namespace = fileManager.namespaceOrThrow();
         TagCreator creator = new TagCreator();
         List<TagView> treeTags = tags.stream()
-                .map(tagName -> creator.deepCreate(tagName).orElseThrow(() ->
-                        new InvalidTagNameException(String.format("Invalid tag name [%s] for creating!", tagName))
-                )).toList();
+                .map(creator::createByFullName)
+                .toList();
 
         NamespaceTagAdder.of(namespace).addTags(treeTags);
         fileManager.commit();

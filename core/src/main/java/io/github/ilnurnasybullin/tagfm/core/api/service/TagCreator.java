@@ -28,13 +28,13 @@ import java.util.Optional;
 public class TagCreator implements TagCreatorService<TagView> {
 
     @Override
-    public Optional<TagView> deepCreate(String fullName) {
+    public TagView createByFullName(String fullName) {
         String[] names = new TreeTagSplitter().tagNames(fullName);
         TreeTag root = TreeTagSafety.root();
+        TreeTag creatingTag = root;
         try {
-            TreeTag tag = root;
             for (String name: names) {
-                tag = TreeTagSafety.of(name, tag);
+                creatingTag = TreeTagSafety.of(name, creatingTag);
             }
         } catch (InvalidTagNameException e) {
             throw  new InvalidTagNameException(
@@ -42,12 +42,12 @@ public class TagCreator implements TagCreatorService<TagView> {
             );
         }
 
-        Optional<TreeTag> tagRoot = root.children()
+        root.children()
                 .values()
                 .stream()
-                .findAny();
-        tagRoot.ifPresent(t -> t.reparent(null));
+                .findAny()
+                .ifPresent(tag -> tag.reparent(null));
 
-        return tagRoot.map(t -> t);
+        return creatingTag;
     }
 }

@@ -23,7 +23,6 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.InvalidTagNameException;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.TreeTagSplitter;
-import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTagSafety;
 
 import java.util.*;
 import java.util.function.Function;
@@ -77,16 +76,14 @@ public class TagService implements NamespaceTagService<TagView> {
     @Override
     public TagView findOrCreateByFullName(String fullName) {
         return findByFullName(fullName)
-                .or(() -> new TagCreator().deepCreate(fullName))
-                .orElseThrow(() -> invalidTagName(fullName));
+                .orElseGet(() -> new TagCreator().createByFullName(fullName));
     }
 
     @Override
     public TagView findOrCreateByNameExact(String name) {
         List<TagView> tags = findByName(name).toList();
         if (tags.isEmpty()) {
-            return new TagCreator().deepCreate(name)
-                    .orElseThrow(() -> invalidTagName(name));
+            return new TagCreator().createByFullName(name);
         }
 
         return getExactValue(name, tags);
@@ -100,9 +97,9 @@ public class TagService implements NamespaceTagService<TagView> {
                 .collect(Collectors.toMap(TagView::fullName, Function.identity()));
 
         TagCreator tagCreator = new TagCreator();
-        setNames.stream().map(tagName -> tagCreator.deepCreate(tagName)
-                .orElseThrow(() -> invalidTagName(tagName))
-        ).forEach(tag -> tags.put(tag.fullName(), tag));
+        setNames.stream()
+                .map(tagCreator::createByFullName)
+                .forEach(tag -> tags.put(tag.fullName(), tag));
 
         return tags;
     }
@@ -118,8 +115,9 @@ public class TagService implements NamespaceTagService<TagView> {
         Map<String, List<TagView>> foundTags = findByNames(names);
         TagCreator tagCreator = new TagCreator();
         return names.stream()
-                .map(name -> getExactValue(name, foundTags.getOrDefault(name,
-                        List.of(tagCreator.deepCreate(name).orElseThrow(() -> invalidTagName(name)))
+                .map(name -> getExactValue(name, foundTags.getOrDefault(
+                        name,
+                        List.of(tagCreator.createByFullName(name))
                 ))).collect(Collectors.toMap(TagView::name, Function.identity()));
     }
 
