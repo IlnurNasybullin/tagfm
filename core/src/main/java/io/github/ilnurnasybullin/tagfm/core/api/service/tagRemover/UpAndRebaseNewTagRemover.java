@@ -17,10 +17,13 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingService;
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
-import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
+import io.github.ilnurnasybullin.tagfm.core.api.service.IllegalTagForRemovingException;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 public class UpAndRebaseNewTagRemover implements TagRemover {
@@ -39,24 +42,17 @@ public class UpAndRebaseNewTagRemover implements TagRemover {
 
     @Override
     public void removeTag(TreeTag tag) {
-        TreeTag parent = tag.parent().orElseThrow();
+        TreeTag parent = tag.parent().orElseThrow(() -> new IllegalTagForRemovingException(
+                String.format("Tag [%s] is illegal for removing - this tag hasn't parent", tag.fullName())
+        ));
 
-        CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        walker.walk(parent, tag);
+        TagParentBindingService<TagView> parentBinder = TagParentBinder.of(namespace);
+        tag.children().forEach((childTagName, childTag) ->
+                parentBinder.bind(childTag, parent, TagParentBindingStrategy.REBASE_NEW)
+        );
 
         namespace.synonymsManager().unbind(tag);
         fileTagsManager.removeTag(tag);
         tag.reparent(null);
     }
-
-    private void noCollision(TreeTag primaryChild, TreeTag collisionParent) {
-        primaryChild.reparent(collisionParent);
-    }
-
-    private void hasCollision(TreeTag primaryChild, TreeTag collisionChild) {
-        fileTagsManager.removeTag(primaryChild);
-        namespace.synonymsManager().unbind(primaryChild);
-        primaryChild.reparent(null);
-    }
-
 }

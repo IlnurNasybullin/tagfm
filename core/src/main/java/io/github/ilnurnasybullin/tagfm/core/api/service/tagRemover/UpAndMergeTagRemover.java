@@ -17,20 +17,22 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingService;
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
-import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
+import io.github.ilnurnasybullin.tagfm.core.api.service.IllegalTagForRemovingException;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 public class UpAndMergeTagRemover implements TagRemover {
 
-    private final SynonymTagManagerView synonymsManager;
+    private final NamespaceView namespace;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
     private UpAndMergeTagRemover(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
-        synonymsManager = namespace.synonymsManager();
+        this.namespace = namespace;
         this.fileTagsManager = fileTagsManager;
     }
 
@@ -40,24 +42,17 @@ public class UpAndMergeTagRemover implements TagRemover {
 
     @Override
     public void removeTag(TreeTag tag) {
-        TreeTag parent = tag.parent().orElseThrow();
+        TreeTag parent = tag.parent().orElseThrow(() -> new IllegalTagForRemovingException(
+                String.format("Tag [%s] is illegal for removing - this tag hasn't parent", tag.fullName())
+        ));
 
-        CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        walker.walk(tag, parent);
+        TagParentBindingService<TagView> parentBinder = TagParentBinder.of(namespace);
+        tag.children().forEach((childTagName, childTag) ->
+                parentBinder.bind(childTag, parent, TagParentBindingStrategy.MERGE)
+        );
 
-        synonymsManager.unbind(tag);
+        namespace.synonymsManager().unbind(tag);
         fileTagsManager.removeTag(tag);
         tag.reparent(null);
-    }
-
-    private void noCollision(TreeTag primaryChild, TreeTag collisionParent) {
-        primaryChild.reparent(collisionParent);
-    }
-
-    private void hasCollision(TreeTag primaryChild, TreeTag collisionChild) {
-        fileTagsManager.replaceTag(primaryChild, collisionChild);
-        synonymsManager.merge(primaryChild, collisionChild);
-        synonymsManager.unbind(collisionChild);
-        primaryChild.reparent(null);
     }
 }

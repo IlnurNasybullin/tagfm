@@ -22,7 +22,6 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
-import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
@@ -32,26 +31,26 @@ public class MergeTagParentBinder implements TagParentBinder {
     private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private MergeTagParentBinder(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
-        synonymsManager = namespace.synonymsManager();
+    private MergeTagParentBinder(SynonymTagManagerView synonymsManager, FilesTagManagerService<TagView> fileTagsManager) {
+        this.synonymsManager = synonymsManager;
         this.fileTagsManager = fileTagsManager;
     }
 
     public static MergeTagParentBinder of(NamespaceView namespace) {
-        return new MergeTagParentBinder(namespace, FilesTagManager.of(namespace));
+        return new MergeTagParentBinder(namespace.synonymsManager(), FilesTagManager.of(namespace));
     }
 
     @Override
     public void bindParent(TreeTag tag, TreeTag parent) {
         Map<String, TreeTag> leafs = parent.children();
         String tagName = tag.name();
-        if (!leafs.containsKey(tagName)) {
+        TreeTag collisionTag = leafs.get(tagName);
+        if (collisionTag == null) {
             tag.reparent(parent);
             return;
         }
 
         CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        TreeTag collisionTag = leafs.get(tagName);
         walker.walk(tag, collisionTag);
 
         fileTagsManager.replaceTag(tag, collisionTag);

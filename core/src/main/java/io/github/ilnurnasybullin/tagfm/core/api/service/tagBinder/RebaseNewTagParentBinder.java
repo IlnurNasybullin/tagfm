@@ -18,6 +18,7 @@ package io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
@@ -27,35 +28,35 @@ import java.util.Map;
 
 public class RebaseNewTagParentBinder implements TagParentBinder {
 
-    private final NamespaceView namespace;
+    private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private RebaseNewTagParentBinder(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
-        this.namespace = namespace;
+    private RebaseNewTagParentBinder(SynonymTagManagerView synonymsManager, FilesTagManagerService<TagView> fileTagsManager) {
+        this.synonymsManager = synonymsManager;
         this.fileTagsManager = fileTagsManager;
     }
 
     public static RebaseNewTagParentBinder of(NamespaceView namespace) {
-        return new RebaseNewTagParentBinder(namespace, FilesTagManager.of(namespace));
+        return new RebaseNewTagParentBinder(namespace.synonymsManager(), FilesTagManager.of(namespace));
     }
 
     @Override
     public void bindParent(TreeTag tag, TreeTag parent) {
         Map<String, TreeTag> leafs = parent.children();
         String tagName = tag.name();
-        if (!leafs.containsKey(tagName)) {
+        TreeTag collisionTag = leafs.get(tagName);
+        if (collisionTag == null) {
             tag.reparent(parent);
             return;
         }
 
         CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        TreeTag removingTag = leafs.get(tagName);
-        walker.walk(removingTag, tag);
+        walker.walk(collisionTag, tag);
 
-        namespace.synonymsManager().unbind(removingTag);
-        fileTagsManager.removeTag(removingTag);
+        synonymsManager.unbind(collisionTag);
+        fileTagsManager.removeTag(collisionTag);
 
-        removingTag.reparent(null);
+        collisionTag.reparent(null);
         tag.reparent(parent);
     }
 
@@ -64,7 +65,7 @@ public class RebaseNewTagParentBinder implements TagParentBinder {
     }
 
     private void hasCollision(TreeTag primaryChildTag, TreeTag collisionChildTag) {
-        namespace.synonymsManager().unbind(primaryChildTag);
+        synonymsManager.unbind(primaryChildTag);
         fileTagsManager.removeTag(primaryChildTag);
         primaryChildTag.reparent(null);
     }
