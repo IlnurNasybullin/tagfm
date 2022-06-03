@@ -17,6 +17,8 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service;
 
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceTagAddingService;
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingService;
+import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
@@ -41,15 +43,8 @@ public class NamespaceTagAdder implements NamespaceTagAddingService<TagView> {
     }
 
     private void addTag(TreeTag parent, TreeTag child) {
-        String childName = child.name();
-        Map<String, TreeTag> leafs = parent.children();
-        if (!leafs.containsKey(childName)) {
-            child.reparent(parent);
-            return;
-        }
-
-        TreeTag newParent = leafs.get(childName);
-        Map.copyOf(child.children()).forEach((name, newChild) -> addTag(newParent, newChild));
+        TagParentBindingService<TagView> parentBinder = TagParentBinder.of(namespace);
+        parentBinder.bind(child, parent, TagParentBindingStrategy.MERGE);
     }
 
 }
