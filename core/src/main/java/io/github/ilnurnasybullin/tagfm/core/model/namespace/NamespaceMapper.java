@@ -1,5 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.core.model.namespace;
 
+import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFile;
 import io.github.ilnurnasybullin.tagfm.core.model.file.TaggedFileSafety;
 import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymGroup;
@@ -11,24 +12,20 @@ import io.github.ilnurnasybullin.tagfm.core.repository.TagEntity;
 import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * @author Ilnur Nasybullin
  */
-public class NamespaceMapper {
+public class NamespaceMapper implements Function<NamespaceEntity, NamespaceView> {
 
-    private final NamespaceEntity namespace;
-
-    private NamespaceMapper(NamespaceEntity namespace) {
-        this.namespace = namespace;
+    @Override
+    public NamespaceView apply(NamespaceEntity namespace) {
+        return mapping(namespace);
     }
 
-    public static NamespaceMapper of(NamespaceEntity namespace) {
-        return new NamespaceMapper(namespace);
-    }
-
-    public Namespace mapping() {
+    public NamespaceView mapping(NamespaceEntity namespace) {
         TreeTag root = TreeTagSafety.root();
         Map<TagEntity, TreeTag> tagsMap = new HashMap<>();
         Iterator<TagEntity> iterator = TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE

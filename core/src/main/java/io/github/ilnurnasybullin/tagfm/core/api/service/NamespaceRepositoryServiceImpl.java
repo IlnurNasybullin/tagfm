@@ -7,10 +7,12 @@ import io.github.ilnurnasybullin.tagfm.core.model.namespace.Namespace;
 import io.github.ilnurnasybullin.tagfm.core.model.namespace.NamespaceMapper;
 import io.github.ilnurnasybullin.tagfm.core.model.namespace.NamespaceRepoDto;
 import io.github.ilnurnasybullin.tagfm.core.model.namespace.NamespaceSafety;
+import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceEntity;
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * @author Ilnur Nasybullin
@@ -42,15 +44,17 @@ public class NamespaceRepositoryServiceImpl implements NamespaceRepositoryServic
 
     @Override
     public Optional<NamespaceView> find(String name) {
+        Function<NamespaceEntity, NamespaceView> mapper = new NamespaceMapper();
         return repository.findBy(name)
-                .map(namespace -> NamespaceMapper.of(namespace).mapping());
+                .map(mapper);
     }
 
     @Override
     public List<NamespaceView> getAll() {
+        Function<NamespaceEntity, NamespaceView> mapper = new NamespaceMapper();
         return repository.getAll()
                 .stream()
-                .map(namespace -> (NamespaceView) NamespaceMapper.of(namespace).mapping())
+                .map(mapper)
                 .toList();
     }
 
@@ -77,8 +81,9 @@ public class NamespaceRepositoryServiceImpl implements NamespaceRepositoryServic
 
     @Override
     public Optional<NamespaceView> getWorkingNamespace() {
+        Function<NamespaceEntity, NamespaceView> mapper = new NamespaceMapper();
         return repository.getWorkingNamespace()
-                .map(namespace -> NamespaceMapper.of(namespace).mapping());
+                .map(mapper);
     }
 
     @Override
