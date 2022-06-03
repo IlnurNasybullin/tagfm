@@ -7,6 +7,7 @@ public interface SynonymTagManagerService<T> {
 
     void bind(T tag, T synonym);
     void unbind(T tag);
+    boolean merge(T tag, T synonym);
     void replace(T oldTag, T newTag);
 
     Collection<T> synonyms(T tag);

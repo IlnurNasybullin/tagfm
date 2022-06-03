@@ -18,20 +18,22 @@ package io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
+import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymTagManager;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
 public class MergeTagParentBinder implements TagParentBinder {
 
-    private final NamespaceView namespace;
+    private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
     private MergeTagParentBinder(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
-        this.namespace = namespace;
+        synonymsManager = namespace.synonymsManager();
         this.fileTagsManager = fileTagsManager;
     }
 
@@ -53,7 +55,8 @@ public class MergeTagParentBinder implements TagParentBinder {
         walker.walk(tag, collisionTag);
 
         fileTagsManager.replaceTag(tag, collisionTag);
-        namespace.synonymsManager().replace(tag, collisionTag);
+        synonymsManager.merge(tag, collisionTag);
+        synonymsManager.unbind(collisionTag);
         tag.reparent(null);
     }
 
@@ -62,7 +65,8 @@ public class MergeTagParentBinder implements TagParentBinder {
     }
 
     private void hasCollision(TreeTag primaryChildTag, TreeTag collisionChildTag) {
-        namespace.synonymsManager().replace(primaryChildTag, collisionChildTag);
+        synonymsManager.merge(primaryChildTag, collisionChildTag);
+        synonymsManager.unbind(collisionChildTag);
         fileTagsManager.replaceTag(primaryChildTag, collisionChildTag);
         primaryChildTag.reparent(null);
     }

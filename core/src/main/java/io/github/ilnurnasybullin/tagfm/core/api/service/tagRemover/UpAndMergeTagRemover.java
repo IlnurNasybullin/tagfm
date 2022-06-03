@@ -18,6 +18,7 @@ package io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FilesTagManagerService;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FilesTagManager;
 import io.github.ilnurnasybullin.tagfm.core.api.service.util.CollisionWalker;
@@ -25,11 +26,11 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 public class UpAndMergeTagRemover implements TagRemover {
 
-    private final NamespaceView namespace;
+    private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
     private UpAndMergeTagRemover(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
-        this.namespace = namespace;
+        synonymsManager = namespace.synonymsManager();
         this.fileTagsManager = fileTagsManager;
     }
 
@@ -44,7 +45,7 @@ public class UpAndMergeTagRemover implements TagRemover {
         CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
         walker.walk(tag, parent);
 
-        namespace.synonymsManager().unbind(tag);
+        synonymsManager.unbind(tag);
         fileTagsManager.removeTag(tag);
         tag.reparent(null);
     }
@@ -55,7 +56,8 @@ public class UpAndMergeTagRemover implements TagRemover {
 
     private void hasCollision(TreeTag primaryChild, TreeTag collisionChild) {
         fileTagsManager.replaceTag(primaryChild, collisionChild);
-        namespace.synonymsManager().replace(primaryChild, collisionChild);
+        synonymsManager.merge(primaryChild, collisionChild);
+        synonymsManager.unbind(collisionChild);
         primaryChild.reparent(null);
     }
 }

@@ -18,6 +18,8 @@ package io.github.ilnurnasybullin.tagfm.core.model.synonym;
 
 import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymTagManagerView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
+import io.github.ilnurnasybullin.tagfm.core.api.service.IllegalTagForReplacing;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagGroupNotFoundException;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.*;
@@ -52,29 +54,22 @@ public final class SynonymTagManager implements SynonymTagManagerView {
         SynonymGroup synonymGroup = synonyms.get(synonym);
 
         if (tagGroup != null && synonymGroup != null) {
-            unionClasses(tagGroup, synonymGroup);
+            mergeGroups(tagGroup, synonymGroup);
             return;
         }
 
         if (tagGroup == null && synonymGroup == null) {
             SynonymGroup sClass = new SynonymGroup();
-            put(tag, sClass);
-            put(synonym, sClass);
+            putInGroup(sClass, tag);
+            putInGroup(sClass, synonym);
             return;
         }
 
-        SynonymGroup notNullClass;
-        TreeTag newTag;
-
         if (tagGroup == null) {
-            notNullClass = synonymGroup;
-            newTag = tag;
+            putInGroup(synonymGroup, tag);
         } else {
-            notNullClass = tagGroup;
-            newTag = synonym;
+            putInGroup(tagGroup, synonym);
         }
-
-        put(newTag, notNullClass);
     }
 
     @Override
@@ -82,12 +77,12 @@ public final class SynonymTagManager implements SynonymTagManagerView {
         bind((TreeTag) tag, (TreeTag) synonym);
     }
 
-    private void put(TreeTag tag, SynonymGroup synonymGroup) {
-        synonyms.put(tag, synonymGroup);
-        synonymGroup.tags().add(tag);
+    private void putInGroup(SynonymGroup group, TreeTag tag) {
+        synonyms.put(tag, group);
+        group.tags().add(tag);
     }
 
-    private void unionClasses(SynonymGroup group1, SynonymGroup group2) {
+    private void mergeGroups(SynonymGroup group1, SynonymGroup group2) {
         if (Objects.equals(group1, group2)) {
             return;
         }
@@ -112,30 +107,63 @@ public final class SynonymTagManager implements SynonymTagManagerView {
             return;
         }
 
-        synonymGroup.tags().remove(tag);
-        if (synonymGroup.size() < 2) {
-            synonymGroup.tags().forEach(synonyms::remove);
+        unbindInGroup(synonymGroup, tag);
+    }
+
+    private void unbindInGroup(SynonymGroup group, TreeTag tag) {
+        group.tags().remove(tag);
+        if (group.size() < 2) {
+            group.tags().forEach(synonyms::remove);
         }
+    }
+
+    private boolean merge(TreeTag tag, TreeTag synonym) {
+        SynonymGroup tagGroup = synonyms.get(tag);
+        SynonymGroup synonymGroup = synonyms.get(synonym);
+
+        if (tagGroup == null || synonymGroup == null) {
+            return false;
+        }
+
+        mergeGroups(tagGroup, synonymGroup);
+        return true;
+    }
+
+    @Override
+    public boolean merge(TagView tag, TagView synonym) {
+        return merge((TreeTag) tag, (TreeTag) synonym);
+    }
+
+    private void replace(TreeTag oldTag, TreeTag newTag) {
+        SynonymGroup oldTagGroup = synonyms.get(oldTag);
+        SynonymGroup newTagGroup = synonyms.get(newTag);
+
+        if (oldTagGroup == null) {
+            throw new TagGroupNotFoundException(
+                    String.format("Not found synonyms group for tag with name [%s]", oldTag)
+            );
+        }
+
+        if (newTagGroup != null) {
+            throw new IllegalTagForReplacing(
+                    String.format(
+                            "Tag with name [%s] can't be replaced - it has already bound with tags %s",
+                            newTag, newTagGroup.tags()
+                    )
+            );
+        }
+
+        replaceInGroup(oldTagGroup, oldTag, newTag);
+    }
+
+    private void replaceInGroup(SynonymGroup group, TreeTag oldTag, TreeTag newTag) {
+        unbindInGroup(group, oldTag);
+        putInGroup(group, newTag);
     }
 
     @Override
     public void replace(TagView oldTag, TagView newTag) {
         replace((TreeTag) oldTag, (TreeTag) newTag);
-    }
-
-    private void replace(TreeTag oldTag, TreeTag newTag) {
-        if (newTag == null) {
-            unbind(oldTag);
-        }
-
-        SynonymGroup primaryClass = synonyms.get(newTag);
-        SynonymGroup secondaryClass = synonyms.get(oldTag);
-
-        if (primaryClass == null || secondaryClass == null) {
-            return;
-        }
-
-        unionClasses(primaryClass, secondaryClass);
     }
 
     @Override
