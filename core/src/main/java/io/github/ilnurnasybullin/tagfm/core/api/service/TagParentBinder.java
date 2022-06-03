@@ -37,10 +37,6 @@ public class TagParentBinder implements TagParentBindingService<TagView> {
 
     @Override
     public void bind(TagView tag, TagView parent, TagParentBindingStrategy strategy) {
-        if (parent == null) {
-            unbind(tag, strategy);
-        }
-
         io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder.TagParentBinder binder = switch (strategy) {
             case THROW_IF_COLLISION -> new ThrowIfCollisionTagParentBinder();
             case REBASE_OLD -> RebaseOldTagParentBinder.of(namespace);
