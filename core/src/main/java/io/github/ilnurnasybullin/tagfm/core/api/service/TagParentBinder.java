@@ -23,16 +23,16 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder.*;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class TagParentBinding implements TagParentBindingService<TagView> {
+public class TagParentBinder implements TagParentBindingService<TagView> {
 
     private final NamespaceView namespace;
 
-    private TagParentBinding(NamespaceView namespace) {
+    private TagParentBinder(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static TagParentBinding of(NamespaceView namespace) {
-        return new TagParentBinding(namespace);
+    public static TagParentBinder of(NamespaceView namespace) {
+        return new TagParentBinder(namespace);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TagParentBinding implements TagParentBindingService<TagView> {
             unbind(tag, strategy);
         }
 
-        TagParentBinder binder = switch (strategy) {
+        io.github.ilnurnasybullin.tagfm.core.api.service.tagBinder.TagParentBinder binder = switch (strategy) {
             case THROW_IF_COLLISION -> new ThrowIfCollisionTagParentBinder();
             case REBASE_OLD -> RebaseOldTagParentBinder.of(namespace);
             case REBASE_NEW -> RebaseNewTagParentBinder.of(namespace);

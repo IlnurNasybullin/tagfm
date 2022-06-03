@@ -23,16 +23,16 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class NamespaceTagAdding implements NamespaceTagAddingService<TagView> {
+public class NamespaceTagAdder implements NamespaceTagAddingService<TagView> {
 
     private final NamespaceView namespace;
 
-    private NamespaceTagAdding(NamespaceView namespace) {
+    private NamespaceTagAdder(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static NamespaceTagAdding of(NamespaceView namespace) {
-        return new NamespaceTagAdding(namespace);
+    public static NamespaceTagAdder of(NamespaceView namespace) {
+        return new NamespaceTagAdder(namespace);
     }
 
     @Override

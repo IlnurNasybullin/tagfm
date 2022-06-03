@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.InvalidTagNameException;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdding;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagCreator;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -52,7 +52,7 @@ public class TagAddCommand implements Runnable {
                         new InvalidTagNameException(String.format("Invalid tag name [%s] for creating!", tagName))
                 )).toList();
 
-        NamespaceTagAdding.of(namespace).addTags(treeTags);
+        NamespaceTagAdder.of(namespace).addTags(treeTags);
         fileManager.commit();
     }
 }

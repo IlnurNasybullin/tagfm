@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinding;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -51,7 +51,7 @@ public class UnbindParentTagsCommand implements Runnable {
         TagView tag = shortName ?
                 tagService.findByNameExact(childTag) :
                 tagService.findByFullNameExact(childTag);
-        TagParentBinding.of(namespace).unbind(tag, parentBindingStrategy);
+        TagParentBinder.of(namespace).unbind(tag, parentBindingStrategy);
         fileManager.commit();
     }
 }

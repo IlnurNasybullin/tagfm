@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.api.service.TagRemovingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagRemoving;
+import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagRemover;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -48,7 +48,7 @@ public class TagRemoveCommand implements Runnable {
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
         TagView searchedTag = searchTag(namespace);
-        NamespaceTagRemoving.of(namespace).removeTag(searchedTag, tagRemovingStrategy);
+        NamespaceTagRemover.of(namespace).removeTag(searchedTag, tagRemovingStrategy);
         fileManager.commit();
     }
 

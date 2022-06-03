@@ -10,16 +10,16 @@ import java.nio.file.Path;
 /**
  * @author Ilnur Nasybullin
  */
-public class FileTagsReplacing implements FileTagsReplacingService<TaggedFileView> {
+public class FileTagsReplacer implements FileTagsReplacingService<TaggedFileView> {
 
     private final NamespaceView namespace;
 
-    private FileTagsReplacing(NamespaceView namespace) {
+    private FileTagsReplacer(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static FileTagsReplacing of(NamespaceView namespace) {
-        return new FileTagsReplacing(namespace);
+    public static FileTagsReplacer of(NamespaceView namespace) {
+        return new FileTagsReplacer(namespace);
     }
 
     @Override

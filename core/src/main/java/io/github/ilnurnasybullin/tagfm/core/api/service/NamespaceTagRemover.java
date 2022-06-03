@@ -23,16 +23,16 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.tagRemover.TagRemover;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class NamespaceTagRemoving implements NamespaceTagRemovingService<TagView> {
+public class NamespaceTagRemover implements NamespaceTagRemovingService<TagView> {
 
     private final NamespaceView namespace;
 
-    private NamespaceTagRemoving(NamespaceView namespace) {
+    private NamespaceTagRemover(NamespaceView namespace) {
         this.namespace = namespace;
     }
 
-    public static NamespaceTagRemoving of(NamespaceView namespace) {
-        return new NamespaceTagRemoving(namespace);
+    public static NamespaceTagRemover of(NamespaceView namespace) {
+        return new NamespaceTagRemover(namespace);
     }
 
     @Override

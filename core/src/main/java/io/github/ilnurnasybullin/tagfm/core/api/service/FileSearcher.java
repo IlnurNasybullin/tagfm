@@ -40,11 +40,11 @@ import java.util.stream.Collectors;
 /**
  * @author Ilnur Nasybullin
  */
-public class FileSearching implements FileSearchingService<TaggedFileView> {
+public class FileSearcher implements FileSearchingService<TaggedFileView> {
 
     private final NamespaceView namespace;
 
-    public FileSearching(NamespaceView namespace) {
+    public FileSearcher(NamespaceView namespace) {
         this.namespace = namespace;
     }
 

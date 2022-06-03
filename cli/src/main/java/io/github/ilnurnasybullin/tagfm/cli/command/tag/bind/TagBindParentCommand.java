@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
-import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinding;
+import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -53,7 +53,7 @@ public class TagBindParentCommand implements Runnable {
         TagView parentTag = getTag(namespace, this.parentTag);
         TagView childTag = getTag(namespace, this.childTag);
 
-        TagParentBinding.of(namespace).bind(childTag, parentTag, parentBindingStrategy);
+        TagParentBinder.of(namespace).bind(childTag, parentTag, parentBindingStrategy);
         fileManager.commit();
     }
 
