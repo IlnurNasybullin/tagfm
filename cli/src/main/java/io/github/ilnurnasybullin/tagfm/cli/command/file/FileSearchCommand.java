@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 @CommandLine.Command(name = "search")
 public class FileSearchCommand implements Runnable {
 
-    @CommandLine.Parameters(arity = "1", index = "0..*")
-    private final List<String> tokens = new ArrayList<>();
+    @CommandLine.Parameters(arity = "1", index = "0")
+    private String expression;
 
     @CommandLine.Option(names = {"-fss", "--file-search-strategy"})
     private FileSearchStrategy fileSearchStrategy = FileSearchStrategy.SIMPLE;
@@ -55,7 +55,7 @@ public class FileSearchCommand implements Runnable {
         NamespaceView namespace = fileManager.namespaceOrThrow();
         FileSearcher factory = new FileSearcher(namespace);
 
-        Set<TaggedFileView> files = factory.searchFiles(tokens, fileSearchStrategy);
+        Set<TaggedFileView> files = factory.searchFiles(expression, fileSearchStrategy);
         printTags(files);
     }
 

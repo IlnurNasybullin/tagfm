@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
+import io.github.ilnurnasybullin.logical.expression.tokenizer.LogicalTokenizer;
+
 module logical.expression.evaluator {
     exports io.github.ilnurnasybullin.logical.expression.parser;
     exports io.github.ilnurnasybullin.logical.expression.evaluator;
+    exports io.github.ilnurnasybullin.logical.expression.tokenizer;
+
+    uses LogicalTokenizer;
 }

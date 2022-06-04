@@ -8,5 +8,5 @@ import java.util.Set;
  */
 @FunctionalInterface
 public interface FileSearchingService<TF> {
-    Set<TF> searchFiles(List<String> expressionTokens, FileSearchStrategy searchStrategy);
+    Set<TF> searchFiles(String expression, FileSearchStrategy searchStrategy);
 }

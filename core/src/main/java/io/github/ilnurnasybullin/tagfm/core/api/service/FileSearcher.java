@@ -49,7 +49,7 @@ public class FileSearcher implements FileSearchingService<TaggedFileView> {
     }
 
     @Override
-    public Set<TaggedFileView> searchFiles(List<String> expressionTokens, FileSearchStrategy searchStrategy) {
+    public Set<TaggedFileView> searchFiles(String expression, FileSearchStrategy searchStrategy) {
         Map<String, TagView> usedTags = new HashMap<>();
 
         Map<String, TagView> fullNamesMap = namespace.tags(false)
@@ -62,7 +62,7 @@ public class FileSearcher implements FileSearchingService<TaggedFileView> {
 
         LogicalExpressionEvaluator<String> evaluator =
                 LogicalExpressionParser.<String>get()
-                .parse(expressionTokens, tagsListener);
+                .parse(expression, tagsListener);
 
         TaggedFilesFilter filesFilter = switch (searchStrategy) {
             case SIMPLE -> SimpleSearchFilter.of(namespace, evaluator, usedTags);

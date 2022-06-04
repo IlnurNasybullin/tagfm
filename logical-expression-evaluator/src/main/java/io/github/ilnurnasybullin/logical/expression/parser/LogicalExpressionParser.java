@@ -19,6 +19,7 @@ package io.github.ilnurnasybullin.logical.expression.parser;
 import io.github.ilnurnasybullin.logical.expression.evaluator.LogicalASTree;
 import io.github.ilnurnasybullin.logical.expression.evaluator.LogicalASTreeImpl;
 import io.github.ilnurnasybullin.logical.expression.element.*;
+import io.github.ilnurnasybullin.logical.expression.tokenizer.LogicalTokenizer;
 
 import java.util.*;
 import java.util.function.Function;
@@ -48,8 +49,9 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
 
     // brackets aren't checking!
     @Override
-    public LogicalASTree<T> parse(List<String> tokens) {
+    public LogicalASTree<T> parse(String expression) {
         List<LogicalASTree<T>> treeTerms = new ArrayList<>();
+        List<String> tokens = getTokens(expression);
 
         Deque<Term<T>> terms = getTerms(tokens);
 
@@ -76,7 +78,7 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
                 throw new IllegalTokensExpression(
                         String.format(
                                 "Illegal tokens expression [%s]: invalid operands count for operator [%s]",
-                                tokens, operator.operator()
+                                expression, operator.operator()
                         )
                 );
             }
@@ -87,11 +89,16 @@ public class LogicalExpressionParser<T> implements LogicalParser<T> {
 
         if (root == null) {
             throw new IllegalStateException(
-                    String.format("Building logical AST not available for tokens [%s]", tokens)
+                    String.format("Building logical AST not available for tokens [%s]", expression)
             );
         }
 
         return root;
+    }
+
+    private List<String> getTokens(String expression) {
+        LogicalTokenizer tokenizer = LogicalTokenizer.getInstance();
+        return tokenizer.tokenize(expression);
     }
 
     private Deque<Term<T>> getTerms(List<String> tokens) {

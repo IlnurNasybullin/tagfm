@@ -25,5 +25,5 @@ import java.util.List;
  */
 public interface LogicalParser<T> {
     // brackets aren't checking!
-    LogicalASTree<T> parse(List<String> tokens);
+    LogicalASTree<T> parse(String expression);
 }

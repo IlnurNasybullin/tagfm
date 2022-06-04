@@ -25,7 +25,7 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface LogicalExpressionParser<T> {
-    LogicalExpressionEvaluator<T> parse(List<String> tokens, Function<String, T> mapper);
+    LogicalExpressionEvaluator<T> parse(String expression, Function<String, T> mapper);
 
     @SuppressWarnings("unchecked")
     static <T> LogicalExpressionParser<T> get() {

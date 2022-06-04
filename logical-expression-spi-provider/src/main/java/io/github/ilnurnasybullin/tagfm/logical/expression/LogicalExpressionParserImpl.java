@@ -29,9 +29,9 @@ import java.util.function.Function;
 public class LogicalExpressionParserImpl<T> implements LogicalExpressionParser<T> {
 
     @Override
-    public LogicalExpressionEvaluator<T> parse(List<String> tokens, Function<String, T> mapper) {
+    public LogicalExpressionEvaluator<T> parse(String expression, Function<String, T> mapper) {
         LogicalASTree<T> evaluatorTree = getParser(mapper)
-                .parse(tokens);
+                .parse(expression);
         return new LogicalExpressionEvaluatorImpl<>(evaluatorTree);
     }
 
