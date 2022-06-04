@@ -30,5 +30,4 @@ module tagfm.repository.xml {
     provides NamespaceRepository with NamespaceRepositoryImpl;
 
     opens io.github.ilnurnasybullin.tagfm.repository.xml.entity to java.xml.bind;
-    exports io.github.ilnurnasybullin.tagfm.repository.xml.fileManager to java.xml.bind;
 }
