@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter;
 
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
+import io.github.ilnurnasybullin.tagfm.core.api.dto.SynonymGroupView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymGroup;
@@ -34,11 +35,11 @@ import java.util.stream.Collectors;
  */
 public class SynonymSearchFilter implements TaggedFilesFilter {
 
-    private final Map<TagView, SynonymGroup> synonymsClass;
-    private final LogicalExpressionEvaluator<SynonymGroup> evaluator;
+    private final Map<TagView, SynonymGroupView> synonymsClass;
+    private final LogicalExpressionEvaluator<SynonymGroupView> evaluator;
 
-    private SynonymSearchFilter(Map<TagView, SynonymGroup> synonymsClass,
-                                LogicalExpressionEvaluator<SynonymGroup> evaluator) {
+    private SynonymSearchFilter(Map<TagView, SynonymGroupView> synonymsClass,
+                                LogicalExpressionEvaluator<SynonymGroupView> evaluator) {
         this.synonymsClass = synonymsClass;
         this.evaluator = evaluator;
     }
@@ -46,13 +47,13 @@ public class SynonymSearchFilter implements TaggedFilesFilter {
     public static TaggedFilesFilter of(NamespaceView namespace,
                                        LogicalExpressionEvaluator<String> expressionEvaluator,
                                        Map<String, TagView> usedTags) {
-        Map<TagView, SynonymGroup> synonyms = new HashMap<>(namespace.synonymsManager().synonymMap());
+        Map<TagView, SynonymGroupView> synonyms = new HashMap<>(namespace.synonymsManager().synonymMap());
         usedTags.values()
                 .stream()
                 .filter(tag -> !synonyms.containsKey(tag))
                 .forEach(tag -> synonyms.put(tag, new SynonymGroup(List.of((TreeTag) tag))));
 
-        LogicalExpressionEvaluator<SynonymGroup> evaluator =
+        LogicalExpressionEvaluator<SynonymGroupView> evaluator =
                 expressionEvaluator.map(tagName -> synonyms.get(usedTags.get(tagName)));
 
         return new SynonymSearchFilter(synonyms, evaluator);
