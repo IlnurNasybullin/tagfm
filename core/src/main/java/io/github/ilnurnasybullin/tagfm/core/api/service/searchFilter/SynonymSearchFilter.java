@@ -61,7 +61,7 @@ public class SynonymSearchFilter implements TaggedFilesFilter {
 
     @Override
     public boolean test(TaggedFileView file) {
-        Set<Object> synonyms = file.tags()
+        Set<SynonymGroupView> synonyms = file.tags()
                 .stream()
                 .map(synonymsClass::get)
                 .collect(Collectors.toSet());
