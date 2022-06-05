@@ -16,5 +16,5 @@
 
 dependencies {
     implementation project(":core")
-    implementation project(":boolean-expression-evaluator")
+    implementation project(":bool-expression-evaluator")
 }

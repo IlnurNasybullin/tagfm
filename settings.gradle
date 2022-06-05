@@ -19,6 +19,6 @@ include 'api'
 include 'core'
 include 'repository-xml'
 include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+include 'bool-expression-evaluator'
+include 'bool-expression-spi-provider'
 
