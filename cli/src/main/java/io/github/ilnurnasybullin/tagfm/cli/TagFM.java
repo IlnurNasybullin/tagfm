@@ -17,18 +17,21 @@
 package io.github.ilnurnasybullin.tagfm.cli;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.handler.PrintExceptionMessageHandler;
 import io.github.ilnurnasybullin.tagfm.cli.util.CustomFactory;
 import io.micronaut.context.ApplicationContext;
 import picocli.CommandLine;
+import picocli.CommandLine.IFactory;
 
-public class FileManagerCli {
+public class TagFM {
 
     public static void main(String[] args) {
         try(ApplicationContext context = ApplicationContext.run(args);
             FileManagerCommand command = context.getBean(FileManagerCommand.class)) {
-            CommandLine.IFactory cfFactory = CommandLine.defaultFactory();
+            IFactory cfFactory = CommandLine.defaultFactory();
             CustomFactory factory = new CustomFactory(context, cfFactory);
             CommandLine commandLine = new CommandLine(command, factory)
+                    .setExecutionExceptionHandler(new PrintExceptionMessageHandler())
                     .setCaseInsensitiveEnumValuesAllowed(true);
 
             commandLine.execute(args);
