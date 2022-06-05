@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.logical.expression.BooleanExpressionParse
 /**
  * @author Ilnur Nasybullin
  */
-module tagfm.bool.expression.evaluator {
+module tagfm.bool.expression.spi.provider {
     requires tagfm.core;
     requires bool.expression.evaluator;
 
