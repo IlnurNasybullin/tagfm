@@ -19,7 +19,7 @@ module tagfm.cli {
 
     requires tagfm.core;
     requires tagfm.repository.xml;
-    requires tagfm.logical.expression.spi.provider;
+    requires tagfm.bool.expression.spi.provider;
 
     requires io.micronaut.core;
     requires io.micronaut.inject;
@@ -56,6 +56,6 @@ module tagfm.cli {
     exports io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
     opens io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 
-    exports io.github.ilnurnasybullin.tagfm.cli.command.option;
-    opens io.github.ilnurnasybullin.tagfm.cli.command.option;
+    exports io.github.ilnurnasybullin.tagfm.cli.command.mixin;
+    opens io.github.ilnurnasybullin.tagfm.cli.command.mixin;
 }

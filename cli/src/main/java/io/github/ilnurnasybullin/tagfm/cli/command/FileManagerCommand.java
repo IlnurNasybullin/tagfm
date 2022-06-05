@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.file.FileCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotFoundException;
-import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.ReusableOption;
 import io.github.ilnurnasybullin.tagfm.cli.command.print.PrintCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.tag.TagCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;

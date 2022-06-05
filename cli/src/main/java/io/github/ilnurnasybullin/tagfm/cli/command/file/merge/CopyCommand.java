@@ -17,7 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.ReusableOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;

@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.option.ReusableOption;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.ReusableOption;
 import io.github.ilnurnasybullin.tagfm.cli.command.print.list.ListCommand;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
