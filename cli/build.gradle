@@ -22,7 +22,7 @@ application {
     mainModule = 'tagfm.cli'
 }
 
-mainClassName = "io.github.ilnurnasybullin.tagfm.cli.FileManagerCli"
+mainClassName = "io.github.ilnurnasybullin.tagfm.cli.TagFM"
 
 micronaut {
     version = "3.4.3"
