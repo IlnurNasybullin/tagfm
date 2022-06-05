@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+package io.github.ilnurnasybullin.logical.expression.parser;
 
+import io.github.ilnurnasybullin.logical.expression.evaluator.BooleanExpressionTree;
+
+/**
+ * @author Ilnur Nasybullin
+ */
+public interface BooleanExpressionParser<T> {
+    // brackets aren't checking!
+    BooleanExpressionTree<T> parse(String expression);
+}

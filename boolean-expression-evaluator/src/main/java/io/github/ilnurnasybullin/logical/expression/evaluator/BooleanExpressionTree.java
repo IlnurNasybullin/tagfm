@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+package io.github.ilnurnasybullin.logical.expression.evaluator;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+/**
+ * @author Ilnur Nasybullin
+ */
+public interface BooleanExpressionTree<T> {
+    <U> BooleanExpressionTree<U> map(Function<T, U> mapFunction);
+    boolean evaluate(Predicate<T> mapper);
+    int leafsCount();
+}

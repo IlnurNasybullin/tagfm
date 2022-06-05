@@ -22,7 +22,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.model.synonym.SynonymGroup;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
-import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
+import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionEvaluator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,16 +36,16 @@ import java.util.stream.Collectors;
 public class SynonymSearchFilter implements TaggedFilesFilter {
 
     private final Map<TagView, SynonymGroupView> synonymsClass;
-    private final LogicalExpressionEvaluator<SynonymGroupView> evaluator;
+    private final BooleanExpressionEvaluator<SynonymGroupView> evaluator;
 
     private SynonymSearchFilter(Map<TagView, SynonymGroupView> synonymsClass,
-                                LogicalExpressionEvaluator<SynonymGroupView> evaluator) {
+                                BooleanExpressionEvaluator<SynonymGroupView> evaluator) {
         this.synonymsClass = synonymsClass;
         this.evaluator = evaluator;
     }
 
     public static TaggedFilesFilter of(NamespaceView namespace,
-                                       LogicalExpressionEvaluator<String> expressionEvaluator,
+                                       BooleanExpressionEvaluator<String> expressionEvaluator,
                                        Map<String, TagView> usedTags) {
         Map<TagView, SynonymGroupView> synonyms = new HashMap<>(namespace.synonymsManager().synonymMap());
         usedTags.values()
@@ -53,7 +53,7 @@ public class SynonymSearchFilter implements TaggedFilesFilter {
                 .filter(tag -> !synonyms.containsKey(tag))
                 .forEach(tag -> synonyms.put(tag, new SynonymGroup(List.of((TreeTag) tag))));
 
-        LogicalExpressionEvaluator<SynonymGroupView> evaluator =
+        BooleanExpressionEvaluator<SynonymGroupView> evaluator =
                 expressionEvaluator.map(tagName -> synonyms.get(usedTags.get(tagName)));
 
         return new SynonymSearchFilter(synonyms, evaluator);

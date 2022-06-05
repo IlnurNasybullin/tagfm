@@ -27,8 +27,8 @@ import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.HierarchySe
 import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.SimpleSearchFilter;
 import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.SynonymSearchFilter;
 import io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter.TaggedFilesFilter;
-import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
-import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionParser;
+import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionEvaluator;
+import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionParser;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,8 +60,8 @@ public class FileSearcher implements FileSearchingService<TaggedFileView> {
 
         Function<String, String> tagsListener = validateListener(usedTags, fullNamesMap, shortNamesMap);
 
-        LogicalExpressionEvaluator<String> evaluator =
-                LogicalExpressionParser.<String>get()
+        BooleanExpressionEvaluator<String> evaluator =
+                BooleanExpressionParser.<String>get()
                 .parse(expression, tagsListener);
 
         TaggedFilesFilter filesFilter = switch (searchStrategy) {

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+import io.github.ilnurnasybullin.logical.expression.tokenizer.BooleanExpressionTokenizer;
 
+module bool.expression.evaluator {
+    exports io.github.ilnurnasybullin.logical.expression.parser;
+    exports io.github.ilnurnasybullin.logical.expression.evaluator;
+    exports io.github.ilnurnasybullin.logical.expression.tokenizer;
+
+    uses BooleanExpressionTokenizer;
+}

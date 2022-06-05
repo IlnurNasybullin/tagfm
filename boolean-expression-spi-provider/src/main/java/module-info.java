@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionParser;
+import io.github.ilnurnasybullin.tagfm.logical.expression.BooleanExpressionParserImpl;
 
+/**
+ * @author Ilnur Nasybullin
+ */
+module tagfm.bool.expression.evaluator {
+    requires tagfm.core;
+    requires bool.expression.evaluator;
+
+    exports io.github.ilnurnasybullin.tagfm.logical.expression;
+
+    provides BooleanExpressionParser with BooleanExpressionParserImpl;
+}

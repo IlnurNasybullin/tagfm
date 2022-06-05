@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
-
+dependencies {
+    implementation project(":core")
+    implementation project(":boolean-expression-evaluator")
+}

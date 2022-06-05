@@ -15,7 +15,7 @@
  */
 
 import io.github.ilnurnasybullin.tagfm.core.repository.NamespaceRepository;
-import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionParser;
+import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionParser;
 
 module tagfm.core {
     requires transitive tagfm.api;
@@ -23,11 +23,11 @@ module tagfm.core {
     exports io.github.ilnurnasybullin.tagfm.core.api.dto to tagfm.cli;
     exports io.github.ilnurnasybullin.tagfm.core.api.service to tagfm.cli;
 
-    exports io.github.ilnurnasybullin.tagfm.core.parser to tagfm.logical.expression.spi.provider;
+    exports io.github.ilnurnasybullin.tagfm.core.evaluator to tagfm.bool.expression.spi.provider;
     exports io.github.ilnurnasybullin.tagfm.core.repository to tagfm.repository.xml;
 
     exports io.github.ilnurnasybullin.tagfm.core.util.iterator;
 
     uses NamespaceRepository;
-    uses LogicalExpressionParser;
+    uses BooleanExpressionParser;
 }

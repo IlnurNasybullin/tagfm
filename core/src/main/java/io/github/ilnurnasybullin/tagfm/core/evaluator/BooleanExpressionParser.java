@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+package io.github.ilnurnasybullin.tagfm.core.evaluator;
 
+import java.util.ServiceLoader;
+import java.util.function.Function;
+
+/**
+ * @author Ilnur Nasybullin
+ */
+@FunctionalInterface
+public interface BooleanExpressionParser<T> {
+    BooleanExpressionEvaluator<T> parse(String expression, Function<String, T> mapper);
+
+    @SuppressWarnings("unchecked")
+    static <T> BooleanExpressionParser<T> get() {
+        return ServiceLoader.load(BooleanExpressionParser.class)
+                .findFirst()
+                .orElseThrow();
+    }
+}

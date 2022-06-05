@@ -19,7 +19,7 @@ package io.github.ilnurnasybullin.tagfm.core.api.service.searchFilter;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
-import io.github.ilnurnasybullin.tagfm.core.parser.LogicalExpressionEvaluator;
+import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionEvaluator;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,16 +29,16 @@ import java.util.Set;
  */
 public class SimpleSearchFilter implements TaggedFilesFilter {
 
-    private final LogicalExpressionEvaluator<TagView> evaluator;
+    private final BooleanExpressionEvaluator<TagView> evaluator;
 
-    private SimpleSearchFilter(LogicalExpressionEvaluator<TagView> evaluator) {
+    private SimpleSearchFilter(BooleanExpressionEvaluator<TagView> evaluator) {
         this.evaluator = evaluator;
     }
 
     public static TaggedFilesFilter of(NamespaceView namespace,
-                                       LogicalExpressionEvaluator<String> expressionEvaluator,
+                                       BooleanExpressionEvaluator<String> expressionEvaluator,
                                        Map<String, TagView> usedTags) {
-        LogicalExpressionEvaluator<TagView> tagsEvaluator = expressionEvaluator.map(usedTags::get);
+        BooleanExpressionEvaluator<TagView> tagsEvaluator = expressionEvaluator.map(usedTags::get);
         return new SimpleSearchFilter(tagsEvaluator);
     }
 

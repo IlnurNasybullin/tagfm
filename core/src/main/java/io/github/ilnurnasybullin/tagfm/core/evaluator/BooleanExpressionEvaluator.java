@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-rootProject.name = 'tagfm'
-include 'api'
-include 'core'
-include 'repository-xml'
-include 'cli'
-include 'boolean-expression-evaluator'
-include 'boolean-expression-spi-provider'
+package io.github.ilnurnasybullin.tagfm.core.evaluator;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+/**
+ * @author Ilnur Nasybullin
+ */
+public interface BooleanExpressionEvaluator<T> {
+    boolean evaluate(Predicate<T> mapper);
+    <U> BooleanExpressionEvaluator<U> map(Function<T, U> mapper);
+}
