@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.bool.expression.element;
+package io.github.ilnurnasybullin.bool.expression.terms;
 
 /**
  * @author Ilnur Nasybullin
  */
-public enum Token {
-    OPEN_BRACKET,
-    CLOSE_BRACKET,
+public enum Operator {
+    NOT(0, 1),
+    AND(1, 2),
+    OR(2, 2);
 
-    NOT,
-    AND,
-    OR
+    private final int priorityLevel;
+    private final int operandsCount;
+
+    Operator(int priorityLevel, int operandsCount) {
+        this.priorityLevel = priorityLevel;
+        this.operandsCount = operandsCount;
+    }
+
+    public int priorityLevel() {
+        return priorityLevel;
+    }
+
+    public int operandsCount() {
+        return operandsCount;
+    }
 }

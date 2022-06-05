@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.bool.expression.evaluator;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
+package io.github.ilnurnasybullin.bool.expression.terms;
 
 /**
  * @author Ilnur Nasybullin
  */
-public interface ExpressionTree<T> {
-    <U> ExpressionTree<U> map(Function<T, U> mapFunction);
-    boolean evaluate(Predicate<T> mapper);
-    int leafsCount();
+public interface Term<T> {
+
+    boolean isOperator();
+    default boolean isOperand() {
+        return !isOperator();
+    }
+
+    Operator operator();
+    T operand();
+
 }

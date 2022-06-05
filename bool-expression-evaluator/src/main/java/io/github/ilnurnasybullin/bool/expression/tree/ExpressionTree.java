@@ -14,31 +14,16 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.bool.expression.element;
+package io.github.ilnurnasybullin.bool.expression.tree;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author Ilnur Nasybullin
  */
-public class OperandElement<T> implements Term<T> {
-
-    private final T operand;
-
-    public OperandElement(T operand) {
-        this.operand = operand;
-    }
-
-    @Override
-    public boolean isOperator() {
-        return false;
-    }
-
-    @Override
-    public Operator operator() {
-        throw new UnsupportedOperationException(String.format("Operand [%s] isn't operator!", operand));
-    }
-
-    @Override
-    public T operand() {
-        return operand;
-    }
+public interface ExpressionTree<T> {
+    <U> ExpressionTree<U> map(Function<T, U> mapFunction);
+    boolean evaluate(Predicate<T> mapper);
+    int leafsCount();
 }

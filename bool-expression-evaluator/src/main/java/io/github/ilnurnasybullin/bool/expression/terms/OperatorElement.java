@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.bool.expression.element;
+package io.github.ilnurnasybullin.bool.expression.terms;
 
 /**
  * @author Ilnur Nasybullin

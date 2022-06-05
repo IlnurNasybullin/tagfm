@@ -16,9 +16,9 @@
 
 package io.github.ilnurnasybullin.bool.expression.parser;
 
-import io.github.ilnurnasybullin.bool.expression.element.*;
-import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
-import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTreeImpl;
+import io.github.ilnurnasybullin.bool.expression.terms.*;
+import io.github.ilnurnasybullin.bool.expression.tree.ExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.tree.ExpressionTreeImpl;
 import io.github.ilnurnasybullin.bool.expression.tokenizer.ExpressionTokenizer;
 
 import java.util.*;

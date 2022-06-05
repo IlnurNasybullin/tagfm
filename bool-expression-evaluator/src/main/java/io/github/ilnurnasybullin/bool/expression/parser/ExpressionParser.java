@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.bool.expression.parser;
 
-import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.tree.ExpressionTree;
 
 /**
  * @author Ilnur Nasybullin

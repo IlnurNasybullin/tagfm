@@ -16,7 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.bool.expression;
 
-import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.tree.ExpressionTree;
 import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionEvaluator;
 
 import java.util.function.Function;

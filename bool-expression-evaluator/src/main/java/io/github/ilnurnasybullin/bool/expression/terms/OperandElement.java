@@ -14,19 +14,31 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.bool.expression.element;
+package io.github.ilnurnasybullin.bool.expression.terms;
 
 /**
  * @author Ilnur Nasybullin
  */
-public interface Term<T> {
+public class OperandElement<T> implements Term<T> {
 
-    boolean isOperator();
-    default boolean isOperand() {
-        return !isOperator();
+    private final T operand;
+
+    public OperandElement(T operand) {
+        this.operand = operand;
     }
 
-    Operator operator();
-    T operand();
+    @Override
+    public boolean isOperator() {
+        return false;
+    }
 
+    @Override
+    public Operator operator() {
+        throw new UnsupportedOperationException(String.format("Operand [%s] isn't operator!", operand));
+    }
+
+    @Override
+    public T operand() {
+        return operand;
+    }
 }

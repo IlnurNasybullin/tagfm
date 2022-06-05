@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.bool.expression.evaluator;
+package io.github.ilnurnasybullin.bool.expression.tree;
 
-import io.github.ilnurnasybullin.bool.expression.element.OperandElement;
-import io.github.ilnurnasybullin.bool.expression.element.Term;
+import io.github.ilnurnasybullin.bool.expression.terms.OperandElement;
+import io.github.ilnurnasybullin.bool.expression.terms.Term;
 
 import java.util.*;
 import java.util.function.Function;

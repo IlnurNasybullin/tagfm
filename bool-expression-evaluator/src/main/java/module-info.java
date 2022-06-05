@@ -18,7 +18,7 @@ import io.github.ilnurnasybullin.bool.expression.tokenizer.ExpressionTokenizer;
 
 module bool.expression.evaluator {
     exports io.github.ilnurnasybullin.bool.expression.parser;
-    exports io.github.ilnurnasybullin.bool.expression.evaluator;
+    exports io.github.ilnurnasybullin.bool.expression.tree;
     exports io.github.ilnurnasybullin.bool.expression.tokenizer;
 
     uses ExpressionTokenizer;
