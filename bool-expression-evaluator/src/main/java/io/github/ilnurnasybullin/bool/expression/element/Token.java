@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.parser;
+package io.github.ilnurnasybullin.bool.expression.element;
 
 /**
  * @author Ilnur Nasybullin
  */
-public class IllegalTokensExpression extends IllegalStateException {
+public enum Token {
+    OPEN_BRACKET,
+    CLOSE_BRACKET,
 
-    public IllegalTokensExpression() {
-    }
-
-    public IllegalTokensExpression(String s) {
-        super(s);
-    }
-
-    public IllegalTokensExpression(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public IllegalTokensExpression(Throwable cause) {
-        super(cause);
-    }
+    NOT,
+    AND,
+    OR
 }

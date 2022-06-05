@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.tagfm.logical.expression;
+package io.github.ilnurnasybullin.tagfm.bool.expression;
 
-import io.github.ilnurnasybullin.logical.expression.evaluator.BooleanExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.parser.ExpressionParserImpl;
 import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionEvaluator;
 import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionParser;
 
@@ -25,16 +26,16 @@ import java.util.function.Function;
 /**
  * @author Ilnur Nasybullin
  */
-public class BooleanExpressionParserImpl<T> implements BooleanExpressionParser<T> {
+public class ExpressionParserAdapter<T> implements BooleanExpressionParser<T> {
 
     @Override
     public BooleanExpressionEvaluator<T> parse(String expression, Function<String, T> mapper) {
-        BooleanExpressionTree<T> evaluatorTree = getParser(mapper)
+        ExpressionTree<T> evaluatorTree = getParser(mapper)
                 .parse(expression);
-        return new BooleanExpressionEvaluatorImpl<>(evaluatorTree);
+        return new ExpressionEvaluatorAdapter<>(evaluatorTree);
     }
 
-    private io.github.ilnurnasybullin.logical.expression.parser.BooleanExpressionParserImpl<T> getParser(Function<String, T> mapper) {
-        return new io.github.ilnurnasybullin.logical.expression.parser.BooleanExpressionParserImpl<>(mapper);
+    private ExpressionParserImpl<T> getParser(Function<String, T> mapper) {
+        return new ExpressionParserImpl<>(mapper);
     }
 }

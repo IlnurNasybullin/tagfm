@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.parser;
+package io.github.ilnurnasybullin.bool.expression.parser;
 
 /**
  * @author Ilnur Nasybullin
  */
-public class IllegalBracketsCountException extends IllegalStateException {
-    public IllegalBracketsCountException() {
+public class IllegalTokensExpression extends IllegalStateException {
+
+    public IllegalTokensExpression() {
     }
 
-    public IllegalBracketsCountException(String s) {
+    public IllegalTokensExpression(String s) {
         super(s);
     }
 
-    public IllegalBracketsCountException(String message, Throwable cause) {
+    public IllegalTokensExpression(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public IllegalBracketsCountException(Throwable cause) {
+    public IllegalTokensExpression(Throwable cause) {
         super(cause);
     }
 }

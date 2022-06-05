@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.tagfm.logical.expression;
+package io.github.ilnurnasybullin.tagfm.bool.expression;
 
-import io.github.ilnurnasybullin.logical.expression.evaluator.BooleanExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
 import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionEvaluator;
 
 import java.util.function.Function;
@@ -25,11 +25,11 @@ import java.util.function.Predicate;
 /**
  * @author Ilnur Nasybullin
  */
-public class BooleanExpressionEvaluatorImpl<T> implements BooleanExpressionEvaluator<T> {
+public class ExpressionEvaluatorAdapter<T> implements BooleanExpressionEvaluator<T> {
 
-    private final BooleanExpressionTree<T> evaluatorTree;
+    private final ExpressionTree<T> evaluatorTree;
 
-    public BooleanExpressionEvaluatorImpl(BooleanExpressionTree<T> evaluatorTree) {
+    public ExpressionEvaluatorAdapter(ExpressionTree<T> evaluatorTree) {
         this.evaluatorTree = evaluatorTree;
     }
 
@@ -40,6 +40,6 @@ public class BooleanExpressionEvaluatorImpl<T> implements BooleanExpressionEvalu
 
     @Override
     public <U> BooleanExpressionEvaluator<U> map(Function<T, U> mapper) {
-        return new BooleanExpressionEvaluatorImpl<>(evaluatorTree.map(mapper));
+        return new ExpressionEvaluatorAdapter<>(evaluatorTree.map(mapper));
     }
 }

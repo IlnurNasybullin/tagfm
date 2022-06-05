@@ -1,11 +1,11 @@
-package io.github.ilnurnasybullin.logical.expression.tokenizer;
+package io.github.ilnurnasybullin.bool.expression.tokenizer;
 
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface BooleanExpressionTokenizer extends Function<String, List<String>> {
+public interface ExpressionTokenizer extends Function<String, List<String>> {
 
     @Override
     default List<String> apply(String expression) {
@@ -14,8 +14,8 @@ public interface BooleanExpressionTokenizer extends Function<String, List<String
 
     List<String> tokenize(String expression);
 
-    static BooleanExpressionTokenizer getInstance() {
-        return ServiceLoader.load(BooleanExpressionTokenizer.class)
+    static ExpressionTokenizer getInstance() {
+        return ServiceLoader.load(ExpressionTokenizer.class)
                 .stream()
                 .filter(provider -> provider.type() != SimpleTokenizer.class)
                 .findAny()

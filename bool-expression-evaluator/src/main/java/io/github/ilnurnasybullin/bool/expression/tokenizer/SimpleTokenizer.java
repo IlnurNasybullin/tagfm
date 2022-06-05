@@ -1,11 +1,11 @@
-package io.github.ilnurnasybullin.logical.expression.tokenizer;
+package io.github.ilnurnasybullin.bool.expression.tokenizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SimpleTokenizer implements BooleanExpressionTokenizer {
+public class SimpleTokenizer implements ExpressionTokenizer {
 
     private final static Pattern splitter = Pattern.compile("\s+");
 

@@ -14,14 +14,31 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.parser;
-
-import io.github.ilnurnasybullin.logical.expression.evaluator.BooleanExpressionTree;
+package io.github.ilnurnasybullin.bool.expression.element;
 
 /**
  * @author Ilnur Nasybullin
  */
-public interface BooleanExpressionParser<T> {
-    // brackets aren't checking!
-    BooleanExpressionTree<T> parse(String expression);
+public class OperandElement<T> implements Term<T> {
+
+    private final T operand;
+
+    public OperandElement(T operand) {
+        this.operand = operand;
+    }
+
+    @Override
+    public boolean isOperator() {
+        return false;
+    }
+
+    @Override
+    public Operator operator() {
+        throw new UnsupportedOperationException(String.format("Operand [%s] isn't operator!", operand));
+    }
+
+    @Override
+    public T operand() {
+        return operand;
+    }
 }

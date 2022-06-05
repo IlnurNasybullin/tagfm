@@ -15,7 +15,7 @@
  */
 
 import io.github.ilnurnasybullin.tagfm.core.evaluator.BooleanExpressionParser;
-import io.github.ilnurnasybullin.tagfm.logical.expression.BooleanExpressionParserImpl;
+import io.github.ilnurnasybullin.tagfm.bool.expression.ExpressionParserAdapter;
 
 /**
  * @author Ilnur Nasybullin
@@ -24,7 +24,7 @@ module tagfm.bool.expression.spi.provider {
     requires tagfm.core;
     requires bool.expression.evaluator;
 
-    exports io.github.ilnurnasybullin.tagfm.logical.expression;
+    exports io.github.ilnurnasybullin.tagfm.bool.expression;
 
-    provides BooleanExpressionParser with BooleanExpressionParserImpl;
+    provides BooleanExpressionParser with ExpressionParserAdapter;
 }

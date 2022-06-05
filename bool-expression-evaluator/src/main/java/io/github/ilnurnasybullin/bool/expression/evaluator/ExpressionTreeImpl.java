@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.evaluator;
+package io.github.ilnurnasybullin.bool.expression.evaluator;
 
-import io.github.ilnurnasybullin.logical.expression.element.OperandElement;
-import io.github.ilnurnasybullin.logical.expression.element.Term;
+import io.github.ilnurnasybullin.bool.expression.element.OperandElement;
+import io.github.ilnurnasybullin.bool.expression.element.Term;
 
 import java.util.*;
 import java.util.function.Function;
@@ -26,38 +26,38 @@ import java.util.function.Predicate;
 /**
  * @author Ilnur Nasybullin
  */
-public class BooleanExpressionTreeImpl<T> implements BooleanExpressionTree<T> {
+public class ExpressionTreeImpl<T> implements ExpressionTree<T> {
 
-    private final static Comparator<BooleanExpressionTree<?>> optimizeComparator =
-            Comparator.comparingInt(BooleanExpressionTree::leafsCount);
+    private final static Comparator<ExpressionTree<?>> optimizeComparator =
+            Comparator.comparingInt(ExpressionTree::leafsCount);
 
     private final int leafsCount;
     private final Term<T> term;
-    private final PriorityQueue<BooleanExpressionTree<T>> leafs;
+    private final PriorityQueue<ExpressionTree<T>> leafs;
 
-    private BooleanExpressionTreeImpl(Term<T> term, PriorityQueue<BooleanExpressionTree<T>> leafs, int leafsCount) {
+    private ExpressionTreeImpl(Term<T> term, PriorityQueue<ExpressionTree<T>> leafs, int leafsCount) {
         this.term = term;
         this.leafs = leafs;
         this.leafsCount = leafsCount;
     }
 
-    public static <T> BooleanExpressionTree<T> operand(Term<T> operand) {
+    public static <T> ExpressionTree<T> operand(Term<T> operand) {
         return of(operand, List.of());
     }
 
-    public static <T> BooleanExpressionTree<T> operator(Term<T> operator, Collection<BooleanExpressionTree<T>> operands) {
+    public static <T> ExpressionTree<T> operator(Term<T> operator, Collection<ExpressionTree<T>> operands) {
         return of(operator, operands);
     }
 
-    private static <T> BooleanExpressionTree<T> of(Term<T> term, Collection<BooleanExpressionTree<T>> leafs) {
-        PriorityQueue<BooleanExpressionTree<T>> prioritizedLeafs = new PriorityQueue<>(optimizeComparator);
+    private static <T> ExpressionTree<T> of(Term<T> term, Collection<ExpressionTree<T>> leafs) {
+        PriorityQueue<ExpressionTree<T>> prioritizedLeafs = new PriorityQueue<>(optimizeComparator);
         prioritizedLeafs.addAll(leafs);
 
         int leafsCount = prioritizedLeafs.stream()
-                .mapToInt(BooleanExpressionTree::leafsCount)
+                .mapToInt(ExpressionTree::leafsCount)
                 .sum() + prioritizedLeafs.size();
 
-        return new BooleanExpressionTreeImpl<>(term, prioritizedLeafs, leafsCount);
+        return new ExpressionTreeImpl<>(term, prioritizedLeafs, leafsCount);
     }
 
     @Override
@@ -66,13 +66,13 @@ public class BooleanExpressionTreeImpl<T> implements BooleanExpressionTree<T> {
     }
 
     @Override
-    public <U> BooleanExpressionTree<U> map(Function<T, U> mapFunction) {
+    public <U> ExpressionTree<U> map(Function<T, U> mapFunction) {
         if (leafsCount == 0) {
             U mappedElement = mapFunction.apply(term.operand());
             return operand(new OperandElement<>(mappedElement));
         }
 
-        List<BooleanExpressionTree<U>> leafs = this.leafs.stream()
+        List<ExpressionTree<U>> leafs = this.leafs.stream()
                 .map(tree -> tree.map(mapFunction))
                 .toList();
 
@@ -97,7 +97,7 @@ public class BooleanExpressionTreeImpl<T> implements BooleanExpressionTree<T> {
 
     private boolean evaluateOr(Predicate<T> mapper) {
         boolean result = false;
-        Iterator<BooleanExpressionTree<T>> iterator = leafs.iterator();
+        Iterator<ExpressionTree<T>> iterator = leafs.iterator();
         while (!result && iterator.hasNext()) {
             result = iterator.next().evaluate(mapper);
         }
@@ -106,7 +106,7 @@ public class BooleanExpressionTreeImpl<T> implements BooleanExpressionTree<T> {
 
     private boolean evaluateAnd(Predicate<T> mapper) {
         boolean result = true;
-        Iterator<BooleanExpressionTree<T>> iterator = leafs.iterator();
+        Iterator<ExpressionTree<T>> iterator = leafs.iterator();
         while (result && iterator.hasNext()) {
             result = iterator.next().evaluate(mapper);
         }

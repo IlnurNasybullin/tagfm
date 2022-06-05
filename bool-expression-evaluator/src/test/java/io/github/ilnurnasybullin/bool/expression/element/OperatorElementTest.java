@@ -1,4 +1,4 @@
-package io.github.ilnurnasybullin.logical.expression.element;
+package io.github.ilnurnasybullin.bool.expression.element;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

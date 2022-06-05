@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.evaluator;
+package io.github.ilnurnasybullin.bool.expression.parser;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
+import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
 
 /**
  * @author Ilnur Nasybullin
  */
-public interface BooleanExpressionTree<T> {
-    <U> BooleanExpressionTree<U> map(Function<T, U> mapFunction);
-    boolean evaluate(Predicate<T> mapper);
-    int leafsCount();
+public interface ExpressionParser<T> {
+    // brackets aren't checking!
+    ExpressionTree<T> parse(String expression);
 }

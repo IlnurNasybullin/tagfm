@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.parser;
+package io.github.ilnurnasybullin.bool.expression.parser;
 
-import io.github.ilnurnasybullin.logical.expression.evaluator.BooleanExpressionTree;
-import io.github.ilnurnasybullin.logical.expression.evaluator.BooleanExpressionTreeImpl;
-import io.github.ilnurnasybullin.logical.expression.element.*;
-import io.github.ilnurnasybullin.logical.expression.tokenizer.BooleanExpressionTokenizer;
+import io.github.ilnurnasybullin.bool.expression.element.*;
+import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTree;
+import io.github.ilnurnasybullin.bool.expression.evaluator.ExpressionTreeImpl;
+import io.github.ilnurnasybullin.bool.expression.tokenizer.ExpressionTokenizer;
 
 import java.util.*;
 import java.util.function.Function;
@@ -27,7 +27,7 @@ import java.util.function.Function;
 /**
  * @author Ilnur Nasybullin
  */
-public class BooleanExpressionParserImpl<T> implements BooleanExpressionParser<T> {
+public class ExpressionParserImpl<T> implements ExpressionParser<T> {
 
     private final static Map<String, Token> tokenMap;
 
@@ -43,28 +43,28 @@ public class BooleanExpressionParserImpl<T> implements BooleanExpressionParser<T
 
     private final Function<String, T> mapper;
 
-    public BooleanExpressionParserImpl(Function<String, T> mapper) {
+    public ExpressionParserImpl(Function<String, T> mapper) {
         this.mapper = mapper;
     }
 
     // brackets aren't checking!
     @Override
-    public BooleanExpressionTree<T> parse(String expression) {
-        List<BooleanExpressionTree<T>> treeTerms = new ArrayList<>();
+    public ExpressionTree<T> parse(String expression) {
+        List<ExpressionTree<T>> treeTerms = new ArrayList<>();
         List<String> tokens = getTokens(expression);
 
         Deque<Term<T>> terms = getTerms(tokens);
 
-        BooleanExpressionTree<T> root = null;
+        ExpressionTree<T> root = null;
         for (Term<T> term: terms) {
             if (term.isOperand()) {
-                root = BooleanExpressionTreeImpl.operand(term);
+                root = ExpressionTreeImpl.operand(term);
                 treeTerms.add(root);
                 continue;
             }
 
-            ListIterator<BooleanExpressionTree<T>> iterator = treeTerms.listIterator(treeTerms.size());
-            List<BooleanExpressionTree<T>> operands = new ArrayList<>();
+            ListIterator<ExpressionTree<T>> iterator = treeTerms.listIterator(treeTerms.size());
+            List<ExpressionTree<T>> operands = new ArrayList<>();
             OperatorElement operator = (OperatorElement) term;
 
             int i = 0;
@@ -83,7 +83,7 @@ public class BooleanExpressionParserImpl<T> implements BooleanExpressionParser<T
                 );
             }
 
-            root = BooleanExpressionTreeImpl.operator(term, operands);
+            root = ExpressionTreeImpl.operator(term, operands);
             treeTerms.add(root);
         }
 
@@ -97,7 +97,7 @@ public class BooleanExpressionParserImpl<T> implements BooleanExpressionParser<T
     }
 
     private List<String> getTokens(String expression) {
-        BooleanExpressionTokenizer tokenizer = BooleanExpressionTokenizer.getInstance();
+        ExpressionTokenizer tokenizer = ExpressionTokenizer.getInstance();
         return tokenizer.tokenize(expression);
     }
 

@@ -14,19 +14,29 @@
  * limitations under the License.
  */
 
-package io.github.ilnurnasybullin.logical.expression.element;
+package io.github.ilnurnasybullin.bool.expression.element;
 
 /**
  * @author Ilnur Nasybullin
  */
-public interface Term<T> {
+public enum Operator {
+    NOT(0, 1),
+    AND(1, 2),
+    OR(2, 2);
 
-    boolean isOperator();
-    default boolean isOperand() {
-        return !isOperator();
+    private final int priorityLevel;
+    private final int operandsCount;
+
+    Operator(int priorityLevel, int operandsCount) {
+        this.priorityLevel = priorityLevel;
+        this.operandsCount = operandsCount;
     }
 
-    Operator operator();
-    T operand();
+    public int priorityLevel() {
+        return priorityLevel;
+    }
 
+    public int operandsCount() {
+        return operandsCount;
+    }
 }
