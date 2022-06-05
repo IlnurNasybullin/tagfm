@@ -101,6 +101,7 @@ public class ExpressionParserImpl<T> implements ExpressionParser<T> {
         return tokenizer.tokenize(expression);
     }
 
+    // infix to postfix (Shunting-Yard Algorithm)
     private Deque<Term<T>> getTerms(List<String> tokens) {
         int currentLevel = 0;
         Deque<Term<T>> terms = new ArrayDeque<>();
