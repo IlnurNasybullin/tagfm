@@ -26,18 +26,18 @@ import io.github.ilnurnasybullin.tagfm.core.api.service.IllegalTagForRemovingExc
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-public class UpAndRebaseNewTagRemover implements InnerNamespaceTagRemover {
+public class UpAndUseOldTagRemover implements InnerNamespaceTagRemover {
 
     private final NamespaceView namespace;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private UpAndRebaseNewTagRemover(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
+    private UpAndUseOldTagRemover(NamespaceView namespace, FilesTagManagerService<TagView> fileTagsManager) {
         this.namespace = namespace;
         this.fileTagsManager = fileTagsManager;
     }
 
-    public static UpAndRebaseNewTagRemover of(NamespaceView namespace) {
-        return new UpAndRebaseNewTagRemover(namespace, FilesTagManager.of(namespace));
+    public static UpAndUseOldTagRemover of(NamespaceView namespace) {
+        return new UpAndUseOldTagRemover(namespace, FilesTagManager.of(namespace));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class UpAndRebaseNewTagRemover implements InnerNamespaceTagRemover {
 
         TagParentBindingService<TagView> parentBinder = TagParentBinder.of(namespace);
         tag.children().forEach((childTagName, childTag) ->
-                parentBinder.bind(childTag, parent, TagParentBindingStrategy.REBASE_NEW)
+                parentBinder.bind(childTag, parent, TagParentBindingStrategy.USE_OLD)
         );
 
         namespace.synonymsManager().unbind(tag);

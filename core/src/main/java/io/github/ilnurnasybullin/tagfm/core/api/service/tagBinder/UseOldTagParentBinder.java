@@ -26,18 +26,19 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class RebaseNewTagParentBinder implements InnerTagParentBinder {
+public class UseOldTagParentBinder implements InnerTagParentBinder {
 
     private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private RebaseNewTagParentBinder(SynonymTagManagerView synonymsManager, FilesTagManagerService<TagView> fileTagsManager) {
+    private UseOldTagParentBinder(SynonymTagManagerView synonymsManager,
+                                  FilesTagManagerService<TagView> fileTagsManager) {
         this.synonymsManager = synonymsManager;
         this.fileTagsManager = fileTagsManager;
     }
 
-    public static RebaseNewTagParentBinder of(NamespaceView namespace) {
-        return new RebaseNewTagParentBinder(namespace.synonymsManager(), FilesTagManager.of(namespace));
+    public static UseOldTagParentBinder of(NamespaceView namespace) {
+        return new UseOldTagParentBinder(namespace.synonymsManager(), FilesTagManager.of(namespace));
     }
 
     @Override
@@ -45,19 +46,18 @@ public class RebaseNewTagParentBinder implements InnerTagParentBinder {
         Map<String, TreeTag> leafs = parent.children();
         String tagName = tag.name();
         TreeTag collisionTag = leafs.get(tagName);
+
         if (collisionTag == null) {
             tag.reparent(parent);
             return;
         }
 
         CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        walker.walk(collisionTag, tag);
+        walker.walk(tag, collisionTag);
 
-        synonymsManager.unbind(collisionTag);
-        fileTagsManager.removeTag(collisionTag);
-
-        collisionTag.reparent(null);
-        tag.reparent(parent);
+        fileTagsManager.removeTag(tag);
+        synonymsManager.unbind(tag);
+        tag.reparent(null);
     }
 
     private void noCollision(TreeTag primaryChild, TreeTag noCollisionParent) {

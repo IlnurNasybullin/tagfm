@@ -27,8 +27,8 @@ public interface InnerNamespaceTagRemover {
         return switch (strategy) {
             case UP_CHILDREN_WITHOUT_CONFLICTS -> UpChildrenWithoutConflicts.of(namespace);
             case REMOVE_CHILDREN -> RemoveChildrenTagRemover.of(namespace);
-            case UP_AND_REBASE_NEW -> UpAndRebaseNewTagRemover.of(namespace);
-            case UP_AND_REBASE_OLD -> UpAndRebaseOldTagRemover.of(namespace);
+            case UP_AND_USE_NEW -> UpAndUseNewTagRemover.of(namespace);
+            case UP_AND_USE_OLD -> UpAndUseOldTagRemover.of(namespace);
             case UP_AND_MERGE_CHILDREN -> UpAndMergeTagRemover.of(namespace);
         };
     }

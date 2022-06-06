@@ -26,19 +26,18 @@ import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
 import java.util.Map;
 
-public class RebaseOldTagParentBinder implements InnerTagParentBinder {
+public class UseNewTagParentBinder implements InnerTagParentBinder {
 
     private final SynonymTagManagerView synonymsManager;
     private final FilesTagManagerService<TagView> fileTagsManager;
 
-    private RebaseOldTagParentBinder(SynonymTagManagerView synonymsManager,
-                                     FilesTagManagerService<TagView> fileTagsManager) {
+    private UseNewTagParentBinder(SynonymTagManagerView synonymsManager, FilesTagManagerService<TagView> fileTagsManager) {
         this.synonymsManager = synonymsManager;
         this.fileTagsManager = fileTagsManager;
     }
 
-    public static RebaseOldTagParentBinder of(NamespaceView namespace) {
-        return new RebaseOldTagParentBinder(namespace.synonymsManager(), FilesTagManager.of(namespace));
+    public static UseNewTagParentBinder of(NamespaceView namespace) {
+        return new UseNewTagParentBinder(namespace.synonymsManager(), FilesTagManager.of(namespace));
     }
 
     @Override
@@ -46,18 +45,19 @@ public class RebaseOldTagParentBinder implements InnerTagParentBinder {
         Map<String, TreeTag> leafs = parent.children();
         String tagName = tag.name();
         TreeTag collisionTag = leafs.get(tagName);
-
         if (collisionTag == null) {
             tag.reparent(parent);
             return;
         }
 
         CollisionWalker<TreeTag> walker = CollisionWalker.of(this::hasCollision, this::noCollision);
-        walker.walk(tag, collisionTag);
+        walker.walk(collisionTag, tag);
 
-        fileTagsManager.removeTag(tag);
-        synonymsManager.unbind(tag);
-        tag.reparent(null);
+        synonymsManager.unbind(collisionTag);
+        fileTagsManager.removeTag(collisionTag);
+
+        collisionTag.reparent(null);
+        tag.reparent(parent);
     }
 
     private void noCollision(TreeTag primaryChild, TreeTag noCollisionParent) {

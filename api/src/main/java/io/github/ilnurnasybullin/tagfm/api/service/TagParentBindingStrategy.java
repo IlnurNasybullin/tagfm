@@ -18,7 +18,7 @@ package io.github.ilnurnasybullin.tagfm.api.service;
 
 public enum TagParentBindingStrategy {
     THROW_IF_COLLISION,
-    REBASE_OLD,
-    REBASE_NEW,
+    USE_OLD,
+    USE_NEW,
     MERGE
 }

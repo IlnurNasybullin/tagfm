@@ -27,8 +27,8 @@ public interface InnerTagParentBinder {
     static InnerTagParentBinder instanceBinder(NamespaceView namespace, TagParentBindingStrategy bindingStrategy) {
         return switch (bindingStrategy) {
             case THROW_IF_COLLISION -> new ThrowIfCollisionTagParentBinder();
-            case REBASE_OLD -> RebaseOldTagParentBinder.of(namespace);
-            case REBASE_NEW -> RebaseNewTagParentBinder.of(namespace);
+            case USE_OLD -> UseOldTagParentBinder.of(namespace);
+            case USE_NEW -> UseNewTagParentBinder.of(namespace);
             case MERGE -> MergeTagParentBinder.of(namespace);
         };
     }
