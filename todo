@@ -1,5 +1,6 @@
 ## refactoring of expression parser
 ## remove license in unnecessary files (assemble files)
+## add NOTICE.txt
 ## printing searched files in list
 ## printing format
 ## add option in namespace for camel case sensitive
