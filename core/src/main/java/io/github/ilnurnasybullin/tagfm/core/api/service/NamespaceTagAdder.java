@@ -23,7 +23,6 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 
-import java.util.Map;
 import java.util.Optional;
 
 public class NamespaceTagAdder implements NamespaceTagAddingService<TagView> {
