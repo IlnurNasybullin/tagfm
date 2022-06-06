@@ -40,17 +40,21 @@ public class NamespaceTagAdder implements NamespaceTagAddingService<TagView> {
 
     @Override
     public void addTag(TagView tag) {
-        addTag((TreeTag) namespace.root(), (TreeTag) tag);
+        TagView childRoot = getRoot(tag);
+        addTag((TreeTag) namespace.root(), (TreeTag) childRoot);
     }
 
-    private void addTag(TreeTag parent, TreeTag child) {
-        TreeTag childRoot = child;
-        Optional<TreeTag> childParent = child.parent();
+    private TagView getRoot(TagView tag) {
+        TagView childRoot = tag;
+        Optional<TagView> childParent = tag.parent();
         while (childParent.isPresent()) {
             childRoot = childParent.get();
             childParent = childRoot.parent();
         }
+        return childRoot;
+    }
 
+    private void addTag(TreeTag parent, TreeTag childRoot) {
         TagParentBindingService<TagView> parentBinder = TagParentBinder.of(namespace);
         parentBinder.bind(childRoot, parent, TagParentBindingStrategy.MERGE);
     }
