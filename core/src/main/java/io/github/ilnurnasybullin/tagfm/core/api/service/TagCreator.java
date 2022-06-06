@@ -23,8 +23,6 @@ import io.github.ilnurnasybullin.tagfm.core.api.service.util.TreeTagSplitter;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTag;
 import io.github.ilnurnasybullin.tagfm.core.model.tag.TreeTagSafety;
 
-import java.util.Optional;
-
 public class TagCreator implements TagCreatorService<TagView> {
 
     @Override
