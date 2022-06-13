@@ -1,12 +1,3 @@
-def moduleName = "logical.expression.evaluator"
-def patchArgs = ["--patch-module", "$moduleName=${tasks.compileJava.destinationDirectory.asFile.get().path}"]
-tasks.named('compileTestJava') {
-    options.compilerArgs += patchArgs
-}
-tasks.named('test') {
-    jvmArgs += patchArgs
-}
-
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

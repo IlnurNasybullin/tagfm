@@ -21,5 +21,7 @@ module bool.expression.evaluator {
     exports io.github.ilnurnasybullin.bool.expression.tree;
     exports io.github.ilnurnasybullin.bool.expression.tokenizer;
 
+    exports io.github.ilnurnasybullin.bool.expression.terms to bool.expression.evaluator.test;
+
     uses ExpressionTokenizer;
 }

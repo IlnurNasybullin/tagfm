@@ -1,5 +1,7 @@
-package io.github.ilnurnasybullin.bool.expression.terms;
+package test.io.github.ilnurnasybullin.bool.expression.term;
 
+import io.github.ilnurnasybullin.bool.expression.terms.Operator;
+import io.github.ilnurnasybullin.bool.expression.terms.OperatorElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
