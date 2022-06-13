@@ -12,6 +12,8 @@ jars=(
 "snakeyaml-1.30.jar"
 )
 
+assembly_root="./sh-assembly"
+
 for i in ${!modules[@]}; do
-  sh ./patch-jar-modules-cli.sh ${modules[$i]} ${jars[$i]}
+  sh "$assembly_root/patch-jar-modules-cli.sh" ${modules[$i]} ${jars[$i]}
 done

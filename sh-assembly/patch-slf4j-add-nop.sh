@@ -11,4 +11,3 @@ jar uf "$libs_root/slf4j-api-1.7.29.jar" \
 
 rm -rf "./org"
 rm -rf "./META-INF"
-rm "./module-info.class"
