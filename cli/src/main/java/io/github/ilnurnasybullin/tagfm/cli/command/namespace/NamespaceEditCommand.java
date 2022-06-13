@@ -19,19 +19,34 @@ package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "edit")
+@CommandLine.Command(
+        name = "edit",
+        headerHeading = "Usage:%n%n",
+        header = "Editing namespace's inner characteristics",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "modifying namespace by editing inner characteristics (file naming strategy)"
+)
 @Singleton
 public class NamespaceEditCommand implements Runnable {
 
     @CommandLine.Parameters(index = "0", arity = "1")
     private String namespaceName;
 
-    @CommandLine.Option(names = {"-fns", "--file-naming-strategy"})
+    @CommandLine.Option(
+            names = {"-fns", "--file-naming-strategy"},
+            paramLabel = "file naming strategy",
+            description = "file naming strategy, valid strategies: ${COMPLETION-CANDIDATES}"
+    )
     private FileNamingStrategy strategy;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     private final NamespaceRepositoryService<NamespaceView> namespaceService;
 

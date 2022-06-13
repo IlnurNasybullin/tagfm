@@ -16,17 +16,24 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "unbind", subcommands = {
-        UnbindSynonymsCommand.class,
-        UnbindParentTagsCommand.class
-})
+@CommandLine.Command(
+        name = "unbind",
+        subcommands = {
+            UnbindSynonymsCommand.class,
+            UnbindParentTagsCommand.class
+        },
+        description = "unbind tags from hierarchy/synonym relationships"
+)
 public class TagUnbindCommand implements Runnable {
-    @Override
-    public void run() {
 
-    }
+    @CommandLine.Mixin
+    private HelpOption helper;
+
+    @Override
+    public void run() {}
 }

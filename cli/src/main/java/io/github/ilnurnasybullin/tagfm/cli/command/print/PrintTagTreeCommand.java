@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.cli.format.TreeTagPrinter;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
@@ -30,16 +31,30 @@ import java.util.Optional;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "tag-tree")
+@CommandLine.Command(
+        name = "tag-tree",
+        headerHeading = "Usage:%n%n",
+        header = "Visualization of tree tags",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "tree tag visualization"
+)
 public class PrintTagTreeCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "searching root tag by short name")
     private boolean shortName;
 
-    @CommandLine.Parameters(arity = "0", index = "0")
-    private Optional<String> rootTag;
+    @CommandLine.Parameters(
+            arity = "0",
+            index = "0",
+            description = "root tag (if not defined then using namespace system root tag)"
+    )
+    private String rootTag;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public PrintTagTreeCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
@@ -48,12 +63,16 @@ public class PrintTagTreeCommand implements Runnable {
     @Override
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
-        TagView root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        TagView root = getTag(namespace, rootTag);
         TreeTagPrinter printer = new TreeTagPrinter(root);
         printer.print();
     }
 
     private TagView getTag(NamespaceView namespace, String tagName) {
+        if (tagName == null) {
+            return getRootTag(namespace);
+        }
+
         TagService tagService = TagService.of(namespace);
         return shortName ?
                 tagService.findByNameExact(tagName) :

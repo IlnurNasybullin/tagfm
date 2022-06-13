@@ -21,6 +21,7 @@ import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
+import io.github.ilnurnasybullin.tagfm.core.util.iterator.TreeIteratorsFactory;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -30,10 +31,17 @@ import java.nio.file.Path;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "file-tags")
+@CommandLine.Command(
+        name = "tags",
+        headerHeading = "Usage:%n%n",
+        header = "Printing of file tags",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "print list of file tags"
+)
 public class ListFileTagsCommand implements Runnable {
 
-    @CommandLine.Parameters(arity = "1", index = "0")
+    @CommandLine.Parameters(arity = "0", index = "0", description = "file (if not defining all tags will print)")
     private Path file;
 
     private final FileManagerCommand fileManager;
@@ -45,6 +53,12 @@ public class ListFileTagsCommand implements Runnable {
     @Override
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
+
+        if (file == null) {
+            TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(namespace.root(), tag -> tag.children().values())
+                    .forEachRemaining(tag -> System.out.println(tag.fullName()));
+            return;
+        }
 
         FileManager fileFinder = FileManager.of(namespace);
         TaggedFileView searchedFile = fileFinder.findExact(file);

@@ -16,16 +16,25 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.tag.bind;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "bind", subcommands = {
-        TagBindFilesCommand.class,
-        TagBindSynonymsCommand.class,
-        TagBindParentCommand.class
-})
+@CommandLine.Command(
+        name = "bind",
+        subcommands = {
+            TagBindFilesCommand.class,
+            TagBindSynonymsCommand.class,
+            TagBindParentCommand.class
+        },
+        description = "binding tag with files and tags' relationships"
+)
 public class TagBindCommand implements Runnable {
+
+    @CommandLine.Mixin
+    private HelpOption helper;
+
     @Override
     public void run() {}
 }

@@ -18,7 +18,7 @@ package io.github.ilnurnasybullin.tagfm.api.service;
 
 public enum TagRemovingStrategy {
     REMOVE_CHILDREN,
-    UP_AND_MERGE_CHILDREN,
+    UP_AND_MERGE,
     UP_AND_USE_OLD,
     UP_AND_USE_NEW,
     UP_CHILDREN_WITHOUT_CONFLICTS

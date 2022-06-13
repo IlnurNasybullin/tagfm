@@ -16,18 +16,27 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "namespace", description = "namespace initialization or modifying", subcommands = {
-        NamespaceInitCommand.class,
-        NamespaceRenameCommand.class,
-        NamespaceEditCommand.class,
-        NamespaceSwitch.class,
-        NamespaceRemoveCommand.class
-})
+@CommandLine.Command(
+        name = "namespace",
+        description = "namespace initialization/modifying/removing commands. Also let you set working namespace",
+        subcommands = {
+            NamespaceInitCommand.class,
+            NamespaceRenameCommand.class,
+            NamespaceEditCommand.class,
+            NamespaceSwitch.class,
+            NamespaceRemoveCommand.class
+        }
+)
 @Singleton
 public class NamespaceCommand implements Runnable {
+
+    @CommandLine.Mixin
+    private HelpOption helper;
+
     @Override
     public void run() {}
 

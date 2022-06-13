@@ -18,6 +18,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.tag.bind;
 
 import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
@@ -26,20 +27,40 @@ import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "parent")
+@CommandLine.Command(
+        name = "parent",
+        headerHeading = "Usage:%n%n",
+        header = "Tags' hierarchy binding",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = """
+        binding tags with hierarchy relationship. Formally, binding (hierarchy) tag X to tag Y  is equivalent that tag X \
+        is setted child of tag Y. For binding can be used these binding strategies: \
+            * throw if collision - throw exception, if tag Y has already tag with same short name (collision tag); \
+            * use old - remove new tags (X and his child) for collision tags; \
+            * use new - remove old tags (child tags of Y) for collision tags; \
+            * merge - union files and synonyms of collision tags.
+        """
+)
 public class TagBindParentCommand implements Runnable {
 
-    @CommandLine.Parameters(index = "0", arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1", description = "parent tag")
     private String parentTag;
 
-    @CommandLine.Parameters(index = "1", arity = "1")
+    @CommandLine.Parameters(index = "1", arity = "1", description = "child tag")
     private String childTag;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "search tags by short name")
     private boolean shortName;
 
-    @CommandLine.Option(names = {"-pbs", "--parent-binding-strategy"})
+    @CommandLine.Option(
+            names = {"-pbs", "--parent-binding-strategy"},
+            description = "tag parent binding strategy, default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES}"
+    )
     private TagParentBindingStrategy parentBindingStrategy = TagParentBindingStrategy.THROW_IF_COLLISION;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     private final FileManagerCommand fileManager;
 

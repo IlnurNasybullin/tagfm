@@ -26,18 +26,38 @@ import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "remove")
+@CommandLine.Command(
+        name = "remove",
+        headerHeading = "Usage:%n%n",
+        header = "Removing tags from namespace",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = """
+                removing tags from current namespace. Formally, removing tag X from namespace is equivalent to \
+                unbind tag X from his parent (tag Y) without binding tag X to any tag. Tag X can have any child, so for 
+                removing has 5 strategies: \
+                    * up children without conflicts - all child tags of tag X bind to tag Y; if tag has already tags \
+                    with same names (collision tags) would be thrown exception;
+                    * remove children - remove tag X and his child tags;
+                    * up and use old - remove tag X and collision tags (child tags of tag X);
+                    * up and use new - remove tag X and collision tags (child tags of tag Y);
+                    * up and merge - remove tag X and merge collision tags (union files and synonym groups).
+                """
+)
 public class TagRemoveCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "search tag by short name")
     private boolean shortName;
 
-    @CommandLine.Option(names = {"-trs", "--tag-removing-strategy"})
+    @CommandLine.Option(
+            names = {"-trs", "--tag-removing-strategy"},
+            description = "tag removing strategy, default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES}"
+    )
     private TagRemovingStrategy tagRemovingStrategy = TagRemovingStrategy.UP_CHILDREN_WITHOUT_CONFLICTS;
 
-    @CommandLine.Parameters(index = "0", arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1", description = "removing tag")
     private String tagName;
 
     public TagRemoveCommand(FileManagerCommand fileManager) {

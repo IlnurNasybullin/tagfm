@@ -1,6 +1,6 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
-import io.github.ilnurnasybullin.tagfm.cli.command.mixin.ReusableOption;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.cli.command.tag.bind.TagBindCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind.TagUnbindCommand;
 import jakarta.inject.Singleton;
@@ -20,16 +20,14 @@ import picocli.CommandLine;
             TagUnbindCommand.class
         },
         description = """
-                managing with tags (add/edit/remove tags from namespace), binding/unbinding parent tag or synonyms
+                managing with tags (add/edit/remove tags from namespace), binding/unbinding parent tag or synonyms.
                 """
 )
 public class TagCommand implements Runnable {
 
     @CommandLine.Mixin
-    private ReusableOption option;
+    private HelpOption option;
 
     @Override
-    public void run() {
-
-    }
+    public void run() {}
 }

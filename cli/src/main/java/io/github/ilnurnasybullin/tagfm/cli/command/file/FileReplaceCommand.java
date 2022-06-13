@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
@@ -30,16 +31,26 @@ import java.nio.file.Path;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "replace")
+@CommandLine.Command(
+        name = "replace",
+        headerHeading = "Usage:%n%n",
+        header = "Replacing file in namespace with moving tags",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "replacing file in namespace with moving tags."
+)
 public class FileReplaceCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", index = "0")
+    @CommandLine.Parameters(arity = "1", index = "0", description = "file being replaced from namespace")
     private Path src;
 
-    @CommandLine.Parameters(arity = "1", index = "1")
+    @CommandLine.Parameters(arity = "1", index = "1", description = "replacing file from outside namespace")
     private Path dest;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public FileReplaceCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
@@ -26,7 +27,6 @@ import picocli.CommandLine;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
 
@@ -34,39 +34,56 @@ import java.util.function.Function;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "tags")
-public class ListTagsCommand implements Runnable {
+@CommandLine.Command(
+        name = "child-tags",
+        headerHeading = "Usage:%n%n",
+        header = "Printing of child tags",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "print list of child tags"
+)
+public class ListChildTagsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(index = "0", arity = "0")
-    private Optional<String> rootTag;
+    @CommandLine.Parameters(index = "0", arity = "0", description = "root tag")
+    private String rootTag;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "using short name for searching root tag")
     private boolean shortName;
 
-    @CommandLine.Option(names = {"-d", "--depth"})
-    private Optional<Integer> depth;
+    @CommandLine.Option(
+            names = {"-d", "--depth"},
+            description = "depth of tree for searching child tags (by default searching all children of root tag)"
+    )
+    private Integer depth;
 
-    public ListTagsCommand(FileManagerCommand fileManager) {
+    @CommandLine.Mixin
+    private HelpOption helper;
+
+    public ListChildTagsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
     }
 
     @Override
     public void run() {
         NamespaceView namespace = fileManager.namespaceOrThrow();
-        TagView root = rootTag.map(tag -> getTag(namespace, tag)).orElse(getRootTag(namespace));
+        TagView root = getTag(namespace, rootTag);
         Function<TagView, Collection<TagView>> leafsSupplier = tag -> new TreeMap<String, TagView>(tag.children()).values();
 
-        Iterator<TagView> iterator = depth.map(d ->
-                        TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.LEVELED.iterator(root, leafsSupplier, d))
-                        .orElse(TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(root, leafsSupplier));
+        Iterator<TagView> iterator = depth == null ?
+                        TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.SIMPLE.iterator(root, leafsSupplier) :
+                        TreeIteratorsFactory.HORIZONTAL_TRAVERSAL.LEVELED.iterator(root, leafsSupplier, depth);
 
         iterator.next();
         iterator.forEachRemaining(tag -> System.out.println(tag.fullName()));
     }
 
     private TagView getTag(NamespaceView namespace, String tagName) {
+        if (tagName == null) {
+            return getRootTag(namespace);
+        }
+
         TagService tagService = TagService.of(namespace);
         return shortName ?
                 tagService.findByNameExact(tagName) :

@@ -29,7 +29,7 @@ public interface InnerNamespaceTagRemover {
             case REMOVE_CHILDREN -> RemoveChildrenTagRemover.of(namespace);
             case UP_AND_USE_NEW -> UpAndUseNewTagRemover.of(namespace);
             case UP_AND_USE_OLD -> UpAndUseOldTagRemover.of(namespace);
-            case UP_AND_MERGE_CHILDREN -> UpAndMergeTagRemover.of(namespace);
+            case UP_AND_MERGE -> UpAndMergeTagRemover.of(namespace);
         };
     }
 }

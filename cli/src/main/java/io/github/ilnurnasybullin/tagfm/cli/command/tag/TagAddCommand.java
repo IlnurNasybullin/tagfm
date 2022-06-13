@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.InvalidTagNameException;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
@@ -29,15 +30,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-@CommandLine.Command(name = "add", description = "add tags in current namespace")
+@CommandLine.Command(
+        name = "add",
+        headerHeading = "Usage:%n%n",
+        header = "Adding tags in namespace",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "add tags in current namespace"
+)
 public class TagAddCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(index = "0..*", paramLabel = "tags", arity = "1",
-            description = "adding tags in current namespace"
-    )
+    @CommandLine.Parameters(index = "0..*", arity = "1", description = "adding tags")
     private final List<String> tags = new ArrayList<>();
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public TagAddCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

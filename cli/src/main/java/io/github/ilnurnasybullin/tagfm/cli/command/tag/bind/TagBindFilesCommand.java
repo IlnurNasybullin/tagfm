@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
@@ -15,25 +16,36 @@ import java.nio.file.Path;
 
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
 import jakarta.inject.Singleton;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Singleton
-@Command(name = "files")
+@Command(
+        name = "files",
+        headerHeading = "Usage:%n%n",
+        header = "Binding files",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "binding files with one tag"
+)
 public class TagBindFilesCommand implements Runnable {
     
-    @Parameters(index = "0", arity = "1")
+    @Parameters(index = "0", arity = "1", description = "binding tag")
     private String tagName;
 
-    @Parameters(index = "1..*", arity = "1")
+    @Parameters(index = "1..*", arity = "1", description = "binding files")
     private final List<Path> files = new ArrayList<>();
 
-    @Option(names = {"-c", "--create-tag"})
+    @Option(names = {"-c", "--create-tag"}, description = "create tag if it's not exist in namespace")
     private boolean createTag;
 
-    @Option(names = {"-sn", "--short-name"})
+    @Option(names = {"-sn", "--short-name"}, description = "search tag by short name")
     private boolean shortName;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     private final FileManagerCommand fileManager;
 

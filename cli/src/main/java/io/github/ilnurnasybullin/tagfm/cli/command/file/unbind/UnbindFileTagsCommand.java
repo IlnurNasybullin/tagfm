@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
@@ -31,7 +32,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-@CommandLine.Command(name = "unbind")
+@CommandLine.Command(
+        name = "unbind",
+        headerHeading = "Usage:%n%n",
+        header = "Unbind tags from file",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "Unbind tags from file"
+)
 public class UnbindFileTagsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
@@ -47,6 +55,9 @@ public class UnbindFileTagsCommand implements Runnable {
 
     @CommandLine.Option(names = {"-frp", "--file-removing-policy"}, paramLabel = "file removing policy")
     private FileRemovingPolicy removingPolicy = FileRemovingPolicy.NO_REMOVE;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public UnbindFileTagsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

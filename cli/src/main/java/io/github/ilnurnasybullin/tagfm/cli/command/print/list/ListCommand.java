@@ -16,6 +16,7 @@
 
 package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
@@ -23,14 +24,22 @@ import picocli.CommandLine;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "list", subcommands = {
-        ListFilesCommand.class,
-        ListFileTagsCommand.class,
-        ListTagsCommand.class,
-        ListSynonymsCommand.class,
-        ListNamespaces.class
-})
+@CommandLine.Command(
+        name = "list",
+        subcommands = {
+            ListFilesCommand.class,
+            ListFileTagsCommand.class,
+            ListChildTagsCommand.class,
+            ListSynonymsCommand.class,
+            ListNamespaces.class
+        },
+        description = "print list of files, tags, namespaces, synonyms etc."
+)
 public class ListCommand implements Runnable {
+
+    @CommandLine.Mixin
+    private HelpOption helper;
+
     @Override
     public void run() {
 

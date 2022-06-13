@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag.bind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
@@ -28,16 +29,26 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-@CommandLine.Command(name = "synonyms")
+@CommandLine.Command(
+        name = "synonyms",
+        headerHeading = "Usage:%n%n",
+        header = "Synonym's binding of tags",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "binding tags with synonym relationships"
+)
 public class TagBindSynonymsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1")
+    @CommandLine.Parameters(arity = "1", index = "0..*", description = "tags for binding in one common synonym group")
     private final List<String> tags = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "searching tags by short name")
     private boolean shortName;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public TagBindSynonymsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

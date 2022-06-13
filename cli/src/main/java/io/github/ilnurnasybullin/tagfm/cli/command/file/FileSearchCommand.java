@@ -18,6 +18,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.file;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileSearchStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
@@ -26,7 +27,6 @@ import io.github.ilnurnasybullin.tagfm.core.api.service.FileSearcher;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,14 +35,37 @@ import java.util.stream.Collectors;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "search")
+@CommandLine.Command(
+        name = "search",
+        headerHeading = "Usage:%n%n",
+        header = "Searching files by tags",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = """
+        searching files by tags with considering the relationship between tags. Searching expression is a boolean \
+        expression where value are tags' names. Another legal symbols in expressions are '&' (and), '|' (or), '~' (not) \
+        '(', ')' (brackets for priority). IN CURRENT VERSION any terms (tags' names and symbols) must be separated with \
+        a space.
+        In searching can be considered the next relationships between tags: \
+            * SYNONYM - if tag X is synonym tag Y then tag X in expression can be replaced (associated) with tag Y; \
+            * HIERARCHY - if tag X is child for tag Y then tag X in expression can be replaced (associated) with tag Y; \
+        By default (strategy SIMPLE), the relationships between tags aren't considered.
+        """
+)
 public class FileSearchCommand implements Runnable {
 
-    @CommandLine.Parameters(arity = "1", index = "0")
+    @CommandLine.Parameters(arity = "1", index = "0", description = "boolean expression for searching")
     private String expression;
 
-    @CommandLine.Option(names = {"-fss", "--file-search-strategy"})
+    @CommandLine.Option(
+            names = {"-fss", "--file-search-strategy"},
+            paramLabel = "file searching strategy",
+            description = "file searching strategy, default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES}"
+    )
     private FileSearchStrategy fileSearchStrategy = FileSearchStrategy.SIMPLE;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     private final FileManagerCommand fileManager;
 

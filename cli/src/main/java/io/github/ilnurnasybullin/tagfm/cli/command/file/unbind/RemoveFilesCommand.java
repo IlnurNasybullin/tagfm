@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.unbind;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
@@ -29,13 +30,23 @@ import java.util.List;
 import java.util.Set;
 
 @Singleton
-@CommandLine.Command(name = "remove")
+@CommandLine.Command(
+        name = "remove",
+        headerHeading = "Usage:%n%n",
+        header = "Remove files from namespace",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "remove files from namespace"
+)
 public class RemoveFilesCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", index = "0..*")
+    @CommandLine.Parameters(arity = "1", index = "0..*", description = "files for removing from namespace")
     private List<Path> files;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public RemoveFilesCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

@@ -20,7 +20,7 @@ import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
 import io.github.ilnurnasybullin.tagfm.cli.command.file.FileCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.namespace.NamespaceNotFoundException;
-import io.github.ilnurnasybullin.tagfm.cli.command.mixin.ReusableOption;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.cli.command.print.PrintCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.tag.TagCommand;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
@@ -41,7 +41,16 @@ import java.util.Optional;
         },
         description = """
                 TagFM is a file manager for tagging files and folders, managing tags and searching files by logical \
-                tags query.
+                expression. \
+                Entities of this manager: \
+                    * file - file or folder in file system; \
+                    * tag - any keyword for annotating file. Tags can be used for files' systematization and searching \
+                    files by them. Tags can be 2 relationships between each other - synonym and hierarchy. Any tag has 2 \
+                    names: short name (or name) and full name that consist from tag's name and hierarchy parent tags' \
+                    names separated by symbol '/' (also as files and folders in file system); \
+                    * namespace - some subject area where tagging is processed. All tags and files in one namespace are \
+                    unique. Namespace is storing file names, tag names and their relationships. File names can be stored \
+                    as absolute or relative path. Any namespace has system root tag with empty name.
                 """
 )
 @Singleton
@@ -55,7 +64,7 @@ public class FileManagerCommand implements Runnable, Closeable {
     private boolean onCommit = false;
 
     @CommandLine.Mixin
-    private ReusableOption options;
+    private HelpOption helper;
 
     public FileManagerCommand(NamespaceRepositoryService<NamespaceView> namespaceService) {
         this.namespaceService = namespaceService;

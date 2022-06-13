@@ -14,7 +14,7 @@ import picocli.CommandLine;
         optionListHeading = "%nOptions:%n",
         commandListHeading = "%nCommands:%n"
 )
-public class ReusableOption {
+public class HelpOption {
 
     @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "helper")
     protected boolean helpRequest;

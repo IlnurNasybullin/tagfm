@@ -18,24 +18,36 @@ package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "init", description = {"init namespace in '.tagfm' folder (it's creating automatically"})
+@CommandLine.Command(
+        name = "init",
+        headerHeading = "Usage:%n%n",
+        header = "Namespace initialization",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "init namespace in '.tagfm' folder (it's creating automatically"
+)
 @Singleton
 public class NamespaceInitCommand implements Runnable {
 
     private final NamespaceRepositoryService<NamespaceView> namespaceService;
 
-    @CommandLine.Option(names = {"-fns", "--file-naming-strategy"})
+    @CommandLine.Option(
+            names = {"-fns", "--file-naming-strategy"},
+            paramLabel = "file naming strategy",
+            description = "file naming strategy, default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES}"
+    )
     private FileNamingStrategy fileNaming = FileNamingStrategy.RELATIVE;
 
-    @CommandLine.Parameters
+    @CommandLine.Parameters(description = "namespace's name")
     private String name;
 
-    @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true)
-    private boolean helpRequest;
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public NamespaceInitCommand(NamespaceRepositoryService<NamespaceView> namespaceService) {
         this.namespaceService = namespaceService;

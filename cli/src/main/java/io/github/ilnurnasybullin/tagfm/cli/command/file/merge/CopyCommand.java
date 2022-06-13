@@ -17,7 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file.merge;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
-import io.github.ilnurnasybullin.tagfm.cli.command.mixin.ReusableOption;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.FileManager;
@@ -49,7 +49,7 @@ public class CopyCommand implements Runnable {
     @CommandLine.Parameters(arity = "1", index = "0", description = "src file of tags")
     private Path src;
 
-    @CommandLine.Parameters(arity = "1", index = "1", description = "dest file")
+    @CommandLine.Parameters(arity = "1", index = "1", description = "dest file where tags are copying")
     private Path dest;
 
     @CommandLine.Option(names = {"-c", "--create-dest"}, arity = "0",
@@ -63,7 +63,7 @@ public class CopyCommand implements Runnable {
     private CopyStrategy copyStrategy = CopyStrategy.ADD;
 
     @CommandLine.Mixin
-    private ReusableOption options;
+    private HelpOption helper;
 
     public CopyCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

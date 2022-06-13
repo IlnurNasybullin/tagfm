@@ -18,6 +18,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
 import io.github.ilnurnasybullin.tagfm.api.service.FileNamingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
@@ -29,13 +30,29 @@ import java.util.function.UnaryOperator;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "files")
+@CommandLine.Command(
+        name = "files",
+        headerHeading = "Usage:%n%n",
+        header = "Namespace's files printing",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "print list files of namespace"
+)
 public class ListFilesCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Option(names = {"-fns", "--file-naming-strategy"})
+    @CommandLine.Option(
+            names = {"-fns", "--file-naming-strategy"},
+            paramLabel = "file naming strategy",
+            description = """
+            file naming strategy (for printing), default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES
+            """
+    )
     private FileNamingStrategy strategy = FileNamingStrategy.ABSOLUTE;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public ListFilesCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

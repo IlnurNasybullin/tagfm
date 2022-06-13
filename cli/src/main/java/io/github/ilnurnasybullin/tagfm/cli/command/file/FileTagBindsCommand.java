@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.file;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TaggedFileView;
@@ -32,20 +33,30 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-@CommandLine.Command(name = "bind")
+@CommandLine.Command(
+        name = "bind",
+        headerHeading = "Usage:%n%n",
+        header = "Binding tags with file",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "binding tags with one file"
+)
 public class FileTagBindsCommand implements Runnable {
 
-    @CommandLine.Parameters(index = "0", arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1", description = "tagging file")
     private Path file;
 
-    @CommandLine.Parameters(index = "1..*", arity = "1")
+    @CommandLine.Parameters(index = "1..*", arity = "1", description = "tags for binding")
     private final List<String> tags = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "using short name of tags")
     private boolean shortName;
 
-    @CommandLine.Option(names = {"-c", "--create"})
-    private boolean createTag;
+    @CommandLine.Option(names = {"-c", "--create"}, description = "create tags, if tags aren't existing in namespace")
+    private boolean createTags;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     private final FileManagerCommand fileManager;
 
@@ -66,7 +77,7 @@ public class FileTagBindsCommand implements Runnable {
 
     private Collection<TagView> getTags(NamespaceView namespace) {
         TagService tagService = TagService.of(namespace);
-        if (!createTag) {
+        if (!createTags) {
             return shortName ?
                     tagService.findByNamesExact(tags).values() :
                     tagService.findByFullNamesExact(tags).values();

@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print.list;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
@@ -27,16 +28,26 @@ import picocli.CommandLine;
  * @author Ilnur Nasybullin
  */
 @Singleton
-@CommandLine.Command(name = "synonyms")
+@CommandLine.Command(
+        name = "synonyms",
+        headerHeading = "Usage:%n%n",
+        header = "Synonym tags' printing",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "printing list of synonym tags"
+)
 public class ListSynonymsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Parameters(arity = "1", index = "0")
+    @CommandLine.Parameters(arity = "1", index = "0", paramLabel = "tag", description = "tag for searching synonyms")
     private String tagName;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "searching tag by short name")
     private boolean shortName;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public ListSynonymsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

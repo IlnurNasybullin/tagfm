@@ -17,21 +17,32 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.namespace;
 
 import io.github.ilnurnasybullin.tagfm.api.service.NamespaceRepositoryService;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "rename")
+@CommandLine.Command(
+        name = "rename",
+        headerHeading = "Usage:%n%n",
+        header = "Namespace renaming",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "namespace renaming"
+)
 @Singleton
 public class NamespaceRenameCommand implements Runnable {
 
     private final NamespaceRepositoryService<NamespaceView> namespaceService;
 
-    @CommandLine.Parameters(index = "0", arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1", description = "old namespace name")
     private String oldName;
 
-    @CommandLine.Parameters(index = "1", arity = "1")
+    @CommandLine.Parameters(index = "1", arity = "1", description = "new namespace name")
     private String newName;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public NamespaceRenameCommand(NamespaceRepositoryService<NamespaceView> namespaceService) {
         this.namespaceService = namespaceService;

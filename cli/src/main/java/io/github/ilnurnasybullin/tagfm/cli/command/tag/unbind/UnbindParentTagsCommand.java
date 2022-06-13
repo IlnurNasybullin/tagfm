@@ -18,6 +18,7 @@ package io.github.ilnurnasybullin.tagfm.cli.command.tag.unbind;
 
 import io.github.ilnurnasybullin.tagfm.api.service.TagParentBindingStrategy;
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagParentBinder;
@@ -26,19 +27,36 @@ import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "parent-tag")
+@CommandLine.Command(
+        name = "parent-tag",
+        headerHeading = "Usage:%n%n",
+        header = "Hierarchy's unbinding of tag",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = """
+                unbind tags' hierarchy relationships. Formally, unbinding tag X from parent tag Y is defining that tag X \
+                would be child of namespace system root tag (binding tag X with namespace system rooo tag). For binding info \
+                enter command help: tagfm tag bind --help
+                """
+)
 public class UnbindParentTagsCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "search unbinding tag by short name")
     private boolean shortName;
 
-    @CommandLine.Option(names = {"-pbs", "--parent-binding-strategy"})
+    @CommandLine.Option(
+            names = {"-pbs", "--parent-binding-strategy"},
+            description = "tag parent binding strategy, default is ${DEFAULT-VALUE}. Valid strategies: ${COMPLETION-CANDIDATES}"
+    )
     private TagParentBindingStrategy parentBindingStrategy = TagParentBindingStrategy.THROW_IF_COLLISION;
 
-    @CommandLine.Parameters(index = "0", arity = "1")
-    private String childTag;
+    @CommandLine.Parameters(index = "0", arity = "1", description = "unbinding tag")
+    private String unbindingTag;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public UnbindParentTagsCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
@@ -49,8 +67,8 @@ public class UnbindParentTagsCommand implements Runnable {
         NamespaceView namespace = fileManager.namespaceOrThrow();
         TagService tagService = TagService.of(namespace);
         TagView tag = shortName ?
-                tagService.findByNameExact(childTag) :
-                tagService.findByFullNameExact(childTag);
+                tagService.findByNameExact(unbindingTag) :
+                tagService.findByFullNameExact(unbindingTag);
         TagParentBinder.of(namespace).unbind(tag, parentBindingStrategy);
         fileManager.commit();
     }

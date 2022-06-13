@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.TagService;
@@ -24,19 +25,29 @@ import jakarta.inject.Singleton;
 import picocli.CommandLine;
 
 @Singleton
-@CommandLine.Command(name = "rename")
+@CommandLine.Command(
+        name = "rename",
+        headerHeading = "Usage:%n%n",
+        header = "Renaming tag in working namespace",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "rename tag int working namespace"
+)
 public class TagRenameCommand implements Runnable {
 
     private final FileManagerCommand fileManager;
 
-    @CommandLine.Option(names = {"-sn", "--short-name"})
+    @CommandLine.Option(names = {"-sn", "--short-name"}, description = "search tag by short name")
     private boolean shortName = false;
 
-    @CommandLine.Parameters(index = "0", arity = "1")
+    @CommandLine.Parameters(index = "0", arity = "1", description = "old tag name")
     private String oldName;
 
-    @CommandLine.Parameters(index = "1", arity = "1")
+    @CommandLine.Parameters(index = "1", arity = "1", description = "new tag name")
     private String newName;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public TagRenameCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;

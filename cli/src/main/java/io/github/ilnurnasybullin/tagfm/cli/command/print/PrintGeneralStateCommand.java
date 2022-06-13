@@ -17,6 +17,7 @@
 package io.github.ilnurnasybullin.tagfm.cli.command.print;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
+import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
 import io.github.ilnurnasybullin.tagfm.cli.format.TableFormatPrinter;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
@@ -31,11 +32,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Singleton
-@CommandLine.Command(name = "general-state")
+@CommandLine.Command(
+        name = "general-state",
+        headerHeading = "Usage:%n%n",
+        header = "Working namespace's info printing",
+        synopsisHeading = "%n",
+        parameterListHeading = "Parameters:%n",
+        description = "printing general state about working namespace"
+)
 public class PrintGeneralStateCommand implements Runnable {
 
     private final int headerLength = 100;
     private final FileManagerCommand fileManager;
+
+    @CommandLine.Mixin
+    private HelpOption helper;
 
     public PrintGeneralStateCommand(FileManagerCommand fileManager) {
         this.fileManager = fileManager;
