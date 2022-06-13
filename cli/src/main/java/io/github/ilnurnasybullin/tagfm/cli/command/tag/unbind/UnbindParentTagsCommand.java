@@ -36,7 +36,7 @@ import picocli.CommandLine;
         description = """
                 unbind tags' hierarchy relationships. Formally, unbinding tag X from parent tag Y is defining that tag X \
                 would be child of namespace system root tag (binding tag X with namespace system rooo tag). For binding info \
-                enter command help: tagfm tag bind --help
+                enter command help: 'tagfm tag bind --help'
                 """
 )
 public class UnbindParentTagsCommand implements Runnable {

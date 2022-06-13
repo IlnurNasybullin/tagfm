@@ -35,10 +35,10 @@ import picocli.CommandLine;
         parameterListHeading = "Parameters:%n",
         description = """
         binding tags with hierarchy relationship. Formally, binding (hierarchy) tag X to tag Y  is equivalent that tag X \
-        is setted child of tag Y. For binding can be used these binding strategies: \
-            * throw if collision - throw exception, if tag Y has already tag with same short name (collision tag); \
-            * use old - remove new tags (X and his child) for collision tags; \
-            * use new - remove old tags (child tags of Y) for collision tags; \
+        is set child of tag Y. For binding can be used these binding strategies:
+            * throw if collision - throw exception, if tag Y has already tag with same short name (collision tag);
+            * use old - remove new tags (X and his child) for collision tags;
+            * use new - remove old tags (child tags of Y) for collision tags;
             * merge - union files and synonyms of collision tags.
         """
 )

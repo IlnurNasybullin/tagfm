@@ -29,6 +29,7 @@ public class TagFM {
             FileManagerCommand command = context.getBean(FileManagerCommand.class)) {
             IFactory cfFactory = CommandLine.defaultFactory();
             CustomFactory factory = new CustomFactory(context, cfFactory);
+
             CommandLine commandLine = new CommandLine(command, factory)
                     .setCaseInsensitiveEnumValuesAllowed(true);
 

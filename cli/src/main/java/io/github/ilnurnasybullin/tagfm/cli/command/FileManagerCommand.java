@@ -41,16 +41,16 @@ import java.util.Optional;
         },
         description = """
                 TagFM is a file manager for tagging files and folders, managing tags and searching files by logical \
-                expression. \
-                Entities of this manager: \
-                    * file - file or folder in file system; \
+                expression.
+                Entities of this manager:
+                    * file - file or folder in file system;
                     * tag - any keyword for annotating file. Tags can be used for files' systematization and searching \
-                    files by them. Tags can be 2 relationships between each other - synonym and hierarchy. Any tag has 2 \
-                    names: short name (or name) and full name that consist from tag's name and hierarchy parent tags' \
-                    names separated by symbol '/' (also as files and folders in file system); \
+                files by them. Tags can be 2 relationships between each other - synonym and hierarchy. Any tag has 2 \
+                names: short name (or name) and full name that consist from tag's name and hierarchy parent tags' \
+                names separated by symbol '/' (also as files and folders in file system);
                     * namespace - some subject area where tagging is processed. All tags and files in one namespace are \
-                    unique. Namespace is storing file names, tag names and their relationships. File names can be stored \
-                    as absolute or relative path. Any namespace has system root tag with empty name.
+                unique. Namespace is storing file names, tag names and their relationships. File names can be stored \
+                as absolute or relative path. Any namespace has system root tag with empty name.
                 """
 )
 @Singleton

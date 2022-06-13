@@ -18,7 +18,6 @@ package io.github.ilnurnasybullin.tagfm.cli.command.tag;
 
 import io.github.ilnurnasybullin.tagfm.cli.command.FileManagerCommand;
 import io.github.ilnurnasybullin.tagfm.cli.command.mixin.HelpOption;
-import io.github.ilnurnasybullin.tagfm.core.api.dto.InvalidTagNameException;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.NamespaceView;
 import io.github.ilnurnasybullin.tagfm.core.api.dto.TagView;
 import io.github.ilnurnasybullin.tagfm.core.api.service.NamespaceTagAdder;

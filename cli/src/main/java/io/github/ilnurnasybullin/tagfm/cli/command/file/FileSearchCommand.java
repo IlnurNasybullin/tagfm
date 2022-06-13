@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
         expression where value are tags' names. Another legal symbols in expressions are '&' (and), '|' (or), '~' (not) \
         '(', ')' (brackets for priority). IN CURRENT VERSION any terms (tags' names and symbols) must be separated with \
         a space.
-        In searching can be considered the next relationships between tags: \
-            * SYNONYM - if tag X is synonym tag Y then tag X in expression can be replaced (associated) with tag Y; \
-            * HIERARCHY - if tag X is child for tag Y then tag X in expression can be replaced (associated) with tag Y; \
+        In searching can be considered the next relationships between tags:
+            * SYNONYM - if tag X is synonym tag Y then tag X in expression can be replaced (associated) with tag Y;
+            * HIERARCHY - if tag X is child for tag Y then tag X in expression can be replaced (associated) with tag Y;
         By default (strategy SIMPLE), the relationships between tags aren't considered.
         """
 )
